@@ -10,8 +10,11 @@ description: >-
   Agent SDK skill. Also trigger to audit, restructure, or fix an existing
   skill's SKILL.md format, description, token budget, or folder layout. DO
   NOT TRIGGER for general documentation requests with no skill-authoring
-  intent (e.g. writing a README or product doc), or for simply
-  invoking/running an already-installed skill rather than authoring one.
+  intent (e.g. a README or product doc); for general-purpose code, scripts,
+  or tests with no skill-packaging intent; for simply invoking/running an
+  already-installed skill; or for scoring, testing, or security-reviewing
+  an existing skill with no restructure or fix requested (use a
+  skill-evaluation skill instead).
 version: 1.0.0
 author: Actual Agentic Solutions
 tags: [skill-authoring, meta, agent-skills, scaffolding]
@@ -116,6 +119,12 @@ case), and rewrite it in place — no folder restructure needed unless asked.
 - Goal or scope is unclear: ask clarifying questions before scaffolding;
   don't guess a broad description "to be safe" — over-broad descriptions
   cause false-positive triggers.
+- One of *this* skill's own reference files (`references/*.md`,
+  `assets/skill_template.md`, `scripts/scaffold_skill.sh`) is missing or
+  unreadable: name the specific file, do not fabricate its contents from
+  memory, and fall back to the annotated template inline in this SKILL.md's
+  workflow description — otherwise pause and tell the user which reference
+  is unavailable before continuing that step.
 - Description exceeds 150 words / 1024 characters: cut redundant trigger
   phrasing before cutting do-not-trigger cases — false positives are usually
   more disruptive than a missed activation.

@@ -14,7 +14,17 @@ Tests whether the agent knows *when* to call the skill, based on its
 description alone — not whether the skill's content is good. Build a 20-50
 prompt suite (see `references/test_case_design.md`), split roughly evenly
 between prompts that should trigger and prompts that should not, and run
-each against the skill's routing. Example result table:
+each against the skill's routing.
+
+**How to isolate routing from the body:** show only the target skill's
+`name` + `description` frontmatter (not its body or bundled files) alongside
+the sibling descriptions it competes with, then ask "would you invoke this
+skill for the following prompt?" for each test case — either by hand-tracing
+the description against the prompt, or by delegating each prompt to a fresh
+subagent/context that only has the candidate description(s) loaded. Do not
+invoke the real skill and observe whether it fires; that exercises routing
+*and* the body together and will conflate a description problem with a body
+problem. Example result table:
 
 | Test ID | Input | Expected | Result |
 |---|---|---|---|
@@ -38,6 +48,10 @@ full skill (description + body + bundled files). Assert on both:
 
 These are more token-heavy than unit tests — size the sample down for
 expensive/long-running skills rather than dropping process assertions.
+Sample at least 3 should-trigger cases, or 20% of them (whichever is
+larger), biased toward the cases with the most decision branches; a skill
+with only one or two integration tests hasn't actually exercised its
+error-handling paths.
 
 ## Regression testing
 

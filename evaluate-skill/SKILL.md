@@ -4,15 +4,18 @@ description: >-
   Evaluates an existing Agent Skill's trigger accuracy, task performance,
   and security posture, then iteratively fixes it until it clears user-set
   (or default) thresholds. TRIGGER when the user asks to "evaluate a
-  skill", "test a skill", "score/benchmark a skill", "check trigger
-  precision/recall", "security review a skill", "red team a skill", "run
-  an eval suite", or wants a skill audited against a production checklist
-  before shipping. Also trigger for computing/interpreting Trigger
-  Precision, Trigger Recall, or False Positive Rate, or for A/B testing a
-  skill description. DO NOT TRIGGER for authoring a brand-new skill from
-  scratch with no existing skill to assess (use a skill-writing skill
-  instead), or for evaluating general application code/tests unrelated to
-  the Agent Skills format.
+  skill", "test a skill", "score/benchmark a skill", "check a skill's
+  trigger precision/recall/false-positive rate", "security review a
+  skill", "red team a skill", "run an eval suite" against a skill, or
+  wants an existing skill's content audited against a production
+  checklist, risk-tiered, or A/B tested. DO NOT TRIGGER for: authoring a
+  brand-new skill from scratch with no existing skill to assess (use a
+  skill-writing skill instead); evaluating general application code or
+  tests unrelated to the Agent Skills format; generic ML/statistics
+  questions about precision, recall, or false positives with no specific
+  Agent Skill in view; or fixing a skill's file layout, folder structure,
+  or word count with no metrics, testing, or security ask attached (use a
+  skill-authoring skill instead).
 version: 1.0.0
 author: Actual Agentic Solutions
 tags: [skill-evaluation, meta, agent-skills, security, testing]
@@ -122,6 +125,12 @@ as not run.
 - Target skill directory has a broken reference pointer or missing script:
   do not score partially — flag as incomplete and stop rather than guessing
   at what the missing content would have said.
+- One of *this* skill's own reference files (`references/*.md`,
+  `scripts/*`, `assets/*`) is missing or unreadable: name the specific
+  file, do not fabricate its contents from memory, and fall back to the
+  quantitative targets and checklist duplicated in this repo's `CLAUDE.md`
+  if present — otherwise pause and tell the user which reference is
+  unavailable before continuing that step.
 - User wants a "quick check" with fewer than 20 prompts: proceed, but state
   explicitly that precision/recall at that sample size is not statistically
   reliable.

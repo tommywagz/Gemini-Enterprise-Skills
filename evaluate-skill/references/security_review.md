@@ -1,9 +1,10 @@
 # Security Review
 
 ## Contents
+- Scope of concern
+- Data classification
 - Risk tiers
 - Order of operations
-- Scope of concern
 
 ## Scope of concern
 
@@ -11,6 +12,22 @@ Scope every skill for: misconfigurations that give the agent too much access
 to the filesystem, exposure of sensitive data, and agent manipulation through
 prompt injection (instructions hidden in bundled files that try to redirect
 the agent's behavior).
+
+## Data classification
+
+Assign one label per skill, driven by the most sensitive data its bundled
+files or instructions touch — this is what the production checklist's "Data
+classification set correctly" box refers to:
+
+| Label | Skill touches... |
+|---|---|
+| **Public** | No data beyond what's already public (docs, general code). |
+| **Internal** | Internal repo/business context with no regulated or customer data. |
+| **Confidential** | Customer PII, financial records, or internal secrets/credentials (even via env vars/IAM roles). |
+| **Restricted** | Regulated data (health, payment card, government) or anything with a legal handling requirement. |
+
+A skill that only *reads* sensitive data still inherits that data's
+classification — classify by what it touches, not by what it writes.
 
 ## Risk tiers
 
@@ -55,7 +72,13 @@ read the prose, since adversarial instructions often live in the parts that
    operation, and CLI call the skill can issue. Assess combined risk, not
    just each call individually — e.g. `kubectl get secrets` plus a
    network-write capability together are Critical even if each looks
-   Medium alone.
+   Medium alone. For each call that is destructive or hard to reverse
+   (delete, force-push, `kubectl apply`/`delete`, `terraform apply`, writes
+   to shared/production systems), confirm the skill's body requires an
+   explicit user confirmation step before issuing it — this is what the
+   production checklist's "Approval workflow configured for irreversible
+   actions" box refers to. Flag any irreversible call the body would fire
+   without one.
 
 Any Critical finding halts the improvement loop in the main workflow — report
 it immediately rather than continuing on to performance tuning.
