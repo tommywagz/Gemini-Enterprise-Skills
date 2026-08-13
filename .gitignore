@@ -1,4 +1,9 @@
 .claude/
+.gemini/
+
 # CLAUDE.md
+# GEMINI.md
 write_skill.md
 eval_skill.md
+
+.env
