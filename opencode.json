@@ -1,0 +1,21 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "agents": {
+    "orchestrator": {
+      "model": "google/gemini-3.5-flash",
+      "systemPromptFile": ".agents/orchestrator.md"
+    },
+    "finder": {
+      "model": "google/gemini-2.5-flash",
+      "systemPromptFile": ".agents/finder.md"
+    },
+    "creator": {
+      "model": "anthropic/claude-3-7-sonnet",
+      "systemPromptFile": ".agents/creator.md"
+    },
+    "evaluator": {
+      "model": "openai/o3-mini",
+      "systemPromptFile": ".agents/evaluator.md"
+    }
+  }
+}
