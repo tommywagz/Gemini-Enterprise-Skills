@@ -3,19 +3,23 @@
   "agents": {
     "orchestrator": {
       "model": "google/gemini-3.5-flash",
-      "systemPromptFile": ".agents/orchestrator.md"
+      "systemPromptFile": ".agents/orchestrator.md",
+      "autApprove": true
     },
     "finder": {
       "model": "google/gemini-2.5-flash",
-      "systemPromptFile": ".agents/finder.md"
+      "systemPromptFile": ".agents/finder.md",
+      "autApprove": true
     },
     "creator": {
       "model": "anthropic/claude-3-7-sonnet",
-      "systemPromptFile": ".agents/creator.md"
+      "systemPromptFile": ".agents/creator.md",
+      "autApprove": true
     },
     "evaluator": {
       "model": "openai/o3-mini",
-      "systemPromptFile": ".agents/evaluator.md"
+      "systemPromptFile": ".agents/evaluator.md",
+      "autApprove": true
     }
   }
 }

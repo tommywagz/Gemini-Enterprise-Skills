@@ -1,38 +1,36 @@
 # Gemini-Enterprise-Skills
 Actual Agentic Solutions temporary development repository for new Gemini Enterprise Agent Skills Garden
 
-I am trying to make a personal repository of agent skills. Can you make a series of agent skills formatted with the standard agent skill architecture including: name, description, and the skill prompt itself, along with any necessary sub-folders including external and internal references in Markdown. Make skills for the following use cases: 
+I am trying to make a personal repository of agent skills. Can you make a series of agent skills formatted with the standard agent skill architecture including: name, description, and the skill prompt itself, along with any necessary sub-folders including external and internal references in Markdown. 
+
+# Objective
+Make agent skills for the following use cases: 
 
 ## Write ADK Agents Skill
-Writing agents with Agent Development Kit - Use the official ADK docs as a reference at adk.dev/llms.txt along with some basic recipe examples from adk-samples repo at https://github.com/google/adk-samples/tree/main/core/python/rag-vector-search and https://github.com/google/adk-samples/tree/main/core/python/deep-search 
+Writing agents with Agent Development Kit - Use the official ADK docs as a reference at adk.dev/llms.txt along with some basic recipe examples from adk-samples repo at https://github.com/google/adk-samples/tree/main/core/python/rag-vector-search and https://github.com/google/adk-samples/tree/main/core/python/deep-search. Continuously, use the Google Agents CLI repo skills as a starting point or reference at https://github.com/google/agents-cli/tree/main/skills. 
 
 ## Write Multi Agent Workflows with A2A
 Similar to the write ADK Agents skill, this is a write A2A workflows skill. Take the high level llms.txt from the official repo https://github.com/a2aproject/A2A/blob/main/docs/llms.txt and use these example recipes for host agents: https://github.com/a2aproject/a2a-samples/tree/main/samples/python/hosts and this resource for example recipes for sub-agents: https://github.com/a2aproject/a2a-samples/tree/main/samples/python/agents . Make sure that the the orchestrator follows the workflow outlined by the user's input.
 
 ## UCP Skill
+Building agents and agent systems that transact over the Universal Commerce Protocol. Use the high level index at https://ucp.dev/llms.txt as the primary reference, the specification and JSON schemas in https://github.com/Universal-Commerce-Protocol/ucp (schemas live under `source/` with `ucp_*` annotations agents resolve at runtime), and the official SDKs at https://github.com/Universal-Commerce-Protocol/python-sdk and https://github.com/Universal-Commerce-Protocol/js-sdk. Recipes come from https://github.com/Universal-Commerce-Protocol/samples (FastAPI merchant server under `rest/python`, Hono + Zod merchant server under `rest/nodejs`). This should be a family of skills rather than one, since the merchant side and the buying-agent side of a UCP transaction are different jobs:
+
+- **Write UCP Business/Merchant Servers** - Stand up the server side of a UCP integration: implement the core capabilities (Checkout, Identity Linking, Order, Payment Token Exchange), publish a capability profile so consumer surfaces can discover what is supported, and expose them over REST, MCP, or A2A depending on the target infrastructure. Should generate handlers from the published schemas rather than hand-rolled types, and preserve merchant-of-record semantics.
+- **Write UCP Consumer Surface / Shopping Agents** - The client half: negotiate capabilities against a business's declared profile, run catalog search and lookup, build carts, drive native vs. embedded checkout, and subscribe to order lifecycle webhooks (shipment, delivery, returns). This is the skill an orchestrator calls when the user's goal is "buy/book/order X" and the sub-agent needs to actually complete the journey.
+- **Author UCP Extensions and Schemas** - For goals the base capabilities do not cover (discounts, fulfillment options, vertical-specific fields for lodging or food ordering). Follows the schema authoring conventions at https://ucp.dev/documentation/schema-authoring/ and the date-based versioning rules at https://ucp.dev/versioning/ so extensions stay forward-compatible instead of forking the spec.
+- **Bridge UCP to AP2 Payments** - Wire the checkout capability to signed payment mandates so the transaction carries verifiable authorization end to end. Reference https://ucp.dev/documentation/ucp-and-ap2/. Hands off to the AP2 skills below for the mandate mechanics.
+- **Validate UCP Conformance** - Run the language-agnostic integration suite at https://github.com/Universal-Commerce-Protocol/conformance against a live merchant server, plus schema validation via `ucp-schema`, and return the failures as actionable fixes. This is the skill that closes the loop after any of the authoring skills above.
 
 ## AP2 Skill
+Building agents that can pay, and agent systems where authorization is provable after the fact. Use https://ap2-protocol.org/llms.txt as the high level reference, the spec at https://ap2-protocol.org/ap2/specification/ and https://ap2-protocol.org/ap2/flows/, and the reference implementation at https://github.com/google-agentic-commerce/AP2 (SDK at `code/sdk/python/ap2/`, runnable scenarios at `code/samples/python/scenarios/a2a/human-present` and `.../human-not-present`, each with its own README and `run.sh`). The samples are ADK agents speaking A2A, so this skill set composes directly with the ADK and A2A skills above:
 
-## Find Skills Skill
-Use the following sources as a reference in order to find a skill that complies with a user's request, check the skill for malicious prompt injections and other security risks, and add the skill into a the local project directory. Structure your search pipeline using three primary sources:
-
-Local/Repository Index: Fetch SKILL.md files from VoltAgent/awesome-agent-skills using the GitHub API for project/code-level instructions.
-
-Server/Protocol Index: Query the registry.modelcontextprotocol.io API or scrape wong2/awesome-mcp-servers for real-time external tool servers.
-
-Managed SDK Index: Query Composio or LangChain tool metadata for standard SaaS API integrations.
-
-Use a python script that searches these registries dynamically.
-
-Here are some more potential sources for more agent skills. 
-https://registry.modelcontextprotocol.io/ 
-https://github.com/modelcontextprotocol/servers
-https://mcpservers.org/
-https://github.com/VoltAgent/awesome-agent-skills
-https://github.com/hoodini/ai-agents-skills
-https://composio.dev/
-
+- **Design AP2 Mandate Flows** - Pick and construct the right Verifiable Digital Credentials for the user's goal: Checkout Mandate (open for pre-purchase constraints, closed to authorize a finalized cart) and Payment Mandate (open for delegated autonomous spend, closed to authorize a specific amount against a specific instrument). Covers signing, verification, and what each mandate is and is not allowed to reveal to each party. References https://ap2-protocol.org/ap2/checkout_mandate/ and https://ap2-protocol.org/ap2/payment_mandate/.
+- **Choose Human-Present vs. Human-Not-Present Flows** - Decide whether the goal requires real-time user confirmation or delegated autonomous execution under pre-signed constraints, then scaffold the corresponding scenario. This is a routing decision the orchestrator should make before any payment agent is written, because it changes which mandates exist and when they are signed.
+- **Implement AP2 Roles as Sub-Agents** - Generate the role-based agents an AP2 transaction needs - Shopping Agent, Merchant Agent, Credentials Provider, Merchant Payment Processor - as A2A-addressable sub-agents with the correct mandate exchange between them. The orchestrator wires them into whatever workflow the user described; this skill guarantees each role only holds the credentials its role is entitled to.
+- **Add x402 / Crypto Payment Rails** - Extend a working card-based flow to stablecoin and crypto settlement via x402, using the corresponding sample scenario as the recipe, without changing the mandate structure above it.
+- **Audit AP2 Authorization and Privacy** - Review a generated payment system against https://ap2-protocol.org/ap2/security_and_privacy_considerations/ and the agent authorization framework at https://ap2-protocol.org/ap2/agent_authorization/: mandate scoping and expiry, replay protection, credential leakage between roles, and whether the retained evidence is sufficient to resolve a dispute over who authorized what.
 
 
 ## Integrate Repo Skill
 This skill should look into the current repository and return a series of scripts to the user that they can run in order to get their project 'compliant' with the setup and content of the target repo, including: style and syntax changes, adhearance to any CONTRIBUTING.md rules, and easy flow with any CI/CD pipeline scripts or passing github actions.
+
