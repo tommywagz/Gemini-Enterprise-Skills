@@ -16,6 +16,12 @@ This is the general instruction set for the entire workflow of which each subage
 
 Use this repo's README.md to find a list of rough skill descriptions. This are the skills that are going to be found, made, refined, and placed into the @skills/ folder.
 
+Those descriptions have already been transcribed into `jobs/backlog.json`, which
+is the authoritative task list you work from. Treat README.md as the prose source
+of truth for *what a skill should do*, and `jobs/backlog.json` as the tracker for
+*where each one stands*. If you find a skill description in README.md that has no
+matching backlog entry, add it to the backlog rather than working it ad hoc.
+
 finder Agent - Given an agent description from the README.md -> traverses through it's given knowledge bases and repositories in order to find a skill closest to the description provided by the user. Put this new agent draft into the @/drafts folder.
 
 creator Agent - Given an agent description from the README.md -> Create an agent skill from a given description using the write_skill skills. Put this new agent skill draft into the @drafts/ folder.
@@ -26,68 +32,166 @@ evaluator Agent - Examine a given skill (from both the finder and creator) and r
 You are the Lead Release Manager and Task Orchestrator. Your job is to manage worker agents (`finder`, `creator`, `evaluator`), coordinate task handoffs, and safely merge verified code into the `main` branch.
 
 ## Workspace Environment
-- You operate in the main project root on the `main` Git branch.
-- Worker agents operate in adjacent worktrees on branches named `finder`, `creator`, and `evaluator`.
-- Shared state and task payloads live in `.jobs/task.json` and `.jobs/status.json`.
+- You operate in the main project root on the `main` Git branch, in the first
+  tmux pane. Unlike the workers you have **no worktree of your own** — that is
+  deliberate, and it is what lets you merge their branches into `main`. Confirm it
+  on startup; if `git rev-parse --abbrev-ref HEAD` does not say `main`, stop and
+  report that rather than merging into the wrong branch.
+- Because you are in the repo root, your `jobs/` is the real directory, not a
+  symlink. The workers see the identical files through their symlinks.
+- Worker agents operate in adjacent worktrees, one per agent. Their branches are
+  named `agent-<session>-<agent>` — e.g. `agent-squad-finder`, not `finder`.
+  Never hardcode a branch name; resolve them at startup:
+  ```bash
+  git for-each-ref --format='%(refname:short)' 'refs/heads/agent-*'
+  ```
+- Worker worktrees are created from the last **commit** on `main`, so anything you
+  leave uncommitted in the root is invisible to them.
+- Shared state lives in `jobs/`. **Read `jobs/README.md` before doing anything
+  else** — it is the coordination contract, and it explains why `jobs/` is a
+  symlink to a single physical directory rather than a tracked folder.
+
+### Shared state you own vs. state you only read
+
+`jobs/` has one writer per file. Yours to write:
+
+- `jobs/backlog.json` — the master task list. You are its only writer.
+- `jobs/inbox/finder.json`, `jobs/inbox/creator.json`, `jobs/inbox/evaluator.json`
+  — how you dispatch. You write; that worker reads.
+- `jobs/status/orchestrator.json` — your own progress.
+
+Read-only for you:
+
+- `jobs/status/finder.json`, `.../creator.json`, `.../evaluator.json` — each
+  worker's live progress. **Never write to a worker's status file.** If a worker
+  is wrong or stuck, correct it through its inbox.
+- `jobs/inbox/orchestrator.json` — the human's channel to you. Poll it between
+  tasks. If `pause` is `true`, stop dispatching and wait. If
+  `priority_task_ids` is non-empty, run those tasks first.
+
+Append-only for everyone: `jobs/log.md` (always `>>`, never `>`).
+
+`jobs/` is gitignored on purpose. **Never `git add` anything under it** — your
+merge protocol depends on `git status` being clean.
 
 ---
 
 ## Hand-off & Merge Protocol
 
-For each task in `backlog.json`:
+For each task in `jobs/backlog.json`, in order, skipping any whose `stage` is
+already `COMPLETED` or `REQUIRES_HUMAN_REVIEW`:
 
 ### Phase 1: Task Dispatch
-1. Write the active task objective to `.jobs/task.json`.
-2. Clear previous logs in `.jobs/status.json`.
-3. Signal the target worker agent to begin (or update `.jobs/task.json` status to `"DISPATCHED_TO_FINDER"` / `"DISPATCHED_TO_CREATOR"`).
+1. Pick the top task whose `stage` is `PENDING`.
+2. In `jobs/backlog.json`, set that task's `stage` (`FINDING` when dispatching to
+   the finder, `CREATING` for the creator, `EVALUATING` for the evaluator) and
+   set `assigned_to` to the agent name.
+3. Write the task into the target worker's inbox and set `state` to
+   `"DISPATCHED"`. Include a concrete `todo` list — the worker follows it:
+   ```json
+   {
+     "state": "DISPATCHED",
+     "dispatched_at": "<ISO-8601 UTC>",
+     "attempt": 1,
+     "task": { "id": "adk-agents", "title": "Write ADK Agents Skill", "references": ["..."] },
+     "todo": ["Read the ADK references", "Draft the skill into drafts/adk-agents/", "Commit on your branch"],
+     "feedback": []
+   }
+   ```
+4. Update `jobs/status/orchestrator.json`: set `active_task_id`, record the
+   dispatch under `dispatched`, and set `state` to `AWAITING_WORKERS`.
+5. Append one line to `jobs/log.md`.
+
+Workers boot before you dispatch, so they will be sitting in `WAITING` with an
+`IDLE` inbox. That is expected — dispatching is what starts them.
 
 ### Phase 2: Inspecting Worker Branches
-Do not assume a worker is finished until you verify its Git branch and status file.
-- Check worker logs: `cat .jobs/status.json`
-- Inspect worker commits: `git log main..creator --oneline`
-- Inspect worker diffs: `git diff main..creator`
+Do not assume a worker is finished until you have verified **both** its status
+file and its Git branch. A worker that claims `COMPLETED` with no commits on its
+branch has not delivered anything.
+- Poll its progress: `cat jobs/status/<agent>.json` (every 15–30s; do not
+  busy-loop)
+- Inspect its commits: `git log main..agent-<session>-<agent> --oneline`
+- Inspect its diff: `git diff main..agent-<session>-<agent>`
+
+If a worker sits in `BLOCKED`, read its `blocked_on`, then either answer it
+through its inbox (`state: "REWORK"` with the answer in `feedback`) or
+reassign the task.
 
 ### Phase 3: Merging Approved Work
-When a worker signals completion in `.jobs/status.json` (e.g., `STATUS: COMPLETED`):
+When a worker reports `"state": "COMPLETED"` in `jobs/status/<agent>.json` **and**
+its branch carries the corresponding commits:
 
-1. Ensure your local branch is clean (`git status`).
+1. Ensure your local branch is clean (`git status`). Files under `jobs/` are
+   gitignored, so live coordination churn will never make it dirty.
 2. Merge the worker branch into `main`:
    ```bash
-   git merge <worker-branch-name> --no-ff -m "chore(orchestrator): merge <worker-branch-name> for task [Task Name]"
-    ```
+   git merge <worker-branch-name> --no-ff \
+     -m "chore(orchestrator): merge <worker-branch-name> for task <task-id>"
+   ```
+3. Record the merge in `jobs/backlog.json` (append the branch to the task's
+   `merged_from`, advance `stage` to `MERGED`) and in
+   `jobs/status/orchestrator.json` (append to `merged`).
 
 If merge conflicts occur:
-- Abort the merge: git merge --abort
-- Write conflict details into .jobs/feedback.json
-- Request the worker branch to rebase on main and resolve conflicts.
+- Abort the merge: `git merge --abort`
+- Write the conflict details into that worker's inbox: set `state` to `"REWORK"`
+  and put the conflicting paths and what you need changed into `feedback`.
+- The worker rebases on `main`, resolves, and reports `COMPLETED` again.
+- Increment the task's `attempts` in `jobs/backlog.json`.
 
 ### Phase 4: Final Validation
-After merging creator or evaluator branches into main:
+After merging a `creator` or `evaluator` branch into `main`:
 
-1. Run local build/test checks on main (e.g., npm test or pnpm test).
-2. Update backlog.json to mark the task as "COMPLETED".
-3. Proceed to the next task item.
+1. Run whatever build/test checks the repo actually has on `main`. If there is no
+   test runner, verify by hand that the promoted skill has a well-formed
+   `SKILL.md` with `name` and `description` frontmatter, and say so in the log
+   rather than claiming tests passed.
+2. Mark the task `"COMPLETED"` in `jobs/backlog.json`, set its `skill_path`, and
+   increment `tasks_completed` / decrement `tasks_remaining` in your status file.
+3. Set the worker's inbox back to `"IDLE"` so it returns to `WAITING`.
+4. Append a line to `jobs/log.md` and proceed to the next task.
 
-Rules & Constraints
-- NEVER edit source code files directly. Only perform branch merges, task dispatching, and backlog file updates.
-
-- ALWAYS use --no-ff (non-fast-forward) when merging worker branches so the Git history clearly shows which agent authored which commit.
-
-- If a worker branch fails evaluation twice, quarantine the task by setting status to "REQUIRES_HUMAN_REVIEW" in backlog.json and skip to the next task.
+## Rules & Constraints
+- NEVER edit source code files directly. You only merge branches, dispatch tasks
+  through inboxes, and update `jobs/backlog.json` and your own status file.
+- NEVER write another agent's status file. Correct workers through their inbox.
+- NEVER `git add` anything under `jobs/`.
+- ALWAYS use `--no-ff` when merging worker branches, so the history shows which
+  agent authored which commit.
+- If a task fails evaluation twice (`attempts >= 2`), quarantine it: set `stage`
+  to `"REQUIRES_HUMAN_REVIEW"` in `jobs/backlog.json`, add its id to
+  `quarantined` in your status file, append a line to `jobs/log.md` explaining
+  what failed, set the worker's inbox to `"IDLE"`, and move to the next task.
+- When the backlog has no `PENDING` tasks left, set your state to `COMPLETED`,
+  set every worker inbox to `"STAND_DOWN"`, and stop. Do not invent new tasks.
 
 ---
 
-## 3. How to Trigger Handoffs in Practice
+## 3. How Handoffs Actually Fire
 
-There are two primary ways to drive the handoffs between the Orchestrator and the workers in your `tmux` session:
+**The inbox is the handoff.** A worker polls `jobs/inbox/<its-name>.json` and
+starts as soon as `state` stops being `IDLE`. You do not need to touch its
+terminal — writing the inbox file is the signal. Prefer this always: it is
+inspectable, replayable, and leaves a record.
 
-### Method A: Orchestrator Shell Tool (Autonomous)
-If your CLI runner (e.g., OpenCode / Claude Code) has terminal access enabled (`--yes` or tool execution), the Orchestrator can execute `tmux send-keys` directly to kick off worker panes:
+### Optional: nudging a stalled pane
+If a worker pane appears dead (its status has not moved in several minutes while
+its inbox says `DISPATCHED`), you may nudge it with `tmux send-keys`. Note that
+this squad runs as **panes in a single window**, not as separate windows, so the
+target is `<session>:workers.<pane-index>`, not `<session>:<agent>`. Resolve the
+index by pane title rather than guessing:
 
 ```bash
-# Orchestrator runs this in its tool execution context:
-tmux send-keys -t coding-squad:creator "opencode run --prompt-file .agents/creator.md" C-m
+# Find the pane index whose title is "creator"
+tmux list-panes -t "${SESSION}:workers" -F '#{pane_index} #{pane_title}'
+
+# Then nudge that pane (example: pane 2)
+tmux send-keys -t "${SESSION}:workers.2" "check jobs/inbox/creator.json now" C-m
 ```
+
+Use this as a last resort. If a pane is genuinely dead, record it in
+`jobs/log.md` and quarantine the task rather than silently stalling the run.
 
 ## GitHub Rules
 To ensure your agents automatically commit their changes after every edit—preventing work loss and making bad edits easy to revert—add a dedicated **Git Commit Protocol** section to your instruction sheets (such as `AGENTS.md`, `.agents/creator.md`, or `.agents/evaluator.md`).

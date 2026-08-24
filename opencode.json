@@ -4,22 +4,23 @@
     "orchestrator": {
       "model": "google/gemini-3.5-flash",
       "systemPromptFile": ".agents/orchestrator.md",
-      "autApprove": true
+      "autoApprove": true,
+      "worktree": false
     },
     "finder": {
       "model": "google/gemini-2.5-flash",
       "systemPromptFile": ".agents/finder.md",
-      "autApprove": true
+      "autoApprove": true
     },
     "creator": {
-      "model": "anthropic/claude-3-7-sonnet",
+      "model": "anthropic/claude-opus-5",
       "systemPromptFile": ".agents/creator.md",
-      "autApprove": true
+      "autoApprove": true
     },
     "evaluator": {
-      "model": "openai/o3-mini",
+      "model": "openai/o3",
       "systemPromptFile": ".agents/evaluator.md",
-      "autApprove": true
+      "autoApprove": true
     }
   }
 }

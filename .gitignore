@@ -7,3 +7,10 @@ write_skill.md
 eval_skill.md
 
 .env
+
+# Shared squad coordination state. Untracked by design: there is one physical
+# jobs/ directory (in the main repo) symlinked into every worktree, so tracking
+# it would turn every status update into a merge conflict and would dirty the
+# working tree the orchestrator needs clean before it merges. No trailing slash
+# so this also matches the symlink git sees in each worktree.
+/jobs
