@@ -1,6 +1,6 @@
 ---
 name: a2a-workflows
-description: "Skill for authoring A2A (Agent2Agent) multi-agent workflows, featuring host-agent orchestration and sub-agent communication. TRIGGER when: 'A2A workflow', 'A2A multi-agent', 'A2A host', 'A2A sub-agent', 'Agent2Agent collaboration'. DO NOT TRIGGER when: normal ADK workflows without A2A (use google-agents-cli-adk-code)."
+description: "Skill for authoring A2A (Agent2Agent) multi-agent workflows, featuring host-agent orchestration and sub-agent communication. TRIGGER when: 'A2A workflow', 'A2A multi-agent', 'A2A host', 'A2A sub-agent', 'Agent2Agent collaboration', 'AgentCard', 'agent-card.json', 'A2ACardResolver'. DO NOT TRIGGER when: normal ADK workflows without A2A (use google-agents-cli-adk-code)."
 version: 1.0.0
 author: Google
 tags: [a2a, adk, python, multi-agent]
@@ -70,6 +70,18 @@ Expected output / behavior:
 - Error Handling
 - **Sub-Agent Down or HTTP Timeout:** If connection or resolution fails during `retrieve_card`, catch the `httpx.HTTPError` gracefully. Log the failure and continue with remaining active sub-agents.
 - **Sub-Agent Task Failure:** Always catch `TaskState.failed` in `send_message` and raise a descriptive `ValueError` containing the sub-agent's error reason so the LLM or user is informed.
+
+- Input Validation
+- **Remote Addresses:** Validate remote agent addresses before calling `A2ACardResolver`. Ensure they are valid URLs/domains and conform to safety specifications to prevent Server-Side Request Forgery (SSRF).
+- **Sub-Agent Cards:** Check that retrieved `AgentCard` schema fields (e.g. `name`, `description`) are non-empty and safe before registration.
+
+- Anti-Patterns
+- **Synchronous Blocking HTTP Calls:** Never make synchronous or blocking network calls inside tools or background tasks, as this blocks the ADK event loop. Always use `httpx.AsyncClient`.
+- **Static Host Configuration:** Avoid hardcoding child agent capabilities or endpoints statically. Use `A2ACardResolver` to resolve details dynamically via `.well-known/agent-card.json`.
+- **Missing Error Boundaries:** Do not let a single failed remote agent connection crash the entire host orchestrator during startup or delegation. Catch and handle exceptions gracefully.
+
+- Fallback Instructions
+- **Reference Offline Fallback:** If reference files (`references/a2a-spec.md` or `references/a2a-multiagent-python.md`) are unavailable, refer to standard ADK orchestration tutorials or look up the general A2A specification protocol. You can construct custom communication wrappers around A2A RPC endpoints manually using the standard ADK `Workflow` API or custom `Tool` definitions.
 
 - Reference Files
 - **references/a2a-spec.md**: A2A protocol core objects (AgentCard, Task, Message, Artifact) and RPC methods.

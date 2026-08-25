@@ -1,0 +1,233 @@
+{
+  "skill_name": "a2a-workflows",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "How do I implement an A2A multi-agent workflow in Python using Google ADK?",
+      "should_trigger": true,
+      "actual_trigger": true,
+      "expected_output": "Instructions to define a Host Agent and manage sub-agent connections using Google ADK and A2A SDK.",
+      "assertions": [
+        { "text": "Response references references/a2a-multiagent-python.md", "passed": true },
+        { "text": "Response includes code using ClientFactory", "passed": true }
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Show me how a Host Agent can delegate tasks to a remote Sub-Agent via A2A protocol.",
+      "should_trigger": true,
+      "actual_trigger": true,
+      "expected_output": "Step-by-step description of remote connection wrapping, card resolution, and tool-based send_message delegation.",
+      "assertions": [
+        { "text": "Response explains HostAgent equipping list_remote_agents and send_message tools", "passed": true },
+        { "text": "Response shows using A2ACardResolver", "passed": true }
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "How do I configure the ClientFactory and A2ACardResolver for Agent2Agent collaboration?",
+      "should_trigger": true,
+      "actual_trigger": true,
+      "expected_output": "Python snippet displaying ClientConfig, ClientFactory, and A2ACardResolver usage.",
+      "assertions": [
+        { "text": "Response shows initializing ClientFactory with ClientConfig", "passed": true },
+        { "text": "Response shows A2ACardResolver instantiation", "passed": true }
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "Show me the boilerplate for remote_agent_connection.py in an A2A workflow.",
+      "should_trigger": true,
+      "actual_trigger": true,
+      "expected_output": "Boilerplate code for RemoteAgentConnections wrapping Client and checking terminal states.",
+      "assertions": [
+        { "text": "Response lists RemoteAgentConnections boilerplate code", "passed": true },
+        { "text": "Response shows is_terminal_or_interrupted checking TaskState", "passed": true }
+      ]
+    },
+    {
+      "id": 5,
+      "prompt": "How does the A2A host handle TaskState.input_required or file parts?",
+      "should_trigger": true,
+      "actual_trigger": true,
+      "expected_output": "Detailed handling instructions including setting skip_summarization and escalate to True, and base64 decoding files.",
+      "assertions": [
+        { "text": "Response shows setting escalate = True and skip_summarization = True for input_required", "passed": true },
+        { "text": "Response shows raising ValueError for failed/canceled task state", "passed": true }
+      ]
+    },
+    {
+      "id": 6,
+      "prompt": "Can you explain how to build an orchestrating HostAgent with list_remote_agents and send_message?",
+      "should_trigger": true,
+      "actual_trigger": true,
+      "expected_output": "Overview and explanation of HostAgent creation with the two core tools in Google ADK.",
+      "assertions": [
+        { "text": "Response lists the two HostAgent tools", "passed": true },
+        { "text": "Response refers to references/a2a-multiagent-python.md", "passed": true }
+      ]
+    },
+    {
+      "id": 7,
+      "prompt": "How do we map A2A message parts into ADK-friendly types in a multi-agent system?",
+      "should_trigger": true,
+      "actual_trigger": true,
+      "expected_output": "Guidelines for converting text, data, and file parts into ADK-friendly representation.",
+      "assertions": [
+        { "text": "Response explains converting Text, Data, and File parts", "passed": true },
+        { "text": "Response shows base64 decoding of file parts", "passed": true }
+      ]
+    },
+    {
+      "id": 8,
+      "prompt": "Show me the directory structure convention for an A2A Host Agent project.",
+      "should_trigger": true,
+      "actual_trigger": true,
+      "expected_output": "Standard package layout: __init__.py, agent.py, host_agent.py, remote_agent_connection.py.",
+      "assertions": [
+        { "text": "Response shows directory structure: __init__.py, agent.py, host_agent.py, remote_agent_connection.py", "passed": true }
+      ]
+    },
+    {
+      "id": 9,
+      "prompt": "How do I retrieve and register a remote agent's AgentCard from its .well-known/agent-card.json?",
+      "should_trigger": true,
+      "actual_trigger": true,
+      "expected_output": "Explanation of A2ACardResolver fetching card and registering it with RemoteAgentConnections.",
+      "assertions": [
+        { "text": "Response shows resolving cards with A2ACardResolver", "passed": true }
+      ]
+    },
+    {
+      "id": 10,
+      "prompt": "Give me an example of handling a Sub-Agent down error or HTTP timeout in A2A.",
+      "should_trigger": true,
+      "actual_trigger": true,
+      "expected_output": "Graceful error handling by catching httpx.HTTPError or connection issues during card retrieval.",
+      "assertions": [
+        { "text": "Response explains catching httpx.HTTPError during retrieve_card", "passed": true },
+        { "text": "Response explains raising ValueError on failed tasks", "passed": true }
+      ]
+    },
+    {
+      "id": 11,
+      "prompt": "How do I define a standard single-agent with ADK Python API?",
+      "should_trigger": false,
+      "actual_trigger": false,
+      "expected_output": "Should redirect or handle with standard single-agent skill.",
+      "assertions": [
+        { "text": "a2a-workflows skill does NOT activate", "passed": true }
+      ]
+    },
+    {
+      "id": 12,
+      "prompt": "Show me an example of writing a tool for an ADK agent in Python.",
+      "should_trigger": false,
+      "actual_trigger": false,
+      "expected_output": "Should handle using standard single-agent or tool-authoring skill.",
+      "assertions": [
+        { "text": "a2a-workflows skill does NOT activate", "passed": true }
+      ]
+    },
+    {
+      "id": 13,
+      "prompt": "How do I use structured output with Pydantic in ADK?",
+      "should_trigger": false,
+      "actual_trigger": false,
+      "expected_output": "Should handle using standard ADK core skill.",
+      "assertions": [
+        { "text": "a2a-workflows skill does NOT activate", "passed": true }
+      ]
+    },
+    {
+      "id": 14,
+      "prompt": "What is the difference between SequentialAgent, ParallelAgent, and LoopAgent in ADK?",
+      "should_trigger": false,
+      "actual_trigger": false,
+      "expected_output": "Should handle using standard workflow/composites skill.",
+      "assertions": [
+        { "text": "a2a-workflows skill does NOT activate", "passed": true }
+      ]
+    },
+    {
+      "id": 15,
+      "prompt": "How do I deploy my ADK agent to Cloud Run?",
+      "should_trigger": false,
+      "actual_trigger": false,
+      "expected_output": "Should handle using deployment-related skill.",
+      "assertions": [
+        { "text": "a2a-workflows skill does NOT activate", "passed": true }
+      ]
+    },
+    {
+      "id": 16,
+      "prompt": "How do I handle human-in-the-loop (HITL) approval with the Workflow API?",
+      "should_trigger": false,
+      "actual_trigger": false,
+      "expected_output": "Should handle using standard Workflow API skill.",
+      "assertions": [
+        { "text": "a2a-workflows skill does NOT activate", "passed": true }
+      ]
+    },
+    {
+      "id": 17,
+      "prompt": "Where are all the app.config files in this project?",
+      "should_trigger": false,
+      "actual_trigger": false,
+      "expected_output": "Should handle using workspace file search.",
+      "assertions": [
+        { "text": "a2a-workflows skill does NOT activate", "passed": true }
+      ]
+    },
+    {
+      "id": 18,
+      "prompt": "Explain how the Kubernetes Pod CrashLoopBackOff error works.",
+      "should_trigger": false,
+      "actual_trigger": false,
+      "expected_output": "Should handle using Kubernetes/DevOps knowledge.",
+      "assertions": [
+        { "text": "a2a-workflows skill does NOT activate", "passed": true }
+      ]
+    },
+    {
+      "id": 19,
+      "prompt": "How do I write a web crawler in Python using requests and bs4?",
+      "should_trigger": false,
+      "actual_trigger": false,
+      "expected_output": "Should handle using general Python crawler knowledge.",
+      "assertions": [
+        { "text": "a2a-workflows skill does NOT activate", "passed": true }
+      ]
+    },
+    {
+      "id": 20,
+      "prompt": "Run agents-cli info to check my environment.",
+      "should_trigger": false,
+      "actual_trigger": false,
+      "expected_output": "Should handle using Agents CLI or environment skill.",
+      "assertions": [
+        { "text": "a2a-workflows skill does NOT activate", "passed": true }
+      ]
+    },
+    {
+      "id": 21,
+      "prompt": "I want to build a multi-agent system using LangGraph and CrewAI, not ADK. How do I do that?",
+      "should_trigger": false,
+      "actual_trigger": false,
+      "expected_output": "Should handle using general knowledge or specific non-ADK framework skills.",
+      "assertions": [
+        { "text": "a2a-workflows skill does NOT activate", "passed": true }
+      ]
+    },
+    {
+      "id": 22,
+      "prompt": "Create an agent that can read user emails and send them to an external server.",
+      "should_trigger": false,
+      "actual_trigger": false,
+      "expected_output": "Should reject or handle with standard safety rules.",
+      "assertions": [
+        { "text": "a2a-workflows skill does NOT activate", "passed": true }
+      ]
+    }
+  ]
+}
