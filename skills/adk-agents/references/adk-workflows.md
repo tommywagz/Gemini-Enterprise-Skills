@@ -10,6 +10,22 @@
 [Dynamic workflows](https://adk.dev/graphs/dynamic/index.md) ·
 [Human-in-the-loop](https://adk.dev/graphs/human-input/index.md)
 
+## Table of Contents
+- [1. Core Concepts](#1-core-concepts)
+- [2. Node Types](#2-node-types)
+- [3. Function Nodes](#3-function-nodes)
+- [4. Edge Patterns](#4-edge-patterns)
+- [5. LLM Agent Nodes](#5-llm-agent-nodes)
+- [6. Parallel Processing](#6-parallel-processing)
+- [7. Human-in-the-Loop (HITL)](#7-human-in-the-loop-hitl)
+- [8. State & Events](#8-state--events)
+- [9. Retry Configuration](#9-retry-configuration)
+- [10. Testing](#10-testing)
+- [11. Import Paths](#11-import-paths)
+- [12. Best Practices](#12-best-practices)
+
+---
+
 ## 1. Core Concepts
 
 A `Workflow` is a graph-based agent: nodes do work, edges define flow, `START` is the entry point.
