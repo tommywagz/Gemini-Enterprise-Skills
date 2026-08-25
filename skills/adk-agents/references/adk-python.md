@@ -1,5 +1,24 @@
 # ADK Python Cheatsheet
 
+## Table of Contents
+- [1. Core Concepts & Project Structure](#1-core-concepts--project-structure)
+- [2. Agent Definitions (`LlmAgent`)](#2-agent-definitions-llmagent)
+- [3. Orchestration with Workflow Agents](#3-orchestration-with-workflow-agents)
+- [4. Multi-Agent Systems & Communication](#4-multi-agent-systems--communication)
+- [5. Building Custom Agents (`BaseAgent`)](#5-building-custom-agents-baseagent)
+- [6. Models Configuration](#6-models-configuration)
+- [7. Tools: The Agent's Capabilities](#7-tools-the-agents-capabilities)
+- [8. Context, State, and Memory](#8-context-state-and-memory)
+- [9. Callbacks](#9-callbacks)
+- [10. Plugins](#10-plugins)
+- [11. A2A Protocol](#11-a2a-protocol)
+- [12. Event-Driven / Ambient Agents](#12-event-driven--ambient-agents)
+- [13. Managed Agents (server-hosted, first-party)](#13-managed-agents-server-hosted-first-party)
+- [14. Quick Reference](#quick-reference)
+- [15. Inspecting ADK Source Code](#inspecting-adk-source-code)
+
+---
+
 ## 1. Core Concepts & Project Structure
 
 ### Essential Primitives
