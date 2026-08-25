@@ -2,6 +2,11 @@
 
 This guide demonstrates how to build an orchestrating Host Agent using Google ADK that delegates work to remote Sub-Agents over the A2A (Agent2Agent) protocol in Python.
 
+## Table of Contents
+- [1. Directory Structure Convention](#1-directory-structure-convention)
+- [2. Remote Agent Connections Wrapper](#2-remote-agent-connections-wrapper)
+- [3. Orchestrating Host Agent](#3-orchestrating-host-agent)
+
 ## 1. Directory Structure Convention
 
 When implementing A2A multi-agent systems, follow this layout:
