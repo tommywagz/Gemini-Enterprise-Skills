@@ -1,8 +1,8 @@
 .claude/
 .gemini/
 .github/
-# CLAUDE.md
-# GEMINI.md
+
+SKILL_FOUNDATIONS.md
 write_skill.md
 eval_skill.md
 
