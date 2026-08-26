@@ -95,6 +95,20 @@ Expected output / behavior:
   }
   ```
 
+- Anti-Patterns to Avoid
+- **Static Public Keys:** Do not hardcode caller or platform public keys. Always resolve them dynamically via the `UCP-Agent` profile URL to handle key rotation gracefully, caching them locally with TTL for performance.
+- **Bypassing Signature Enforcement:** Never allow state-changing operations (like cart updates or checkout completion) without fully verifying the request signature and body digest unless `--require_signatures=false` is explicitly set in non-production environments.
+- **Leaking Secrets:** Never check private webhook signing keys or database credentials into your source repository. Use secure environment variables or secret vaults.
+- **SSRF Vulnerabilities:** Do not resolve arbitrary or internal/loopback IP address profile URLs (`127.0.0.1`, `localhost`, private CIDRs) in production when validating the `UCP-Agent` header, to prevent Server-Side Request Forgery.
+- **Infinite Webhook Retries:** Do not retry failed webhook deliveries indefinitely or on permanent client-side 4xx errors. Strictly enforce the 3-attempt backoff policy.
+
+- Fallback Instructions
+- **Stack Adaptability:** If the desired programming language or framework is not Python/FastAPI or Node.js/Hono (e.g., Java/Spring, Go, or Rust), use the protocol details in `references/ucp-spec.md` as the source of truth to author native implementations:
+  1. Set up the static discovery manifest JSON at `/.well-known/ucp`.
+  2. Map standard HTTP routes for `/carts` and `checkout-sessions` using your framework's standard router.
+  3. Implement the cryptographic request validation middleware using standard libraries for your language (e.g., standard RSA/ECDSA signature verification).
+- **Missing References:** If reference files are unavailable or unreadable, default to standard REST/HTTP design principles and enforce standard JWT/JWS cryptographic signing to secure public-facing endpoints.
+
 - Reference Files
 - **references/ucp-spec.md**: Master technical specs (discovery, capability endpoints, request signatures, webhook deliveries).
 - **references/python-fastapi-merchant.md**: Setup instructions, routes, and server patterns for Python/FastAPI.

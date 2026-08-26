@@ -1,0 +1,230 @@
+{
+  "skill_name": "ucp-merchant-servers",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "How do I implement a UCP merchant server in FastAPI?",
+      "should_trigger": true,
+      "actual_trigger": true,
+      "expected_output": "Instructions to build a UCP-compliant business/merchant server using FastAPI.",
+      "assertions": [
+        { "text": "Response mentions /.well-known/ucp discovery endpoint", "passed": true },
+        { "text": "Response references python-fastapi-merchant.md", "passed": true }
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "I need to configure a UCP business server with Hono and Node.",
+      "should_trigger": true,
+      "actual_trigger": true,
+      "expected_output": "Instructions to set up a UCP business server using Hono and Node.js.",
+      "assertions": [
+        { "text": "Response mentions Hono and Node.js runtime", "passed": true },
+        { "text": "Response references nodejs-hono-merchant.md", "passed": true }
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Show me how to set up request signature verification on a UCP server integration.",
+      "should_trigger": true,
+      "actual_trigger": true,
+      "expected_output": "Detailed steps on RFC 9421 signature verification and RFC 9530 content-digest matching.",
+      "assertions": [
+        { "text": "Response explains extracting UCP-Agent profile URL", "passed": true },
+        { "text": "Response explains verifying signature over signed headers using ES256/Ed25519", "passed": true }
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "What endpoints do I need to support for a UCP shopping service?",
+      "should_trigger": true,
+      "actual_trigger": true,
+      "expected_output": "List of core cart and checkout state engine REST endpoints.",
+      "assertions": [
+        { "text": "Response lists /carts and /checkout-sessions endpoints", "passed": true }
+      ]
+    },
+    {
+      "id": 5,
+      "prompt": "How do I define a UCP capability profile manifest at .well-known/ucp?",
+      "should_trigger": true,
+      "actual_trigger": true,
+      "expected_output": "The JSON structure for the discovery profile at /.well-known/ucp.",
+      "assertions": [
+        { "text": "Response includes a valid JSON manifest schema with dev.ucp.shopping", "passed": true },
+        { "text": "Response refers to references/ucp-spec.md", "passed": true }
+      ]
+    },
+    {
+      "id": 6,
+      "prompt": "Set up a UCP business server checkout session state engine.",
+      "should_trigger": true,
+      "actual_trigger": true,
+      "expected_output": "State management transitions and routes for checkout sessions.",
+      "assertions": [
+        { "text": "Response covers transition to ready_for_complete status", "passed": true }
+      ]
+    },
+    {
+      "id": 7,
+      "prompt": "Explain how UCP merchant server webhooks with exponential backoff retry are built.",
+      "should_trigger": true,
+      "actual_trigger": true,
+      "expected_output": "Description of outbound webhook signing and retry mechanism.",
+      "assertions": [
+        { "text": "Response explains exponential backoff retry logic", "passed": true },
+        { "text": "Response warns against retrying 4xx client errors", "passed": true }
+      ]
+    },
+    {
+      "id": 8,
+      "prompt": "Show me the discovery profile JSON structure for a UCP server integration.",
+      "should_trigger": true,
+      "actual_trigger": true,
+      "expected_output": "Discovery profile JSON example.",
+      "assertions": [
+        { "text": "Response contains discovery profile JSON", "passed": true }
+      ]
+    },
+    {
+      "id": 9,
+      "prompt": "How does RFC 9421 request signature verification work on UCP business servers?",
+      "should_trigger": true,
+      "actual_trigger": true,
+      "expected_output": "Technical overview of RFC 9421 validation.",
+      "assertions": [
+        { "text": "Response references RFC 9421 and key resolution from UCP-Agent header", "passed": true }
+      ]
+    },
+    {
+      "id": 10,
+      "prompt": "I want to deploy a shopping capability profile for a merchant using Universal Commerce Protocol.",
+      "should_trigger": true,
+      "actual_trigger": true,
+      "expected_output": "Deployment and scaffolding details for UCP shopping capabilities.",
+      "assertions": [
+        { "text": "Response references the UCP specification and discovery endpoints", "passed": true }
+      ]
+    },
+    {
+      "id": 11,
+      "prompt": "How do I build a client-side shopping agent using ucp-consumer-surface-shopping-agents?",
+      "should_trigger": false,
+      "actual_trigger": false,
+      "expected_output": "Redirects to client-side shopping agent skill.",
+      "assertions": [
+        { "text": "ucp-merchant-servers skill does NOT activate", "passed": true }
+      ]
+    },
+    {
+      "id": 12,
+      "prompt": "Show me how a buying client processes payment on a remote merchant.",
+      "should_trigger": false,
+      "actual_trigger": false,
+      "expected_output": "Redirects to consumer-side shopping skill.",
+      "assertions": [
+        { "text": "ucp-merchant-servers skill does NOT activate", "passed": true }
+      ]
+    },
+    {
+      "id": 13,
+      "prompt": "How do I write a web crawler in Python using requests and bs4?",
+      "should_trigger": false,
+      "actual_trigger": false,
+      "expected_output": "General Python crawler information.",
+      "assertions": [
+        { "text": "ucp-merchant-servers skill does NOT activate", "passed": true }
+      ]
+    },
+    {
+      "id": 14,
+      "prompt": "Explain how the Kubernetes Pod CrashLoopBackOff error works.",
+      "should_trigger": false,
+      "actual_trigger": false,
+      "expected_output": "General Kubernetes error information.",
+      "assertions": [
+        { "text": "ucp-merchant-servers skill does NOT activate", "passed": true }
+      ]
+    },
+    {
+      "id": 15,
+      "prompt": "How do I deploy my ADK agent to Cloud Run?",
+      "should_trigger": false,
+      "actual_trigger": false,
+      "expected_output": "Deployment instructions for ADK agent on Cloud Run.",
+      "assertions": [
+        { "text": "ucp-merchant-servers skill does NOT activate", "passed": true }
+      ]
+    },
+    {
+      "id": 16,
+      "prompt": "Show me how to write an ADK agent in Python with tools.",
+      "should_trigger": false,
+      "actual_trigger": false,
+      "expected_output": "Standard ADK Python agent instructions.",
+      "assertions": [
+        { "text": "ucp-merchant-servers skill does NOT activate", "passed": true }
+      ]
+    },
+    {
+      "id": 17,
+      "prompt": "What is the difference between SequentialAgent and ParallelAgent in ADK?",
+      "should_trigger": false,
+      "actual_trigger": false,
+      "expected_output": "ADK workflow composite instructions.",
+      "assertions": [
+        { "text": "ucp-merchant-servers skill does NOT activate", "passed": true }
+      ]
+    },
+    {
+      "id": 18,
+      "prompt": "How do I handle human-in-the-loop approval with the Workflow API?",
+      "should_trigger": false,
+      "actual_trigger": false,
+      "expected_output": "Workflow HITL instructions.",
+      "assertions": [
+        { "text": "ucp-merchant-servers skill does NOT activate", "passed": true }
+      ]
+    },
+    {
+      "id": 19,
+      "prompt": "How do I configure the ClientFactory and A2ACardResolver?",
+      "should_trigger": false,
+      "actual_trigger": false,
+      "expected_output": "A2A workflow configuration instructions.",
+      "assertions": [
+        { "text": "ucp-merchant-servers skill does NOT activate", "passed": true }
+      ]
+    },
+    {
+      "id": 20,
+      "prompt": "Where are all the app.config files in this project?",
+      "should_trigger": false,
+      "actual_trigger": false,
+      "expected_output": "General workspace search instructions.",
+      "assertions": [
+        { "text": "ucp-merchant-servers skill does NOT activate", "passed": true }
+      ]
+    },
+    {
+      "id": 21,
+      "prompt": "Create an agent that can read user emails.",
+      "should_trigger": false,
+      "actual_trigger": false,
+      "expected_output": "Safety rejection.",
+      "assertions": [
+        { "text": "ucp-merchant-servers skill does NOT activate", "passed": true }
+      ]
+    },
+    {
+      "id": 22,
+      "prompt": "Show me how to buy flowers using a consumer-facing shopping assistant.",
+      "should_trigger": false,
+      "actual_trigger": false,
+      "expected_output": "Redirects to client-side shopping agent skill.",
+      "assertions": [
+        { "text": "ucp-merchant-servers skill does NOT activate", "passed": true }
+      ]
+    }
+  ]
+}

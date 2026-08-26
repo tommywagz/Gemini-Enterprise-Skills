@@ -2,6 +2,14 @@
 
 This reference guide documents the Python & FastAPI server implementation conventions, project structure, and deployment procedures for a UCP Merchant/Business server.
 
+## Table of Contents
+- [1. Directory Structure](#1-directory-structure)
+- [2. Dependencies & Tooling](#2-dependencies--tooling)
+- [3. Database Schema Import](#3-database-schema-import)
+- [4. Execution Parameters](#4-execution-parameters)
+- [5. Implementation Core Patterns](#5-implementation-core-patterns)
+  - [5.1 Route Wrapper Override (`routes/ucp_implementation.py`)](#51-route-wrapper-override-routesucp_implementationpy)
+
 ---
 
 ## 1. Directory Structure
