@@ -2,6 +2,19 @@
 
 This document serves as the technical reference for the Universal Commerce Protocol (UCP). It covers discovery profiles, standard endpoints for capabilities/extensions, RFC 9421 request signature verification, and webhook-based order tracking.
 
+## Table of Contents
+- [1. Discovery Profile (`/.well-known/ucp`)](#1-discovery-profile-well-knownucp)
+  - [1.1 Complete Discovery JSON Example](#11-complete-discovery-json-example)
+- [2. Core Capabilities & Extensions](#2-core-capabilities--extensions)
+  - [2.1 Cart Capability](#21-cart-capability)
+  - [2.2 Checkout Capability](#22-checkout-capability)
+  - [2.3 Extensions](#23-extensions)
+- [3. Cryptographic Request Signatures (RFC 9421)](#3-cryptographic-request-signatures-rfc-9421)
+  - [3.1 Verification Mechanics](#31-verification-mechanics)
+- [4. Webhook Signing & Outbound Delivery](#4-webhook-signing--outbound-delivery)
+  - [4.1 Webhook Signing Flow](#41-webhook-signing-flow)
+  - [4.2 Retry & Backoff](#42-retry--backoff)
+
 ---
 
 ## 1. Discovery Profile (`/.well-known/ucp`)
