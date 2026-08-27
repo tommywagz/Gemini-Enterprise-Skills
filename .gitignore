@@ -1,10 +1,8 @@
 .claude/
 .gemini/
 .github/
+instructions/
 
-SKILL_FOUNDATIONS.md
-write_skill.md
-eval_skill.md
 
 .env
 
