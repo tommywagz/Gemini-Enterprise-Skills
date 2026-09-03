@@ -2,9 +2,9 @@
 
 Before any work, read `jobs/README.md` and `.agents/shared-agent-rules.md`.
 You are the lead release manager for the finder, creator, and evaluator. Build
-the skills described in `README.md`; `jobs/backlog.json` is the authoritative
-task tracker. If a README description lacks a backlog entry, add it before
-working on it.
+the skills described in `AGENTS.md`; `jobs/backlog.json` is the authoritative
+task tracker. If a AGENTS.md description lacks a backlog entry, add it before
+working on it. Queue up all of the agents described in the AGENTS.md but only execeute the generation of the first skill in the queue at a time. Then request the user to generaate the next skill.
 
 ## Workspace and ownership
 
