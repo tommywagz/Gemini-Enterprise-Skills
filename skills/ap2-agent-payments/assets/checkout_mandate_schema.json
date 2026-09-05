@@ -1,0 +1,163 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ap2-protocol.org/schemas/checkout_mandate.json",
+  "title": "AP2 Checkout Mandate Content",
+  "description": "Mandate content for an AP2 Checkout Mandate, open or closed, per AP2 v0.2 (https://ap2-protocol.org/ap2/checkout_mandate/). This validates the decoded mandate content object, not the SD-JWT envelope. Selective disclosure means a legitimate presentation may omit disclosable fields; validate the fully resolved content.",
+  "type": "object",
+  "oneOf": [
+    { "$ref": "#/$defs/closedCheckoutMandate" },
+    { "$ref": "#/$defs/openCheckoutMandate" }
+  ],
+  "$defs": {
+    "closedCheckoutMandate": {
+      "title": "Closed Checkout Mandate",
+      "description": "Bound to one finalized checkout. Verified by the Merchant.",
+      "type": "object",
+      "properties": {
+        "vct": { "const": "mandate.checkout.1" },
+        "checkout_jwt": {
+          "type": "string",
+          "description": "base64url-encoded serialized merchant-signed JWT of the Checkout payload. Selectively disclosable. MUST be signed with a non-deterministic scheme (ES256).",
+          "pattern": "^[A-Za-z0-9_-]+\\.[A-Za-z0-9_-]+\\.[A-Za-z0-9_-]+$"
+        },
+        "checkout_hash": {
+          "$ref": "#/$defs/base64url",
+          "description": "base64url hash of the checkout_jwt value, using the SD-JWT _sd_alg or sha-256. Not selectively disclosable. MUST equal the Payment Mandate transaction_id."
+        },
+        "iat": { "$ref": "#/$defs/epochSeconds" },
+        "exp": { "$ref": "#/$defs/epochSeconds" }
+      },
+      "required": ["vct", "checkout_hash"],
+      "additionalProperties": true
+    },
+    "openCheckoutMandate": {
+      "title": "Open Checkout Mandate",
+      "description": "Not yet bound to a transaction. Carries constraints and the agent key. Human-not-present flows only.",
+      "type": "object",
+      "properties": {
+        "vct": { "const": "mandate.checkout.open.1" },
+        "constraints": {
+          "type": "array",
+          "minItems": 1,
+          "description": "An open mandate with no constraints authorizes the agent without bounds.",
+          "items": { "$ref": "#/$defs/checkoutConstraint" }
+        },
+        "cnf": {
+          "$ref": "#/$defs/cnf",
+          "description": "REQUIRED while the mandate is open: sender-constrains it to the agent key."
+        },
+        "iat": { "$ref": "#/$defs/epochSeconds" },
+        "exp": {
+          "$ref": "#/$defs/epochSeconds",
+          "description": "RECOMMENDED to be the smallest value that lets the agent finish the task."
+        }
+      },
+      "required": ["vct", "constraints", "cnf"],
+      "additionalProperties": true
+    },
+    "checkoutConstraint": {
+      "type": "object",
+      "required": ["type"],
+      "properties": { "type": { "type": "string" } },
+      "oneOf": [
+        { "$ref": "#/$defs/allowedMerchantsConstraint" },
+        { "$ref": "#/$defs/lineItemsConstraint" },
+        {
+          "description": "Extension point. A verifier that does not recognise the type MUST fail evaluation.",
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "not": { "enum": ["checkout.allowed_merchants", "checkout.line_items"] }
+            }
+          },
+          "required": ["type"]
+        }
+      ]
+    },
+    "allowedMerchantsConstraint": {
+      "title": "checkout.allowed_merchants",
+      "type": "object",
+      "properties": {
+        "type": { "const": "checkout.allowed_merchants" },
+        "allowed": {
+          "type": "array",
+          "minItems": 1,
+          "description": "Selectively disclosable. The constraint is invalid if no element is revealed.",
+          "items": { "$ref": "#/$defs/merchant" }
+        }
+      },
+      "required": ["type", "allowed"],
+      "additionalProperties": false
+    },
+    "lineItemsConstraint": {
+      "title": "checkout.line_items",
+      "type": "object",
+      "properties": {
+        "type": { "const": "checkout.line_items" },
+        "items": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/lineItemRequirements" }
+        }
+      },
+      "required": ["type", "items"],
+      "additionalProperties": false
+    },
+    "lineItemRequirements": {
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "acceptable_items": {
+          "type": "array",
+          "minItems": 1,
+          "description": "Selectively disclosable. Exactly one must be present in the Checkout per unit of quantity.",
+          "items": { "$ref": "#/$defs/item" }
+        },
+        "quantity": { "type": "integer", "minimum": 1 }
+      },
+      "required": ["id", "acceptable_items", "quantity"],
+      "additionalProperties": false
+    },
+    "item": {
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Unique identifier, often the SKU." },
+        "title": { "type": "string" }
+      },
+      "required": ["id"],
+      "additionalProperties": true
+    },
+    "merchant": {
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "website": { "type": "string", "format": "uri" }
+      },
+      "required": ["id", "name"],
+      "additionalProperties": true
+    },
+    "cnf": {
+      "type": "object",
+      "description": "RFC 7800 proof-of-possession key.",
+      "properties": {
+        "jwk": {
+          "type": "object",
+          "properties": {
+            "kty": { "type": "string" },
+            "crv": { "type": "string" },
+            "x": { "$ref": "#/$defs/base64url" },
+            "y": { "$ref": "#/$defs/base64url" }
+          },
+          "required": ["kty", "crv", "x"],
+          "additionalProperties": true
+        }
+      },
+      "required": ["jwk"],
+      "additionalProperties": true
+    },
+    "base64url": { "type": "string", "pattern": "^[A-Za-z0-9_-]+$" },
+    "epochSeconds": { "type": "integer", "minimum": 0 }
+  }
+}

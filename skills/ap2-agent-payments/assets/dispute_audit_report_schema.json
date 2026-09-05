@@ -1,0 +1,199 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ap2-protocol.org/schemas/dispute_audit_report.json",
+  "title": "AP2 Authorization, Privacy and Dispute-Readiness Audit Report",
+  "description": "Output shape for the Step 7 audit of the ap2-agent-payments skill. Records whether a generated or observed AP2 payment system has correctly scoped mandates, sound bindings, clean credential boundaries, and evidence sufficient to resolve a dispute over who authorized what. A check that was not executed MUST be recorded as 'skipped', never as 'pass'.",
+  "type": "object",
+  "properties": {
+    "report_version": { "const": "1.0" },
+    "generated_at": { "type": "string", "format": "date-time" },
+    "auditor": {
+      "type": "string",
+      "description": "Tool or agent that produced the report, e.g. 'ap2-agent-payments/verify_mandate_signature.py'."
+    },
+    "spec_version": {
+      "type": "string",
+      "default": "v0.2",
+      "description": "AP2 specification version audited against."
+    },
+    "subject": {
+      "type": "object",
+      "description": "What was audited.",
+      "properties": {
+        "kind": { "enum": ["generated_system", "mandate_chain", "live_transaction", "sample_scenario"] },
+        "identifier": { "type": "string" },
+        "transaction_id": {
+          "type": "string",
+          "description": "base64url checkout hash keying the evidence tuple, if known."
+        },
+        "flow": { "enum": ["human-present", "human-not-present", "mixed", "unknown"] },
+        "rail": { "enum": ["cards", "x402", "other", "unknown"] },
+        "roles_present": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "shopping_agent",
+              "trusted_surface",
+              "merchant",
+              "credential_provider",
+              "network",
+              "merchant_payment_processor"
+            ]
+          }
+        }
+      },
+      "required": ["kind", "identifier", "flow"],
+      "additionalProperties": true
+    },
+    "mandates": {
+      "type": "array",
+      "description": "Mandates observed in the subject.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "vct": {
+            "enum": [
+              "mandate.checkout.1",
+              "mandate.checkout.open.1",
+              "mandate.payment.1",
+              "mandate.payment.open.1"
+            ]
+          },
+          "state": { "enum": ["open", "closed"] },
+          "signer": { "enum": ["user", "agent_provider", "agent", "unknown"] },
+          "exp": { "type": ["integer", "null"] },
+          "lifetime_seconds": { "type": ["integer", "null"] },
+          "constraint_types": { "type": "array", "items": { "type": "string" } },
+          "disclosed_claims": { "type": "array", "items": { "type": "string" } }
+        },
+        "required": ["vct", "state"],
+        "additionalProperties": true
+      }
+    },
+    "findings": {
+      "type": "array",
+      "description": "One entry per audit checklist item. See references/ap2_spec_summary.md section 'Audit'.",
+      "items": { "$ref": "#/$defs/finding" }
+    },
+    "evidence": {
+      "type": "object",
+      "description": "Dispute-readiness of the retained evidence.",
+      "properties": {
+        "checkout_tuple_retained": {
+          "$ref": "#/$defs/tristate",
+          "description": "open Checkout Mandate + closed Checkout Mandate + Checkout Receipt persisted."
+        },
+        "payment_tuple_retained": {
+          "$ref": "#/$defs/tristate",
+          "description": "open Payment Mandate + closed Payment Mandate + Payment Receipt persisted."
+        },
+        "receipts_verified": {
+          "$ref": "#/$defs/tristate",
+          "description": "Receipt 'reference' values recompute against the retained closed mandates."
+        },
+        "tamper_resistant_storage": {
+          "$ref": "#/$defs/tristate",
+          "description": "Receipts and mandates are stored where the agent's LLM cannot alter them."
+        },
+        "retention_location": { "type": "string" },
+        "can_answer": {
+          "type": "object",
+          "description": "Whether the retained evidence answers each dispute question.",
+          "properties": {
+            "who_authorized": { "$ref": "#/$defs/tristate" },
+            "what_they_saw": { "$ref": "#/$defs/tristate" },
+            "what_amount": { "$ref": "#/$defs/tristate" },
+            "which_instrument": { "$ref": "#/$defs/tristate" },
+            "when": { "$ref": "#/$defs/tristate" }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": true
+    },
+    "credential_leakage": {
+      "type": "array",
+      "description": "Any artifact reaching a role that is not entitled to it. See references/role_credential_matrix.md.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "artifact": { "type": "string" },
+          "reached_role": { "type": "string" },
+          "entitled": { "type": "boolean" },
+          "evidence": { "type": "string" }
+        },
+        "required": ["artifact", "reached_role", "entitled"],
+        "additionalProperties": false
+      }
+    },
+    "summary": {
+      "type": "object",
+      "properties": {
+        "result": { "enum": ["pass", "fail", "inconclusive"] },
+        "counts": {
+          "type": "object",
+          "properties": {
+            "pass": { "type": "integer", "minimum": 0 },
+            "fail": { "type": "integer", "minimum": 0 },
+            "warn": { "type": "integer", "minimum": 0 },
+            "skipped": { "type": "integer", "minimum": 0 },
+            "not_applicable": { "type": "integer", "minimum": 0 }
+          },
+          "required": ["pass", "fail", "skipped"],
+          "additionalProperties": false
+        },
+        "blocking_findings": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "IDs of critical findings that must be fixed before this system handles real money."
+        },
+        "unverified": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Explicit list of what could not be checked (missing keys, cryptography unavailable, no live merchant). MUST be stated rather than reported as a clean pass."
+        }
+      },
+      "required": ["result", "counts"],
+      "additionalProperties": false
+    }
+  },
+  "required": ["report_version", "generated_at", "subject", "findings", "summary"],
+  "additionalProperties": false,
+  "$defs": {
+    "tristate": { "enum": ["yes", "no", "unknown"] },
+    "finding": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Stable identifier, e.g. 'scoping.open-mandate-exp' or 'binding.transaction-id-matches'."
+        },
+        "category": {
+          "enum": [
+            "scoping_and_expiry",
+            "binding_and_replay",
+            "credential_leakage",
+            "dispute_readiness",
+            "determinism",
+            "rail_specific"
+          ]
+        },
+        "title": { "type": "string" },
+        "status": { "enum": ["pass", "fail", "warn", "skipped", "not_applicable"] },
+        "severity": { "enum": ["critical", "high", "medium", "low", "info"] },
+        "detail": { "type": "string" },
+        "location": {
+          "type": "string",
+          "description": "Where the finding applies: a file path, a role name, or a chain hop such as 'hop[1]'."
+        },
+        "spec_reference": {
+          "type": "string",
+          "description": "URL or section of the AP2 spec supporting the finding."
+        },
+        "remediation": { "type": "string" }
+      },
+      "required": ["id", "category", "title", "status", "severity"],
+      "additionalProperties": false
+    }
+  }
+}
