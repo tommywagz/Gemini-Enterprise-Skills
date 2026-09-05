@@ -8,14 +8,14 @@
         "location": "global"
       },
       "models": {
-        "gemini-3.6-flash": { "reasoning": false },
+        "gemini-3.8-flash": { "reasoning": false },
         "gemini-3.5-flash": { "reasoning": false }
       }
     }
   },
   "agents": {
     "orchestrator": {
-      "model": "google-vertex/gemini-3.6-flash",
+      "model": "google-vertex/gemini-3.8-flash",
       "systemPromptFile": ".agents/orchestrator.md",
       "autoApprove": true,
       "worktree": false
