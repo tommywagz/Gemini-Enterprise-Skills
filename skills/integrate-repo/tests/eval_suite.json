@@ -1,0 +1,30 @@
+{
+  "metadata": {
+    "suite_name": "integrate-repo routing triggers v1",
+    "created": "2026-09-07",
+    "target_skill": "integrate-repo",
+    "description": "20-prompt balanced suite: 10 should trigger, 10 should not trigger. Non-triggering prompts are deliberately adjacent (new-repo scaffolding, merge conflicts, business-logic refactors, authoring CI) rather than random, so the suite measures boundary precision rather than topic separation."
+  },
+  "cases": [
+    {"id": 1, "prompt": "Integrate this vendored SDK folder into our repo so it passes our checks", "should_trigger": true},
+    {"id": 2, "prompt": "Make vendor/acme-client comply with our repo's lint and formatting rules", "should_trigger": true},
+    {"id": 3, "prompt": "Match the repo style and syntax for this external module", "should_trigger": true},
+    {"id": 4, "prompt": "Remediate this project to match CONTRIBUTING.md", "should_trigger": true},
+    {"id": 5, "prompt": "Generate scripts so this folder will pass repo CI locally", "should_trigger": true},
+    {"id": 6, "prompt": "Align this AI-generated code with our repository conventions before I open a PR", "should_trigger": true},
+    {"id": 7, "prompt": "Build me a local GitHub Actions pre-flight runner for src/newfeature", "should_trigger": true},
+    {"id": 8, "prompt": "Lint passes on my machine but CI fails on this directory — why?", "should_trigger": true},
+    {"id": 9, "prompt": "Audit this folder against our quality gates and tell me what needs fixing by hand", "should_trigger": true},
+    {"id": 10, "prompt": "We copied a module from another team's repo; bring it up to our standards", "should_trigger": true},
+    {"id": 11, "prompt": "Create a new Python service repo from scratch with CI", "should_trigger": false},
+    {"id": 12, "prompt": "Resolve the merge conflict in src/api/routes.ts", "should_trigger": false},
+    {"id": 13, "prompt": "Refactor this payment function to reduce duplication", "should_trigger": false},
+    {"id": 14, "prompt": "Write a GitHub Actions workflow that deploys to Cloud Run", "should_trigger": false},
+    {"id": 15, "prompt": "Why is this pytest test failing with a KeyError?", "should_trigger": false},
+    {"id": 16, "prompt": "Explain what ruff's B008 rule means", "should_trigger": false},
+    {"id": 17, "prompt": "Bump our eslint dependency to version 9", "should_trigger": false},
+    {"id": 18, "prompt": "Set up a pre-commit config for a brand new project", "should_trigger": false},
+    {"id": 19, "prompt": "Review this pull request for security issues", "should_trigger": false},
+    {"id": 20, "prompt": "Add dark mode to our React settings page", "should_trigger": false}
+  ]
+}
