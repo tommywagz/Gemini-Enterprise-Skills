@@ -1,0 +1,236 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "FloorPlanSpecification",
+  "description": "Canonical Schema for 2D/2.5D Real Estate Floor Plans, including room polygons, openings, fixtures, and metadata.",
+  "type": "object",
+  "required": [
+    "metadata",
+    "rooms"
+  ],
+  "properties": {
+    "metadata": {
+      "type": "object",
+      "required": [
+        "address",
+        "total_square_footage"
+      ],
+      "properties": {
+        "address": {
+          "type": "string",
+          "description": "The street address of the property."
+        },
+        "zpid": {
+          "type": "string",
+          "description": "Zillow Property ID, if applicable."
+        },
+        "redfin_id": {
+          "type": "string",
+          "description": "Redfin Property Identifier, if applicable."
+        },
+        "mls_id": {
+          "type": "string",
+          "description": "Multiple Listing Service identifier."
+        },
+        "total_square_footage": {
+          "type": "number",
+          "description": "Reported gross living area (GLA) in square feet from listing."
+        },
+        "calculated_square_footage": {
+          "type": "number",
+          "description": "Sum of computed room polygon areas."
+        },
+        "variance_percentage": {
+          "type": "number",
+          "description": "Percentage variance between reported and calculated square footage."
+        },
+        "units": {
+          "type": "string",
+          "enum": [
+            "feet",
+            "meters"
+          ],
+          "default": "feet"
+        }
+      }
+    },
+    "rooms": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "polygon"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique identifier for the room (e.g. 'room_01', 'kitchen')."
+          },
+          "name": {
+            "type": "string",
+            "description": "Name or label of the room (e.g. 'Primary Bedroom', 'Kitchen', 'Living Room')."
+          },
+          "ceiling_height": {
+            "type": "number",
+            "description": "Ceiling height in specified units (default 8.0 or 9.0 feet)."
+          },
+          "polygon": {
+            "type": "array",
+            "description": "Ordered list of 2D coordinates defining the closed boundary of the room.",
+            "minItems": 3,
+            "items": {
+              "type": "array",
+              "minItems": 2,
+              "maxItems": 2,
+              "items": {
+                "type": "number"
+              }
+            }
+          },
+          "wall_types": {
+            "type": "array",
+            "description": "Indication of wall properties matching the polygon edges sequentially.",
+            "items": {
+              "type": "string",
+              "enum": [
+                "interior_standard",
+                "exterior_brick",
+                "exterior_siding",
+                "load_bearing",
+                "railing",
+                "virtual_opening"
+              ]
+            }
+          }
+        }
+      }
+    },
+    "portals": {
+      "type": "array",
+      "description": "Openings such as doors, windows, and main entryways linking spaces.",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "type",
+          "width",
+          "position"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "door_single_swing",
+              "door_double_swing",
+              "door_sliding",
+              "door_pocket",
+              "door_bifold",
+              "window_single_hung",
+              "window_double_hung",
+              "window_picture",
+              "open_archway",
+              "exterior_entry"
+            ]
+          },
+          "width": {
+            "type": "number",
+            "description": "Width of the portal in specified units (e.g., 3.0 feet for standard doors)."
+          },
+          "sill_height": {
+            "type": "number",
+            "description": "Height from floor to bottom of opening (only for windows)."
+          },
+          "height": {
+            "type": "number",
+            "description": "Total height of the opening (default 6.8 feet for doors)."
+          },
+          "position": {
+            "type": "array",
+            "description": "The exact 2D anchor point of the center of the portal [x, y].",
+            "minItems": 2,
+            "maxItems": 2,
+            "items": {
+              "type": "number"
+            }
+          },
+          "orientation_angle": {
+            "type": "number",
+            "description": "Rotation angle in degrees (0 to 360) defining door swing or window direction."
+          },
+          "connects_rooms": {
+            "type": "array",
+            "description": "List of room IDs connected by this portal (max 2).",
+            "maxItems": 2,
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "fixtures": {
+      "type": "array",
+      "description": "Sinks, cabinets, plumbing fixtures, appliances, closets, and built-ins.",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "type",
+          "position"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "sink_kitchen",
+              "sink_bathroom",
+              "toilet",
+              "tub_shower",
+              "shower_stall",
+              "refrigerator",
+              "stove_oven",
+              "washer_dryer",
+              "cabinet_base",
+              "cabinet_wall",
+              "closet_rod",
+              "fireplace"
+            ]
+          },
+          "position": {
+            "type": "array",
+            "description": "2D anchor point of the fixture center [x, y].",
+            "minItems": 2,
+            "maxItems": 2,
+            "items": {
+              "type": "number"
+            }
+          },
+          "dimensions": {
+            "type": "array",
+            "description": "Bounding box dimensions of the fixture [width, depth, height].",
+            "minItems": 2,
+            "maxItems": 3,
+            "items": {
+              "type": "number"
+            }
+          },
+          "orientation_angle": {
+            "type": "number",
+            "description": "Rotation angle of the fixture in degrees."
+          },
+          "room_id": {
+            "type": "string",
+            "description": "The ID of the room housing this fixture."
+          }
+        }
+      }
+    }
+  }
+}

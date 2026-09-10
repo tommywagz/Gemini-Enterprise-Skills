@@ -1,0 +1,393 @@
+{
+  "skill_name": "real-estate-floorplan",
+  "metadata": {
+    "suite_name": "real-estate-floorplan routing triggers v1",
+    "created": "2026-09-10",
+    "target_skill": "real-estate-floorplan",
+    "description": "20-prompt balanced suite: 10 should trigger, 10 should not trigger. Non-triggering prompts are deliberately adjacent boundary cases (pricing estimation, mortgage calculation, general home improvements, general mechanical CAD, 3D gaming level layouts) to evaluate boundary precision."
+  },
+  "cases": [
+    {
+      "id": 1,
+      "prompt": "Extract the floor plan for 123 Maple Street from Zillow.",
+      "should_trigger": true
+    },
+    {
+      "id": 2,
+      "prompt": "Generate a CAD floor plan from the Zillow listing at 742 Evergreen Terrace.",
+      "should_trigger": true
+    },
+    {
+      "id": 3,
+      "prompt": "Can you research real estate floor plans for the Apartments.com community at 'Westside Apartments'?",
+      "should_trigger": true
+    },
+    {
+      "id": 4,
+      "prompt": "Convert the Redfin blueprint for 456 Oak Ave to a DXF file.",
+      "should_trigger": true
+    },
+    {
+      "id": 5,
+      "prompt": "Draw a floor plan with Floor Builder MCP for a 2B2B layout.",
+      "should_trigger": true
+    },
+    {
+      "id": 6,
+      "prompt": "Use Redfin MCP to get property listing floor plan media and convert to SVG.",
+      "should_trigger": true
+    },
+    {
+      "id": 7,
+      "prompt": "Query Apartments.com for studio floor plans and build CAD vector geometry.",
+      "should_trigger": true
+    },
+    {
+      "id": 8,
+      "prompt": "I want to snap adjacent walls in my real estate layout and generate a DXF of it.",
+      "should_trigger": true
+    },
+    {
+      "id": 9,
+      "prompt": "Create a layered CAD layout following AIA guidelines for 1001 Pine Street.",
+      "should_trigger": true
+    },
+    {
+      "id": 10,
+      "prompt": "Run validation on this floor plan spec JSON to check closed loop boundaries and egress clearances.",
+      "should_trigger": true
+    },
+    {
+      "id": 11,
+      "prompt": "Estimate the property value or market price for 123 Maple Street.",
+      "should_trigger": false
+    },
+    {
+      "id": 12,
+      "prompt": "How much will my monthly mortgage payment be for a $500,000 home loan?",
+      "should_trigger": false
+    },
+    {
+      "id": 13,
+      "prompt": "Suggest some general home improvements and landscaping ideas for a small backyard.",
+      "should_trigger": false
+    },
+    {
+      "id": 14,
+      "prompt": "Design a 3D mechanical CAD model for a custom engine piston.",
+      "should_trigger": false
+    },
+    {
+      "id": 15,
+      "prompt": "Draft a 3D video game level layout for an arena shooter.",
+      "should_trigger": false
+    },
+    {
+      "id": 16,
+      "prompt": "Help me design a database schema for real estate listing transactions.",
+      "should_trigger": false
+    },
+    {
+      "id": 17,
+      "prompt": "Find open house listings near Seattle for this weekend.",
+      "should_trigger": false
+    },
+    {
+      "id": 18,
+      "prompt": "How do I negotiate a lease agreement with my landlord?",
+      "should_trigger": false
+    },
+    {
+      "id": 19,
+      "prompt": "Write a Python script to scrape property prices from real estate websites.",
+      "should_trigger": false
+    },
+    {
+      "id": 20,
+      "prompt": "Draw a mechanical gear schematic using AutoCAD commands.",
+      "should_trigger": false
+    }
+  ],
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Extract the floor plan for 123 Maple Street from Zillow.",
+      "should_trigger": true,
+      "actual_trigger": true,
+      "assertions": [
+        {
+          "text": "Skill activates on Zillow floor plan extraction request",
+          "passed": true
+        },
+        {
+          "text": "Correctly routes to Stage 1 discovery",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Generate a CAD floor plan from the Zillow listing at 742 Evergreen Terrace.",
+      "should_trigger": true,
+      "actual_trigger": true,
+      "assertions": [
+        {
+          "text": "Skill activates on CAD generation from Zillow listing",
+          "passed": true
+        },
+        {
+          "text": "Identifies the need for Floor Builder and CAD MCP servers",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Can you research real estate floor plans for the Apartments.com community at 'Westside Apartments'?",
+      "should_trigger": true,
+      "actual_trigger": true,
+      "assertions": [
+        {
+          "text": "Skill activates on Apartments.com floor plan research",
+          "passed": true
+        },
+        {
+          "text": "Understands unit models instead of individual physical units",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "Convert the Redfin blueprint for 456 Oak Ave to a DXF file.",
+      "should_trigger": true,
+      "actual_trigger": true,
+      "assertions": [
+        {
+          "text": "Skill activates on Redfin blueprint conversion to DXF",
+          "passed": true
+        },
+        {
+          "text": "Triggers CAD/BIM MCP server to output DXF format",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "prompt": "Draw a floor plan with Floor Builder MCP for a 2B2B layout.",
+      "should_trigger": true,
+      "actual_trigger": true,
+      "assertions": [
+        {
+          "text": "Skill activates on Floor Builder MCP drawing request",
+          "passed": true
+        },
+        {
+          "text": "Utilizes floor-builder-mcp-server toolchain",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "prompt": "Use Redfin MCP to get property listing floor plan media and convert to SVG.",
+      "should_trigger": true,
+      "actual_trigger": true,
+      "assertions": [
+        {
+          "text": "Skill activates on Redfin MCP media extraction and SVG conversion",
+          "passed": true
+        },
+        {
+          "text": "Schedules Stage 1 discovery and Stage 2 CAD authoring",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "prompt": "Query Apartments.com for studio floor plans and build CAD vector geometry.",
+      "should_trigger": true,
+      "actual_trigger": true,
+      "assertions": [
+        {
+          "text": "Skill activates on Apartments.com studio query for CAD build",
+          "passed": true
+        },
+        {
+          "text": "Recognizes Apartments.com MCP tool get_community_floorplans",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "prompt": "I want to snap adjacent walls in my real estate layout and generate a DXF of it.",
+      "should_trigger": true,
+      "actual_trigger": true,
+      "assertions": [
+        {
+          "text": "Skill activates on snapping adjacent walls and exporting DXF",
+          "passed": true
+        },
+        {
+          "text": "Recognizes correct ordering: snap_adjacent_walls before portal insertion",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "prompt": "Create a layered CAD layout following AIA guidelines for 1001 Pine Street.",
+      "should_trigger": true,
+      "actual_trigger": true,
+      "assertions": [
+        {
+          "text": "Skill activates on creating AIA CAD layers",
+          "passed": true
+        },
+        {
+          "text": "Asserts adherence to AIA CAD layer guidelines (A-WALL, A-DOOR, etc.)",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "prompt": "Run validation on this floor plan spec JSON to check closed loop boundaries and egress clearances.",
+      "should_trigger": true,
+      "actual_trigger": true,
+      "assertions": [
+        {
+          "text": "Skill activates on running validation",
+          "passed": true
+        },
+        {
+          "text": "Triggers validate_geometric_closure.py script",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 11,
+      "prompt": "Estimate the property value or market price for 123 Maple Street.",
+      "should_trigger": false,
+      "actual_trigger": false,
+      "assertions": [
+        {
+          "text": "Skill rejects property price estimation request",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 12,
+      "prompt": "How much will my monthly mortgage payment be for a $500,000 home loan?",
+      "should_trigger": false,
+      "actual_trigger": false,
+      "assertions": [
+        {
+          "text": "Skill rejects mortgage calculation request",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 13,
+      "prompt": "Suggest some general home improvements and landscaping ideas for a small backyard.",
+      "should_trigger": false,
+      "actual_trigger": false,
+      "assertions": [
+        {
+          "text": "Skill rejects general home improvements request",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 14,
+      "prompt": "Design a 3D mechanical CAD model for a custom engine piston.",
+      "should_trigger": false,
+      "actual_trigger": false,
+      "assertions": [
+        {
+          "text": "Skill rejects mechanical CAD model request",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 15,
+      "prompt": "Draft a 3D video game level layout for an arena shooter.",
+      "should_trigger": false,
+      "actual_trigger": false,
+      "assertions": [
+        {
+          "text": "Skill rejects 3D video game level design request",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 16,
+      "prompt": "Help me design a database schema for real estate listing transactions.",
+      "should_trigger": false,
+      "actual_trigger": false,
+      "assertions": [
+        {
+          "text": "Skill rejects general database design coding request",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 17,
+      "prompt": "Find open house listings near Seattle for this weekend.",
+      "should_trigger": false,
+      "actual_trigger": false,
+      "assertions": [
+        {
+          "text": "Skill rejects general open house/listing search",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 18,
+      "prompt": "How do I negotiate a lease agreement with my landlord?",
+      "should_trigger": false,
+      "actual_trigger": false,
+      "assertions": [
+        {
+          "text": "Skill rejects legal or lease agreement requests",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 19,
+      "prompt": "Write a Python script to scrape property prices from real estate websites.",
+      "should_trigger": false,
+      "actual_trigger": false,
+      "assertions": [
+        {
+          "text": "Skill rejects general web scraping requests",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 20,
+      "prompt": "Draw a mechanical gear schematic using AutoCAD commands.",
+      "should_trigger": false,
+      "actual_trigger": false,
+      "assertions": [
+        {
+          "text": "Skill rejects general mechanical CAD requests",
+          "passed": true
+        }
+      ]
+    }
+  ]
+}

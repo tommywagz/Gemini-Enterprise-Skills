@@ -1,0 +1,98 @@
+# Architectural CAD Standards (AIA CAD Layer Guidelines)
+
+## Contents
+- Layer naming convention
+- Required layers for a residential floor plan
+- Line weights and hatch conventions
+- Symbol block reference (assets/standard_cad_symbols.dxf)
+
+This skill follows the **AIA CAD Layer Guidelines (CLG)** naming pattern —
+the industry-standard convention (originally published by the American
+Institute of Architects, widely adopted across AEC CAD/BIM tooling) rather
+than ad-hoc layer names. Using the standard names means a generated DXF opens
+correctly in any AIA-CLG-aware CAD viewer without a manual layer-mapping
+step.
+
+## Layer naming convention
+
+CLG layer names follow: `<Discipline>-<Major>-<Minor>-<Status>`
+
+- **Discipline** (2 chars): `A` = Architectural. This skill only emits `A-*`
+  layers — structural (`S-`), mechanical (`M-`), electrical (`E-`) are out
+  of scope.
+- **Major** (4 chars): the element category (`WALL`, `DOOR`, `GLAZ`, `FLOR`,
+  `ANNO`).
+- **Minor** (4 chars, optional): a sub-category (`FIXT` for fixtures, `DIMS`
+  for dimensions, `TEXT` for labels).
+- **Status** (optional suffix): `-NEW`, `-DEMO`, `-EXST` for renovation
+  drawings. Floor plans generated from a listing are always net-new — omit
+  the status suffix unless the user explicitly asks for an existing-vs-
+  proposed comparison drawing.
+
+## Required layers for a residential floor plan
+
+Declare every layer below via `create_layer` (see
+`mcp_cad_builder_tools.md`) before the first `add_polyline` call:
+
+| Layer | Content | Typical color (AutoCAD Color Index) |
+|---|---|---|
+| `A-WALL` | Room boundary polylines (walls) | 7 (white/black) |
+| `A-WALL-PRHT` | Partial-height walls / railings (from `wall_types: railing`) | 8 (dark gray) |
+| `A-DOOR` | Door leaf + swing arc geometry | 1 (red) |
+| `A-GLAZ` | Window geometry | 5 (blue) |
+| `A-FLOR-FIXT` | Fixtures: sinks, cabinets, appliances, closets | 3 (green) |
+| `A-ANNO-DIMS` | Dimension lines and extension lines | 2 (yellow) |
+| `A-ANNO-TEXT` | Room labels, area callouts | 7 (white/black) |
+| `A-ANNO-SYMB` | Miscellaneous symbols not covered above | 4 (cyan) |
+
+Map the canonical schema's `wall_types` enum
+(`interior_standard`, `exterior_brick`, `exterior_siding`, `load_bearing`,
+`railing`, `virtual_opening`) to layers as follows: everything except
+`railing` and `virtual_opening` goes on `A-WALL`; `railing` goes on
+`A-WALL-PRHT`; `virtual_opening` (an implied boundary with no physical wall,
+e.g. an open-plan kitchen/living divide) is drawn as a dashed polyline on
+`A-WALL` rather than omitted — an omitted boundary breaks the closed-loop
+check in `validate_geometric_closure.py`.
+
+## Line weights and hatch conventions
+
+| Element | Line weight (mm) | Notes |
+|---|---|---|
+| Exterior walls (`exterior_brick`, `exterior_siding`) | 0.50 | Heaviest line on the sheet |
+| Interior/load-bearing walls | 0.35 | |
+| Partial-height walls / railings | 0.25 | Often dashed or hidden linetype |
+| Door/window geometry | 0.25 | |
+| Dimension and extension lines | 0.18 | Lightest line weight |
+| Text/annotation | 0.18 | |
+
+Hatch interior walls with a solid fill at 100% density; leave exterior wall
+cavities unhatched or use a standard masonry/insulation hatch pattern if the
+CAD MCP server's `add_polyline` supports a `hatch_pattern` argument — check
+`tools/list` for that server before assuming the argument exists.
+
+## Symbol block reference (assets/standard_cad_symbols.dxf)
+
+`assets/standard_cad_symbols.dxf` is a block-definition library (not a
+drawing to render standalone). It currently ships three named blocks on the
+`0` and `FIXTURES` layers:
+
+| Block name | Represents | Use for |
+|---|---|---|
+| `DOOR_SWING` | A single door leaf + 90° swing arc | Any `portals[].type` starting with `door_` — scale/mirror via `add_block_reference`'s `rotation`/`scale` args to match `double`, `sliding`, `pocket`, or `bifold` variants rather than authoring a new block per variant |
+| `WINDOW_SYMBOL` | A generic window opening | Any `portals[].type` starting with `window_` |
+| `SINK_SYMBOL` | A generic basin outline | `sink_kitchen` or `sink_bathroom` fixtures |
+
+This is a **starter set**, not full coverage of every `fixtures[].type` and
+`portals[].type` enum value in `floorplan_spec_schema.json` (e.g. there is no
+dedicated `toilet` or `stove_oven` block yet). For an enum value with no
+matching block: reuse the closest existing block scaled to the fixture's
+`dimensions` rather than drawing raw geometry by hand, and note in the
+skill's output which fixtures used a substitute block so a human can add the
+missing symbol to this file later — don't silently invent a new
+undocumented block name that no CAD viewer's block table will resolve.
+
+Reference existing blocks by name via `add_block_reference` (see
+`mcp_cad_builder_tools.md`) rather than redrawing geometry by hand — hand-
+drawn symbols drift from the standard and make output inconsistent across
+floor plans generated by this skill.
+</content>
