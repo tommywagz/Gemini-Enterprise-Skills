@@ -1,41 +1,88 @@
-# Architectural CAD Standards Reference
+# Architectural CAD Standards (AIA CAD Layer Guidelines)
 
-This document outlines the standard layering naming, line weights, color index values, and line types utilized in standard architectural drafting, aligning with the American Institute of Architects (AIA) CAD Layer Guidelines. 
+## Contents
+- Layer naming convention
+- Required layers for a residential floor plan
+- Line weights and hatch conventions
+- Symbol block reference (assets/standard_cad_symbols.dxf)
 
-These standards ensure consistency, readability, and compatibility when exporting to vector formats (DXF, SVG, DWG) via the CAD / BIM MCP server.
+This skill follows the **AIA CAD Layer Guidelines (CLG)** naming pattern —
+the industry-standard convention (originally published by the American
+Institute of Architects, widely adopted across AEC CAD/BIM tooling) rather
+than ad-hoc layer names. Using the standard names means a generated DXF opens
+correctly in any AIA-CLG-aware CAD viewer without a manual layer-mapping
+step.
 
----
+## Layer naming convention
 
-## 1. AIA Standard Layering Table
+CLG layer names follow: `<Discipline>-<Major>-<Minor>-<Status>`
 
-| Layer Name | Color Index (ACI) | Hex Code | Line Weight (mm) | Line Type | Description |
-| :--- | :---: | :---: | :---: | :---: | :--- |
-| **`WALLS`** (A-WALL) | 1 (Red) | `#FF0000` | 0.50 mm (Thick) | `CONTINUOUS` | Main structural walls, interior partitions, load-bearing walls. |
-| **`DOORS`** (A-DOOR) | 2 (Yellow) | `#FFFF00` | 0.25 mm (Thin) | `CONTINUOUS` | Door frames, leaves, swings, sliding door tracks. |
-| **`WINDOWS`** (A-GLAZ) | 3 (Green) | `#00FF00` | 0.25 mm (Thin) | `CONTINUOUS` | Window glass frames, sills, and glazing. |
-| **`FIXTURES`** (A-EQPM) | 4 (Cyan) | `#00FFFF` | 0.18 mm (Extra-Thin) | `CONTINUOUS` | Plumbing fixtures, kitchen appliances, cabinets, counters. |
-| **`DIMENSIONS`** (A-ANNO-DIM) | 5 (Blue) | `#0000FF` | 0.13 mm (Extra-Thin) | `CONTINUOUS` | Dimension lines, ticks, witness lines, boundary limits. |
-| **`TEXT`** (A-ANNO-TEXT) | 6 (Magenta) | `#FF00FF` | 0.25 mm (Thin) | `CONTINUOUS` | Room labels, tags, notes, square footage text annotations. |
+- **Discipline** (2 chars): `A` = Architectural. This skill only emits `A-*`
+  layers — structural (`S-`), mechanical (`M-`), electrical (`E-`) are out
+  of scope.
+- **Major** (4 chars): the element category (`WALL`, `DOOR`, `GLAZ`, `FLOR`,
+  `ANNO`).
+- **Minor** (4 chars, optional): a sub-category (`FIXT` for fixtures, `DIMS`
+  for dimensions, `TEXT` for labels).
+- **Status** (optional suffix): `-NEW`, `-DEMO`, `-EXST` for renovation
+  drawings. Floor plans generated from a listing are always net-new — omit
+  the status suffix unless the user explicitly asks for an existing-vs-
+  proposed comparison drawing.
 
----
+## Required layers for a residential floor plan
 
-## 2. Line Weight Application Guide
+Declare every layer below via `create_layer` (see
+`mcp_cad_builder_tools.md`) before the first `add_polyline` call:
 
-To maintain excellent legibility when plotting, line weights must follow a hierarchy of depth:
-- **Major Profile (0.50mm / 0.020")**: Use for cut boundaries (walls that partition the building structure). This is the thickest line on a floor plan.
-- **Minor Details (0.25mm / 0.010")**: Use for portals (doors/windows) and annotations (room labels). This shows operable or architectural fittings.
-- **Background Symbols (0.18mm / 0.007")**: Use for furniture, plumbing fixtures, countertops, and appliances. These are non-structural elements that sit on the floor.
-- **Reference & Utilities (0.13mm / 0.005")**: Use for dimension ticks/lines, centerlines, and leader lines.
+| Layer | Content | Typical color (AutoCAD Color Index) |
+|---|---|---|
+| `A-WALL` | Room boundary polylines (walls) | 7 (white/black) |
+| `A-WALL-PRHT` | Partial-height walls / railings (from `wall_types: railing`) | 8 (dark gray) |
+| `A-DOOR` | Door leaf + swing arc geometry | 1 (red) |
+| `A-GLAZ` | Window geometry | 5 (blue) |
+| `A-FLOR-FIXT` | Fixtures: sinks, cabinets, appliances, closets | 3 (green) |
+| `A-ANNO-DIMS` | Dimension lines and extension lines | 2 (yellow) |
+| `A-ANNO-TEXT` | Room labels, area callouts | 7 (white/black) |
+| `A-ANNO-SYMB` | Miscellaneous symbols not covered above | 4 (cyan) |
 
----
+Map the canonical schema's `wall_types` enum
+(`interior_standard`, `exterior_brick`, `exterior_siding`, `load_bearing`,
+`railing`, `virtual_opening`) to layers as follows: everything except
+`railing` and `virtual_opening` goes on `A-WALL`; `railing` goes on
+`A-WALL-PRHT`; `virtual_opening` (an implied boundary with no physical wall,
+e.g. an open-plan kitchen/living divide) is drawn as a dashed polyline on
+`A-WALL` rather than omitted — an omitted boundary breaks the closed-loop
+check in `validate_geometric_closure.py`.
 
-## 3. Block Symbol Library Conventions
+## Line weights and hatch conventions
 
-When placing blocks (inserts) from the library (e.g., `assets/standard_cad_symbols.dxf`), blocks must be drawn on Layer `0` (ByBlock/ByLayer settings) so that they inherit the layer characteristics of the layer they are placed into:
-- **`DOOR_SWING`**: Place on `DOORS` layer. It should contain:
-  - Door jamb width (typically 4-6 inches thick).
-  - Main door panel thickness (typically 1.5 - 2 inches).
-  - Swing arc (90-degree swing circle portion).
-- **`WINDOW_SYMBOL`**: Place on `WINDOWS` layer. It should represent double line glazing with frame ends.
-- **`SINK_SYMBOL`**: Place on `FIXTURES` layer. Represents standard kitchen and vanity washbasins.
-- **`TOILET_SYMBOL`**: Place on `FIXTURES` layer. Represents standard water closets and tanks.
+| Element | Line weight (mm) | Notes |
+|---|---|---|
+| Exterior walls (`exterior_brick`, `exterior_siding`) | 0.50 | Heaviest line on the sheet |
+| Interior/load-bearing walls | 0.35 | |
+| Partial-height walls / railings | 0.25 | Often dashed or hidden linetype |
+| Door/window geometry | 0.25 | |
+| Dimension and extension lines | 0.18 | Lightest line weight |
+| Text/annotation | 0.18 | |
+
+Hatch interior walls with a solid fill at 100% density; leave exterior wall
+cavities unhatched or use a standard masonry/insulation hatch pattern if the
+CAD MCP server's `add_polyline` supports a `hatch_pattern` argument — check
+`tools/list` for that server before assuming the argument exists.
+
+## Symbol block reference (assets/standard_cad_symbols.dxf)
+
+`assets/standard_cad_symbols.dxf` is a block-definition library (not a
+drawing to render standalone) containing standard symbols for:
+
+- Door swings: single, double, sliding, pocket, bifold (matches the
+  `portals[].type` enum in `floorplan_spec_schema.json`)
+- Windows: single-hung, double-hung, picture
+- Fixtures: kitchen/bathroom sinks, toilet, tub/shower, refrigerator,
+  stove/oven, washer/dryer
+
+Reference blocks by name via `add_block_reference` (see
+`mcp_cad_builder_tools.md`) rather than redrawing the geometry by hand —
+hand-drawn symbols drift from the standard and make the output
+inconsistent across floor plans generated by this skill.
+</content>

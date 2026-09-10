@@ -1,114 +1,73 @@
-# Floor Builder & CAD MCP Tool Reference
+# Floor Builder & CAD MCP Tool Signatures
 
-This reference documents the signatures, parameters, schemas, and behavior for the Floor Builder and CAD/BIM Model Context Protocol (MCP) servers. These tools are used in Stage 2 of the pipeline to construct vector assets and generate standard architectural exports.
+## Contents
+- Floor Builder MCP Server (illustrative tool contract)
+- CAD / BIM MCP Server (illustrative tool contract)
+- Call ordering and dependency rules
 
----
+Both servers below follow the same MCP `tools/list` / `tools/call` contract
+described in `mcp_realestate_servers.md` — confirm the live schema with
+`tools/list` before trusting an argument name here verbatim. These are the
+canonical, illustrative shapes this skill's workflow is written against.
 
-## 1. Floor Builder MCP Server
+## Floor Builder MCP Server (illustrative tool contract)
 
-The Floor Builder MCP server handles procedural room layout generation, geometric alignment, wall snapping, and structural/door clearance adjustments.
+Procedural 2D/2.5D layout generation — consumes the canonical Floor Plan
+Specification (`assets/floorplan_spec_schema.json`) and produces a snapped,
+annotated layout ready for CAD export.
 
-### Tool Signatures
+| Tool | Arguments | Effect |
+|---|---|---|
+| `create_room_polygon` | `{room_id, polygon: [[x,y],...], ceiling_height?}` | Registers one room's boundary loop |
+| `snap_adjacent_walls` | `{tolerance_inches?: number}` (default `0.5`) | Aligns shared edges between rooms whose boundaries are within `tolerance_inches` of each other, eliminating micro-gaps and overlaps |
+| `insert_portal` | `{portal_id, type, width, position, orientation_angle, connects_rooms}` | Places a door/window cutout and, for doors, the swing arc geometry |
+| `add_annotation` | `{room_id, text, position?}` | Stamps a dimension/label callout; if `position` is omitted, centers it in the room's bounding box |
+| `generate_layout` | `{}` | Finalizes the current session's rooms/portals into a single layout graph; call once after all `create_room_polygon` and `insert_portal` calls |
 
-#### `create_room_polygon`
-Constructs a room enclosure representing a 2D closed loop coordinate polygon.
-- **Parameters**:
-  - `room_id` (string, required): Unique identifier for the room.
-  - `name` (string, required): Label of the room (e.g. "Primary Bedroom").
-  - `dimensions` (array of numbers, optional): Width and length in units (e.g. `[12, 14]`) for quick auto-generation from center.
-  - `polygon` (array of 2D coordinates, optional): Direct array of `[x, y]` coordinate pairs defining vertices (e.g., `[[0,0], [12,0], [12,14], [0,14], [0,0]]`).
-- **Output**:
-  ```json
-  {
-    "status": "success",
-    "room_id": "room_01",
-    "polygon": [[0.0, 0.0], [12.0, 0.0], [12.0, 14.0], [0.0, 14.0], [0.0, 0.0]],
-    "area_sqft": 168.0
-  }
-  ```
+**Call order matters:** `snap_adjacent_walls` must run *after* all
+`create_room_polygon` calls for the layout but *before* `insert_portal` —
+inserting a portal against an unsnapped wall bakes the micro-gap into the
+door frame geometry, and `validate_geometric_closure.py` will report a false
+clearance violation that no CAD-side fix can correct without re-running this
+step.
 
-#### `snap_adjacent_walls`
-Snaps adjacent wall polylines together within a threshold tolerance to ensure clean geometry and prevent microscopic gaps.
-- **Parameters**:
-  - `room_id_primary` (string, required): Anchor room.
-  - `room_id_secondary` (string, required): Room to snap to primary.
-  - `tolerance` (number, optional): Maximum distance to trigger a snap. Defaults to `0.2` (inches/feet units).
-- **Output**:
-  ```json
-  {
-    "status": "success",
-    "snapped_edges": 1,
-    "adjusted_vertices_count": 2
-  }
-  ```
+## CAD / BIM MCP Server (illustrative tool contract)
 
-#### `insert_portal`
-Places a door, window, or opening into an existing wall edge.
-- **Parameters**:
-  - `portal_type` (string, required): Type of opening (`door_single_swing`, `window_double_hung`, `open_archway`).
-  - `width` (number, required): Width of the portal.
-  - `position` (array of 2 numbers, required): Exact center `[x, y]` coordinates.
-  - `orientation_angle` (number, required): Orientation rotation in degrees.
-  - `connects_rooms` (array of strings, optional): ID of room(s) connected.
-- **Output**:
-  ```json
-  {
-    "portal_id": "port_01",
-    "status": "placed",
-    "clearance_check": "passed"
-  }
-  ```
+Takes the finalized layout graph from `generate_layout` and produces layered
+vector geometry in industry-standard exchange formats.
 
----
+| Tool | Arguments | Effect |
+|---|---|---|
+| `create_layer` | `{name, color?, lineweight?}` | Declares a named CAD layer (see `architectural_cad_standards.md` for the naming convention to use) |
+| `add_polyline` | `{layer, points: [[x,y],...], closed: bool}` | Draws vector geometry onto a layer |
+| `add_block_reference` | `{layer, block_name, insertion_point, rotation?, scale?}` | Places a symbol block (door swing, window, fixture) — `block_name` values come from `assets/standard_cad_symbols.dxf`'s block table |
+| `add_dimension` | `{layer, start, end, text?}` | Draws a dimension line with extension lines and text |
+| `export` | `{format: "dxf"|"svg"|"dwg", path}` | Serializes all layers/geometry to the requested format |
 
-## 2. CAD / BIM MCP Server
+**Layer discipline:** call `create_layer` for every layer in
+`architectural_cad_standards.md`'s table before the first `add_polyline` —
+some CAD MCP server implementations silently drop geometry addressed to an
+undeclared layer instead of erroring, which produces a DXF that looks
+complete in a naive line-count check but is missing whole categories of
+elements. Verify layer population by re-querying entity counts per layer
+after `export`, not just checking the export call's return status.
 
-The CAD / BIM MCP server translates the composite Floor Plan Specification into standard vector CAD documents and exports them.
+## Call ordering and dependency rules
 
-### Tool Signatures
+The full Stage 2 pipeline, in required order:
 
-#### `initialize_drawing`
-Initializes a new CAD vector canvas with standard layer sheets and metadata.
-- **Parameters**:
-  - `units` (string, optional): `"feet"` or `"meters"`. Defaults to `"feet"`.
-  - `title` (string, optional): "Property Floor Plan Layout".
-- **Output**:
-  ```json
-  {
-    "drawing_id": "dwg_2026_09",
-    "status": "initialized",
-    "layers_created": ["WALLS", "DOORS", "WINDOWS", "DIMENSIONS", "FIXTURES", "TEXT"]
-  }
-  ```
+1. `create_room_polygon` for every room in the spec.
+2. `snap_adjacent_walls` once, across the whole layout.
+3. `insert_portal` for every portal in the spec (after snapping).
+4. `add_annotation` for room labels/dimensions.
+5. `generate_layout` to finalize.
+6. `create_layer` for each required AIA-convention layer.
+7. `add_polyline` / `add_block_reference` / `add_dimension`, addressed to the
+   layers from step 6.
+8. `export` to the requested format(s).
 
-#### `add_vector_geometry`
-Draws points, lines, polylines, arcs, or blocks onto a specified layer.
-- **Parameters**:
-  - `drawing_id` (string, required): ID returned by `initialize_drawing`.
-  - `layer` (string, required): Layer name (must match standard AIA naming: `WALLS`, `DOORS`, `WINDOWS`, `DIMENSIONS`, `FIXTURES`, `TEXT`).
-  - `geometry_type` (string, required): `"LINE"`, `"POLYLINE"`, `"ARC"`, `"INSERT_BLOCK"`.
-  - `coordinates` (array, required): Vertex coordinates corresponding to geometry type.
-  - `block_name` (string, optional): The name of a standard block if type is `"INSERT_BLOCK"`.
-- **Output**:
-  ```json
-  {
-    "status": "added",
-    "geometry_id": "geom_102"
-  }
-  ```
-
-#### `export_drawing`
-Exports the drawing session into a standard portable vector file.
-- **Parameters**:
-  - `drawing_id` (string, required): Drawing ID.
-  - `format` (string, required): Export format (`"DXF"`, `"SVG"`, `"DWG"`).
-- **Output**:
-  ```json
-  {
-    "status": "exported",
-    "format": "DXF",
-    "file_size_bytes": 10482,
-    "download_url": "http://localhost:3000/exports/dwg_2026_09.dxf",
-    "file_path": "/home/tow73/AAS/skills-worker-creator/exports/dwg_2026_09.dxf"
-  }
-  ```
+Run `scripts/validate_geometric_closure.py` against the Floor Plan
+Specification **before** step 1 — catching an unclosed polygon before it
+enters the Floor Builder session is cheap; catching it after `export` means
+re-running the entire Stage 2 pipeline.
+</content>
