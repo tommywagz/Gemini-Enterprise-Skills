@@ -3,7 +3,6 @@
 .github/
 instructions/
 
-
 .env
 
 # Shared squad coordination state. Untracked by design: there is one physical

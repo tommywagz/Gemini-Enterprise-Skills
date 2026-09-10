@@ -54,6 +54,30 @@ The primary goal of this repository is to build a robust, scalable "garden" of p
 
 ---
 
+## 🗺️ Skill Allocation & Deployment Roadmap
+
+This repository acts as a staging garden. Once skills are fully implemented, tested, and evaluated, they are distributed to their optimal destination repositories. Below is the complete allocation plan and current completion status:
+
+### 1. New Skills Staged in AGENTS.md
+| Skill / Use Case | Destination Repository | Status / Clarification | Potential Usefulness & Rationale |
+|---|---|---|---|
+| `model-governance` | `https://github.com/google/agents-cli/tree/main/skills` | 🔴 **Unstarted (Backlog)** | Handles local LLM profiling and `opencode.json` launch command patching within the developer’s CLI. |
+| `real-estate-floorplan` | `https://github.com/google/adk-samples/tree/main/skills` | 🔴 **Unstarted (Backlog)** | A complex spatial research & vector CAD/BIM workflow; showcases multi-platform MCP integration. |
+
+### 2. Sibling Skills (from `@skills/**` folder)
+| Local Skill Name | Destination Repository | Status / Clarification | Potential Usefulness & Rationale |
+|---|---|---|---|
+| `a2a-workflows` | `https://github.com/google/adk-samples/tree/main/skills` | 🟢 **Completed & Promoted** | Full multi-agent orchestration and A2A communication wrappers. Fully verified with evaluation report. |
+| `adk-agents` | `https://github.com/google/agents-cli/tree/main/skills` | 🟢 **Completed & Promoted** | Primary developer cheatsheet/reference for the core Google ADK Python SDK. Fully verified with evaluation report. |
+| `ap2-agent-payments` | `https://github.com/google/adk-samples/tree/main/skills` | 🟢 **Completed & Promoted** | Commerce payment authorization sample using SD-JWT credentials and role separation. Fully verified with evaluation report. |
+| `evaluate-skill` | `https://github.com/google/agents-cli/tree/main/skills` | 🟡 **System Meta-Skill** | Meta-tooling used by the Evaluator Agent. Stable for squad execution; pending standalone garden-testing promotion. |
+| `find-skill` | `https://github.com/google/agents-cli/tree/main/skills` | 🟡 **System Meta-Skill** | Discovery and pre-screening of MCP/Composio skills used by the Finder Agent. Stable for squad execution; pending standalone garden-testing promotion. |
+| `integrate-repo` | `https://github.com/google/agents-cli/tree/main/skills` | 🟢 **Completed & Promoted** | CLI tool for style compliance and CI gate preflights. Fully verified with evaluation report. |
+| `ucp-merchant-servers` | `https://github.com/google/adk-samples/tree/main/skills` | 🔵 **In Progress / Evaluation** | Server-side FastAPI/Hono UCP integration sample. Currently has test suite scaffolded; final evaluation report is pending. |
+| `write-skill` | `https://github.com/google/agents-cli/tree/main/skills` | 🟡 **System Meta-Skill** | Scaffolds standard skill packages. Used by the Creator Agent. Stable for squad execution; pending standalone garden-testing promotion. |
+
+---
+
 ## 🤝 Multi-Agent Squad & Coordination
 
 Instead of relying on a single monolith, the repository coordinates an automated software delivery team where each agent runs in its own **isolated Git worktree on its own Git branch**. 

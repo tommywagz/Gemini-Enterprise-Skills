@@ -31,7 +31,7 @@
       "autoApprove": true
     },
     "evaluator": {
-      "model": "openai/5.6-terra",
+      "model": "openai/gpt-5.6-terra",
       "systemPromptFile": ".agents/evaluator.md",
       "autoApprove": true
     }

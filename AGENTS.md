@@ -6,66 +6,6 @@ I am trying to make a personal repository of agent skills. Can you make a series
 # Objective
 Make agent skills for the following use cases: 
 
-## AP2 Skill
-Building agents that can pay, and agent systems where authorization is provable after the fact. Use https://ap2-protocol.org/llms.txt as the high level reference, the spec at https://ap2-protocol.org/ap2/specification/ and https://ap2-protocol.org/ap2/flows/, and the reference implementation at https://github.com/google-agentic-commerce/AP2 (SDK at `code/sdk/python/ap2/`, runnable scenarios at `code/samples/python/scenarios/a2a/human-present` and `.../human-not-present`, each with its own README and `run.sh`). The samples are ADK agents speaking A2A, so this skill set composes directly with the ADK and A2A skills above:
-
-- **Design AP2 Mandate Flows** - Pick and construct the right Verifiable Digital Credentials for the user's goal: Checkout Mandate (open for pre-purchase constraints, closed to authorize a finalized cart) and Payment Mandate (open for delegated autonomous spend, closed to authorize a specific amount against a specific instrument). Covers signing, verification, and what each mandate is and is not allowed to reveal to each party. References https://ap2-protocol.org/ap2/checkout_mandate/ and https://ap2-protocol.org/ap2/payment_mandate/.
-- **Choose Human-Present vs. Human-Not-Present Flows** - Decide whether the goal requires real-time user confirmation or delegated autonomous execution under pre-signed constraints, then scaffold the corresponding scenario. This is a routing decision the orchestrator should make before any payment agent is written, because it changes which mandates exist and when they are signed.
-- **Implement AP2 Roles as Sub-Agents** - Generate the role-based agents an AP2 transaction needs - Shopping Agent, Merchant Agent, Credentials Provider, Merchant Payment Processor - as A2A-addressable sub-agents with the correct mandate exchange between them. The orchestrator wires them into whatever workflow the user described; this skill guarantees each role only holds the credentials its role is entitled to.
-- **Add x402 / Crypto Payment Rails** - Extend a working card-based flow to stablecoin and crypto settlement via x402, using the corresponding sample scenario as the recipe, without changing the mandate structure above it.
-- **Audit AP2 Authorization and Privacy** - Review a generated payment system against https://ap2-protocol.org/ap2/security_and_privacy_considerations/ and the agent authorization framework at https://ap2-protocol.org/ap2/agent_authorization/: mandate scoping and expiry, replay protection, credential leakage between roles, and whether the retained evidence is sufficient to resolve a dispute over who authorized what.
-
-### Routing & Packaging Blueprint
-- **Proposed Identity:** `ap2-agent-payments` (or modular family `ap2-mandate-flows`, `ap2-flow-routing`, `ap2-role-subagents`, `ap2-x402-rails`, `ap2-authorization-audit`)
-- **Trigger Contract:** TRIGGER when users ask to implement autonomous agent checkout, AP2 payment mandates, signed checkout credentials, x402 crypto settlement rails, or mandate authorization audits. DO NOT TRIGGER for generic UCP cart operations without payment settlement or raw non-agent payment gateway SDK integration (Stripe/PayPal API) without verifiable mandate credentials.
-- **Bundle Layout:**
-  - `references/`: `ap2_spec_summary.md` (mandate structures and signing RFCs), `role_credential_matrix.md` (who sees what), `x402_settlement_guide.md`.
-  - `scripts/`: `verify_mandate_signature.py`, `simulate_ap2_flow.sh`.
-  - `assets/`: JSON schemas for Checkout Mandate, Payment Mandate, and dispute audit reports.
-
-
-## Integrate Repo Skill
-Skill for inspecting a host repository's operational environment, coding standards, and quality gates, then auditing an external or unintegrated target file/folder to produce executable remediation scripts and pre-flight runners that bring the target into full compliance with the host repo.
-
-### Core Capabilities
-- **Discover & Extract Repository Standards** - Automatically inspect the host repository root where the agent harness resides:
-  - Formatter and linter configurations (`.eslintrc.*`, `biome.json`, `ruff.toml`, `pyproject.toml`, `.prettierrc`, `tsconfig.json`, `Cargo.toml`, `.golangci.yml`).
-  - Contribution guidelines, style guides, and PR/issue templates (`CONTRIBUTING.md`, `STYLEGUIDE.md`, `.github/PULL_REQUEST_TEMPLATE.md`).
-  - Git hook managers (`.pre-commit-config.yaml`, `.husky/`, `lefthook.yml`).
-  - Continuous integration workflows (`.github/workflows/*.ya?ml`, GitLab CI, CircleCI) to extract the exact sequential validation commands and passing criteria.
-- **Audit Target Delta & Generate Compliance Matrix** - Inspect the user-specified target folder or file against the extracted repository rules:
-  - Identify style, formatting, syntax, and typing discrepancies.
-  - Check file and directory naming conventions (kebab-case vs. snake_case vs. camelCase), directory placement, and test co-location conventions.
-  - Verify license headers, docstring/JSDoc conventions, and forbidden dependency imports.
-  - Execute non-destructive dry-run linting, formatting, and type-checking commands against the target path to catalog all violations.
-- **Synthesize Executable Remediation Scripts** - Generate robust, reproducible shell scripts (e.g. `remediate_compliance.sh`) that the user can inspect and execute:
-  - Run auto-fixers in proper dependency order (e.g., import sorting -> syntax fixers -> code formatters -> linter fixes).
-  - Execute safe file renaming, path migrations, and directory restructuring.
-  - Inject required file headers, license notices, and boilerplate templates.
-  - Include rollback safety checks (e.g., git stash or temporary branch checkpoints) before executing destructive modifications.
-- **Build Local CI/CD Pre-Flight Runner** - Generate a dedicated validation script (e.g. `run_ci_preflight.sh`) that simulates the repository's GitHub Actions / CI pipeline locally against the target path:
-  - Run the exact lint, typecheck, build, and unit test commands identified from the CI workflows.
-  - Return clear pass/fail status reports with actionable diagnostics for any remaining manual fixes.
-- **Audit PR & Contribution Readiness** - Compile a compliance summary report against `CONTRIBUTING.md` requirements (e.g. conventional commit formats, test coverage thresholds, documentation updates) ready for PR submission.
-
-### Routing & Packaging Blueprint
-- **Proposed Identity:** `integrate-repo`
-- **Routing Description Checklist:**
-  - *Trigger:* TRIGGER when users ask to "integrate repo", "make folder compliant with repo", "match repo style and syntax", "remediate project to match CONTRIBUTING.md", "generate scripts to pass repo CI", "align external code with repository conventions", or need local GitHub Actions pre-flight scripts for a folder.
-  - *Do Not Trigger:* DO NOT TRIGGER for creating a brand-new repo from scratch (use project scaffolding skills), resolving general git merge conflicts, or refactoring business logic unrelated to repository standards.
-- **Workflow Contract for Creator Agent:**
-  1. Inspect host repository root to detect build systems, linters, formatters, and CI workflows.
-  2. Parse `CONTRIBUTING.md` and `.github/workflows/` to identify required quality gates and commands.
-  3. Scan the target file/folder to catalog deviations (syntax, style, structure, licensing).
-  4. Generate `remediate_compliance.sh` with ordered automated fix commands and backup safeguards.
-  5. Generate `run_ci_preflight.sh` reflecting the exact CI validation gates.
-  6. Output an actionable execution summary detailing commands to run and manual fixes required.
-- **Bundle Layout:**
-  - `references/`: `toolchain_fixers.md` (flags for ruff, eslint, biome, prettier, black, clippy), `ci_workflow_patterns.md` (extracting test matrices from GitHub Actions).
-  - `scripts/`: `extract_repo_rules.py` (CLI scanner for linters/CI configs), `remediate_compliance.sh` (template runner).
-  - `assets/`: `compliance_report_template.md`, `preflight_checklist.json`.
-
-
 ## Model Governance Assignment
 Skill for previewing an agent prompt, workflow, or task specification, analyzing its cognitive and token complexity, and assigning the optimal LLM provider and model tier based on configured user preferences (quality/results, cost minimization, or balanced intelligence-to-token ratio), outputting the launch command and configuration patches.
 
@@ -150,4 +90,67 @@ Skill for orchestrating a two-stage spatial research and architectural drafting 
   - `references/`: `mcp_realestate_servers.md` (tool schemas and auth for Zillow, Apartments.com, Redfin), `mcp_cad_builder_tools.md` (Floor Builder and CAD MCP signatures), `architectural_cad_standards.md` (layer naming and line weights).
   - `scripts/`: `normalize_listing_spatial_data.py` (transforms listing dimensions to canonical schema), `validate_geometric_closure.py` (checks closed loops and clearances).
   - `assets/`: `floorplan_spec_schema.json` (canonical JSON schema), `standard_cad_symbols.dxf` (library of doors, windows, fixtures).
+
+
+# Repository Attribution Matrix
+
+## 1. Skills from this Document (AGENTS.md)
+| Proposed Identity | Destination Repository | Potential Usefulness & Rationale |
+|---|---|---|
+| `model-governance` | `https://github.com/google/agents-cli/tree/main/skills` | Handles local LLM cognitive/token profiling, dynamic provider configuration routing, and `opencode.json` config/launch command patching within the developer’s CLI. |
+| `real-estate-floorplan` | `https://github.com/google/adk-samples/tree/main/skills` | A domain-specific multi-platform real estate listing scraper and vector CAD/BIM drafting workflow; serves as an excellent complex multi-turn integration sample for ADK/MCP. |
+
+## 2. Sibling Skills (from `@skills/**` folder)
+| Local Skill Name | Destination Repository | Potential Usefulness & Rationale |
+|---|---|---|
+| `a2a-workflows` | `https://github.com/google/adk-samples/tree/main/skills` | Sample showing how to implement multi-agent A2A (Agent2Agent) protocol orchestration and sub-agent connection logic using `google-adk`. |
+| `adk-agents` | `https://github.com/google/agents-cli/tree/main/skills` | Primary developer-facing CLI reference and cheatsheet for the core Google ADK Python SDK. |
+| `ap2-agent-payments` | `https://github.com/google/adk-samples/tree/main/skills` | Cryptographic commerce/payment sample demonstrating Checkout/Payment Mandates via SD-JWT verifiable credentials and role separation. |
+| `evaluate-skill` | `https://github.com/google/agents-cli/tree/main/skills` | Meta-skill developer tool used locally or in CI to score agent skill triggers, precision, recall, and run security scans. |
+| `find-skill` | `https://github.com/google/agents-cli/tree/main/skills` | Developer tool enabling dynamic discovery and screening of MCP servers, Composio tools, and community skills from within the CLI. |
+| `integrate-repo` | `https://github.com/google/agents-cli/tree/main/skills` | Quality-gate linter and formatter conformer used to integrate third-party, vendored, or AI-generated code cleanly into host repository standards. |
+| `ucp-merchant-servers` | `https://github.com/google/adk-samples/tree/main/skills` | Complete commerce sample demonstrating standard Universal Commerce Protocol (UCP) server-side FastAPI/Hono integrations. |
+| `write-skill` | `https://github.com/google/agents-cli/tree/main/skills` | CLI-integrated generator and standard scaffold utility for writing agentic skill packages. |
+
+
+# Pitched Potential Skills
+
+## 1. Destination Repo: Cloud Skills (`skills/cloud`)
+### Pitch A: `gcp-terraform-security-policy` (GCP IaC Compliance Reviewer)
+- **Description:** Scans Terraform configurations against Google Cloud security and organizational policies (e.g., CIS benchmarks, private-by-default buckets, least-privilege IAM roles) before provisioning resources.
+- **Trigger:** TRIGGER when users ask to "audit Terraform configurations for GCP", "verify GCP resource compliance", "validate Terraform security policies", or "run GCP IAC security scan".
+- **Do Not Trigger:** DO NOT TRIGGER for general Terraform syntax errors (unrelated to GCP compliance) or for multi-cloud Azure/AWS-specific reviews unless specifically targeted at a GCP hybrid scenario.
+- **Value:** Invaluable for platform engineering and DevSecOps squads looking to enforce corporate guardrails automatically prior to remote `terraform apply`.
+
+### Pitch B: `gcp-cost-optimizer` (Google Cloud FinOps Auditor)
+- **Description:** Analyzes active Google Cloud inventory reports (e.g., idle Compute Engine instances, unattached persistent disks, under-utilized BigQuery slots, or excessively provisioned Cloud Run scaling settings) and generates prescriptive recommendations or Terraform configurations to minimize spend.
+- **Trigger:** TRIGGER when users ask to "reduce Google Cloud costs", "find idle GCP resources", "optimize BigQuery slot utilization", or "run a GCP spend audit".
+- **Do Not Trigger:** DO NOT TRIGGER for billing alert setups, cloud payment credential updates, or generic code optimizations.
+- **Value:** Provides a clear, high-ROI corporate financial operations (FinOps) helper that cuts wasted cloud spend.
+
+## 2. Destination Repo: ADK Sample Skills (`adk-samples/skills`)
+### Pitch A: `adk-cross-session-knowledge-bank` (Memory Bank Integration Sample)
+- **Description:** Sample demonstrating how to persist user preferences, key terminology, and conversational context across discrete sessions using the Vertex AI Memory Bank (`PreloadMemoryTool` and `LoadMemoryTool`).
+- **Trigger:** TRIGGER when users ask to "implement cross-session memory in ADK", "configure Vertex AI Memory Bank", "persist agent knowledge across conversations", or "use PreloadMemoryTool/LoadMemoryTool".
+- **Do Not Trigger:** DO NOT TRIGGER for standard transient session state-key management (single-turn variables) or raw client-side SQLite setup.
+- **Value:** Deeply explains and scaffolds ADK’s advanced long-term memory capabilities, a frequent point of friction for production agent developers.
+
+### Pitch B: `adk-durable-human-in-the-loop` (Durable Approval Gates)
+- **Description:** Scaffolds and guides the setup of a durable, asynchronous Human-In-The-Loop (HITL) approval gate within an ADK Graph-based Workflow. It pauses the node execution, publishes a state-holding webhook payload to an external workflow dashboard, and safely resumes upon receiving a signed approval payload.
+- **Trigger:** TRIGGER when users ask to "add workflow approval gate in ADK", "suspend ADK graph execution", "implement human sign-off", or "integrate ADK asynchronous resume".
+- **Do Not Trigger:** DO NOT TRIGGER for basic synchronous CLI input prompts (`request_input`) or transient function-level confirmation challenges.
+- **Value:** Offers a robust, real-world pattern for integrating agentic graphs with enterprise-grade operational workflows.
+
+## 3. Destination Repo: Agents CLI Skills (`agents-cli/skills`)
+### Pitch A: `agents-cli-conformance-tester` (Protocol Conformance Scanner)
+- **Description:** Spins up a local mock sandbox to execute conformance suites against local UCP merchant servers or A2A host agents, outputting verified protocol-compliance test summaries.
+- **Trigger:** TRIGGER when users ask to "run UCP conformance tests", "verify A2A compliance of local server", "agents-cli test-compliance", or "check protocol compatibility".
+- **Do Not Trigger:** DO NOT TRIGGER for standard PyTest/Vitest unit-testing or generic code-linting.
+- **Value:** Greatly accelerates local protocol-compliant development by avoiding manual verification.
+
+### Pitch B: `agents-cli-scaffold-extension` (Polyglot Multi-Agent Workspace Generator)
+- **Description:** Extends standard CLI scaffolding actions to generate hybrid, polyglot agent workspaces (e.g., automatically linking a TypeScript/Hono web handler with a Python/ADK processing orchestrator).
+- **Trigger:** TRIGGER when users ask to "scaffold a multi-agent polyglot workspace", "agents-cli scaffold enhance multiple languages", or "add Node.js/Python boundaries to agent project".
+- **Do Not Trigger:** DO NOT TRIGGER for standard single-agent folder scaffolding or simple python virtual-env setup.
+- **Value:** Provides a seamless enterprise layout that coordinates larger development teams working across multiple runtimes.
 
