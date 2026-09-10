@@ -1,0 +1,13 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "governance": {
+    "mode": "{{OPTIMIZATION_MODE}}",
+    "allowed_providers": ["{{PROVIDER_1}}", "{{PROVIDER_2}}"],
+    "budget_ceiling_usd_per_mtok_output": "{{BUDGET_CEILING_OR_REMOVE}}"
+  },
+  "agent": {
+    "{{AGENT_NAME}}": {
+      "model": "{{PROVIDER_ID}}/{{MODEL_ID}}"
+    }
+  }
+}
