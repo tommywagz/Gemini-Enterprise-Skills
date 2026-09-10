@@ -1,0 +1,59 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://actualagentic.solutions/schemas/governance-policy.json",
+  "title": "Model Governance Policy",
+  "description": "Convention this skill introduces under the top-level 'governance' key in opencode.json. Not part of OpenCode's own documented schema -- see references/opencode_config_spec.md.",
+  "type": "object",
+  "properties": {
+    "mode": {
+      "type": "string",
+      "enum": ["result_maximized", "cost_optimized", "balanced"],
+      "default": "balanced",
+      "description": "result_maximized: top intelligence in tier regardless of cost. cost_optimized: cheapest model in tier meeting the context-limit floor. balanced: the tier's recommended default model, falling through by rank if ineligible."
+    },
+    "allowed_providers": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "examples": ["anthropic", "openai", "google-vertex"]
+      },
+      "description": "Restrict model selection to these provider IDs. Empty or omitted means no restriction beyond what is actually configured under the top-level 'provider' key."
+    },
+    "budget_ceiling_usd_per_mtok_output": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Optional hard ceiling on a single model's output cost per 1M tokens. resolve_governance_model.py does not currently enforce this automatically -- treat it as a manual check against the chosen model's cost_per_1m.output before finalizing."
+    },
+    "per_agent_overrides": {
+      "type": "object",
+      "description": "Optional per-agent-role governance overrides, keyed by agent name (matches agent.<name> in opencode.json).",
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "mode": {
+            "type": "string",
+            "enum": ["result_maximized", "cost_optimized", "balanced"]
+          },
+          "min_tier": {
+            "type": "integer",
+            "enum": [1, 2, 3],
+            "description": "Never assign this agent a model below this tier, even if the task profiler classifies its prompt lower."
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false,
+  "examples": [
+    {
+      "mode": "balanced",
+      "allowed_providers": ["anthropic", "google-vertex"],
+      "budget_ceiling_usd_per_mtok_output": 30,
+      "per_agent_overrides": {
+        "orchestrator": { "min_tier": 2 },
+        "evaluator": { "mode": "result_maximized" }
+      }
+    }
+  ]
+}
