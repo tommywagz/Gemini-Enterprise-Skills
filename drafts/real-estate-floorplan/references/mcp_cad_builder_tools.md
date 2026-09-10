@@ -40,7 +40,7 @@ vector geometry in industry-standard exchange formats.
 |---|---|---|
 | `create_layer` | `{name, color?, lineweight?}` | Declares a named CAD layer (see `architectural_cad_standards.md` for the naming convention to use) |
 | `add_polyline` | `{layer, points: [[x,y],...], closed: bool}` | Draws vector geometry onto a layer |
-| `add_block_reference` | `{layer, block_name, insertion_point, rotation?, scale?}` | Places a symbol block (door swing, window, fixture) — `block_name` values come from `assets/standard_cad_symbols.dxf`'s block table |
+| `add_block_reference` | `{layer, block_name, insertion_point, rotation?, scale?}` | Places a symbol block (door swing, window, fixture) — `block_name` must be one of the names defined in `assets/standard_cad_symbols.dxf`'s block table (currently `DOOR_SWING`, `WINDOW_SYMBOL`, `SINK_SYMBOL` — see `architectural_cad_standards.md` for substitution rules when no exact block exists) |
 | `add_dimension` | `{layer, start, end, text?}` | Draws a dimension line with extension lines and text |
 | `export` | `{format: "dxf"|"svg"|"dwg", path}` | Serializes all layers/geometry to the requested format |
 
