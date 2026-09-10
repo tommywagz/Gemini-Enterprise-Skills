@@ -1,0 +1,393 @@
+{
+  "skill_name": "model-governance",
+  "metadata": {
+    "suite_name": "model-governance routing triggers v1",
+    "created": "2026-09-10",
+    "target_skill": "model-governance",
+    "description": "20-prompt balanced suite: 10 should trigger, 10 should not trigger. Non-triggering prompts are deliberately adjacent boundary cases (prompt rewriting/engineering, API credential provisioning, live benchmark runs, general coding, merge conflict resolution) to evaluate boundary precision."
+  },
+  "cases": [
+    {
+      "id": 1,
+      "prompt": "Assign a model for this prompt: Refactor our multi-service authentication architecture",
+      "should_trigger": true
+    },
+    {
+      "id": 2,
+      "prompt": "Select the optimal model and tier for generating basic unit tests for this utility module",
+      "should_trigger": true
+    },
+    {
+      "id": 3,
+      "prompt": "Configure opencode model governance to minimize token cost for our finder agent",
+      "should_trigger": true
+    },
+    {
+      "id": 4,
+      "prompt": "I need an opencode launch command with --model for running this security audit task",
+      "should_trigger": true
+    },
+    {
+      "id": 5,
+      "prompt": "Reconcile my global ~/.config/opencode/opencode.json with this repo's project opencode.json to choose the right LLM",
+      "should_trigger": true
+    },
+    {
+      "id": 6,
+      "prompt": "Optimize our model choice for cost vs. intelligence using the balanced mode",
+      "should_trigger": true
+    },
+    {
+      "id": 7,
+      "prompt": "Determine the LLM tier and launch command to run a syntax check across these markdown files",
+      "should_trigger": true
+    },
+    {
+      "id": 8,
+      "prompt": "Patch our opencode.json so the evaluator subagent runs on a frontier reasoning model",
+      "should_trigger": true
+    },
+    {
+      "id": 9,
+      "prompt": "What provider and model should run this prompt under a result_maximized policy?",
+      "should_trigger": true
+    },
+    {
+      "id": 10,
+      "prompt": "Profile the cognitive complexity of this task specification and recommend an opencode model",
+      "should_trigger": true
+    },
+    {
+      "id": 11,
+      "prompt": "Rewrite this prompt to make it clearer and reduce hallucination",
+      "should_trigger": false
+    },
+    {
+      "id": 12,
+      "prompt": "Help me improve the wording of this system prompt for our customer support bot",
+      "should_trigger": false
+    },
+    {
+      "id": 13,
+      "prompt": "Set up and provision Google Cloud Vertex AI API credentials and service account keys",
+      "should_trigger": false
+    },
+    {
+      "id": 14,
+      "prompt": "Store our Anthropic API key securely in our shell environment variables",
+      "should_trigger": false
+    },
+    {
+      "id": 15,
+      "prompt": "Run an MMLU benchmark evaluation suite to compare Claude 3.5 Sonnet against GPT-4o",
+      "should_trigger": false
+    },
+    {
+      "id": 16,
+      "prompt": "Evaluate our agent's accuracy and latency across 100 historical queries",
+      "should_trigger": false
+    },
+    {
+      "id": 17,
+      "prompt": "Write a Python script to calculate Fibonacci numbers",
+      "should_trigger": false
+    },
+    {
+      "id": 18,
+      "prompt": "Resolve the merge conflict in opencode.json between main and feature branch",
+      "should_trigger": false
+    },
+    {
+      "id": 19,
+      "prompt": "Add a retry mechanism with exponential backoff to our HTTP client",
+      "should_trigger": false
+    },
+    {
+      "id": 20,
+      "prompt": "Deploy our application to Google Kubernetes Engine using Terraform",
+      "should_trigger": false
+    }
+  ],
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Assign a model for this prompt: Refactor our multi-service authentication architecture",
+      "should_trigger": true,
+      "actual_trigger": true,
+      "assertions": [
+        {
+          "text": "Skill routes to model governance evaluation",
+          "passed": true
+        },
+        {
+          "text": "Identifies architectural refactoring as Tier 1 complexity",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Select the optimal model and tier for generating basic unit tests for this utility module",
+      "should_trigger": true,
+      "actual_trigger": true,
+      "assertions": [
+        {
+          "text": "Skill activates on optimal model and tier request",
+          "passed": true
+        },
+        {
+          "text": "Classifies unit test authoring as Tier 2 workhorse",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Configure opencode model governance to minimize token cost for our finder agent",
+      "should_trigger": true,
+      "actual_trigger": true,
+      "assertions": [
+        {
+          "text": "Skill activates on configuring model governance",
+          "passed": true
+        },
+        {
+          "text": "Applies cost_optimized mode and targets finder agent",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "I need an opencode launch command with --model for running this security audit task",
+      "should_trigger": true,
+      "actual_trigger": true,
+      "assertions": [
+        {
+          "text": "Skill activates on --model launch command request",
+          "passed": true
+        },
+        {
+          "text": "Emits opencode run --model launch command",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "prompt": "Reconcile my global ~/.config/opencode/opencode.json with this repo's project opencode.json to choose the right LLM",
+      "should_trigger": true,
+      "actual_trigger": true,
+      "assertions": [
+        {
+          "text": "Skill activates on config inheritance reconciliation",
+          "passed": true
+        },
+        {
+          "text": "Applies project-over-global precedence correctly",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "prompt": "Optimize our model choice for cost vs. intelligence using the balanced mode",
+      "should_trigger": true,
+      "actual_trigger": true,
+      "assertions": [
+        {
+          "text": "Skill activates on cost vs. intelligence optimization query",
+          "passed": true
+        },
+        {
+          "text": "Selects balanced_default model for the classified tier",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "prompt": "Determine the LLM tier and launch command to run a syntax check across these markdown files",
+      "should_trigger": true,
+      "actual_trigger": true,
+      "assertions": [
+        {
+          "text": "Skill activates on LLM tier and launch command determination",
+          "passed": true
+        },
+        {
+          "text": "Classifies syntax triage/validation as Tier 3 high throughput",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "prompt": "Patch our opencode.json so the evaluator subagent runs on a frontier reasoning model",
+      "should_trigger": true,
+      "actual_trigger": true,
+      "assertions": [
+        {
+          "text": "Skill activates on subagent config patching",
+          "passed": true
+        },
+        {
+          "text": "Emits config patch for agent.evaluator.model",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "prompt": "What provider and model should run this prompt under a result_maximized policy?",
+      "should_trigger": true,
+      "actual_trigger": true,
+      "assertions": [
+        {
+          "text": "Skill activates on result_maximized policy routing",
+          "passed": true
+        },
+        {
+          "text": "Selects Rank 1 highest capability model in tier",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "prompt": "Profile the cognitive complexity of this task specification and recommend an opencode model",
+      "should_trigger": true,
+      "actual_trigger": true,
+      "assertions": [
+        {
+          "text": "Skill activates on profiling cognitive complexity",
+          "passed": true
+        },
+        {
+          "text": "Executes profile_prompt.py heuristic classifier",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 11,
+      "prompt": "Rewrite this prompt to make it clearer and reduce hallucination",
+      "should_trigger": false,
+      "actual_trigger": false,
+      "assertions": [
+        {
+          "text": "Skill rejects prompt rewriting request per DO NOT TRIGGER clause",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 12,
+      "prompt": "Help me improve the wording of this system prompt for our customer support bot",
+      "should_trigger": false,
+      "actual_trigger": false,
+      "assertions": [
+        {
+          "text": "Skill rejects prompt engineering request per DO NOT TRIGGER clause",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 13,
+      "prompt": "Set up and provision Google Cloud Vertex AI API credentials and service account keys",
+      "should_trigger": false,
+      "actual_trigger": false,
+      "assertions": [
+        {
+          "text": "Skill rejects cloud credential provisioning per DO NOT TRIGGER clause",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 14,
+      "prompt": "Store our Anthropic API key securely in our shell environment variables",
+      "should_trigger": false,
+      "actual_trigger": false,
+      "assertions": [
+        {
+          "text": "Skill rejects API key storage request per DO NOT TRIGGER clause",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 15,
+      "prompt": "Run an MMLU benchmark evaluation suite to compare Claude 3.5 Sonnet against GPT-4o",
+      "should_trigger": false,
+      "actual_trigger": false,
+      "assertions": [
+        {
+          "text": "Skill rejects live benchmark evaluation per DO NOT TRIGGER clause",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 16,
+      "prompt": "Evaluate our agent's accuracy and latency across 100 historical queries",
+      "should_trigger": false,
+      "actual_trigger": false,
+      "assertions": [
+        {
+          "text": "Skill rejects agent performance evaluation request",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 17,
+      "prompt": "Write a Python script to calculate Fibonacci numbers",
+      "should_trigger": false,
+      "actual_trigger": false,
+      "assertions": [
+        {
+          "text": "Skill rejects general application coding request",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 18,
+      "prompt": "Resolve the merge conflict in opencode.json between main and feature branch",
+      "should_trigger": false,
+      "actual_trigger": false,
+      "assertions": [
+        {
+          "text": "Skill rejects git merge conflict resolution request",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 19,
+      "prompt": "Add a retry mechanism with exponential backoff to our HTTP client",
+      "should_trigger": false,
+      "actual_trigger": false,
+      "assertions": [
+        {
+          "text": "Skill rejects general feature implementation request",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 20,
+      "prompt": "Deploy our application to Google Kubernetes Engine using Terraform",
+      "should_trigger": false,
+      "actual_trigger": false,
+      "assertions": [
+        {
+          "text": "Skill rejects infrastructure deployment request",
+          "passed": true
+        }
+      ]
+    }
+  ]
+}

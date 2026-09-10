@@ -1,0 +1,73 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "preflight_checklist",
+  "description": "Machine-readable gate manifest emitted by integrate-repo Step 5. Single source of truth for the gate list shared by remediate_compliance.sh and run_ci_preflight.sh. Replace every REPLACE_* value; delete unused gate entries rather than leaving placeholders.",
+  "version": "1.0.0",
+  "host_repo_root": "REPLACE_ABSOLUTE_PATH",
+  "target_path": "REPLACE_RELATIVE_PATH",
+  "generated": "REPLACE_ISO8601_UTC",
+  "checkpoint_ref": "REPLACE_pre-remediate/<timestamp>",
+  "gates": [
+    {
+      "id": "lint",
+      "tool": "REPLACE_TOOL_NAME",
+      "stage": 3,
+      "check_command": "REPLACE e.g. ruff check <target>",
+      "fix_command": "REPLACE e.g. ruff check --fix <target>, or null if verifier-only",
+      "version": "REPLACE_RESOLVED_VERSION_OR_UNPINNED",
+      "pin_source": "lockfile | pre-commit rev | action input | run-step pin | manifest range | UNPINNED",
+      "ci_file": "REPLACE .github/workflows/ci.yml",
+      "ci_command": "REPLACE the original CI command, before alias resolution",
+      "resolved_via_alias": null,
+      "blocking": true,
+      "applies_because": "path argument | working-directory | on.paths filter | config include"
+    },
+    {
+      "id": "format",
+      "tool": "REPLACE_TOOL_NAME",
+      "stage": 4,
+      "check_command": "REPLACE e.g. ruff format --check <target>",
+      "fix_command": "REPLACE e.g. ruff format <target>",
+      "version": "REPLACE_RESOLVED_VERSION_OR_UNPINNED",
+      "pin_source": "REPLACE",
+      "ci_file": "REPLACE",
+      "ci_command": "REPLACE",
+      "resolved_via_alias": null,
+      "blocking": true,
+      "applies_because": "REPLACE"
+    },
+    {
+      "id": "typecheck",
+      "tool": "REPLACE_TOOL_NAME",
+      "stage": null,
+      "check_command": "REPLACE e.g. mypy <target>",
+      "fix_command": null,
+      "version": "REPLACE_RESOLVED_VERSION_OR_UNPINNED",
+      "pin_source": "REPLACE",
+      "ci_file": "REPLACE",
+      "ci_command": "REPLACE",
+      "resolved_via_alias": null,
+      "blocking": true,
+      "applies_because": "REPLACE"
+    }
+  ],
+  "stage_order": [
+    { "stage": 1, "name": "codemods", "why": "rewrites AST shapes; invalidates everything downstream" },
+    { "stage": 2, "name": "import-sort", "why": "changes line counts; must precede line-sensitive steps" },
+    { "stage": 3, "name": "lint-fix", "why": "may emit correct but unformatted code" },
+    { "stage": 4, "name": "format", "why": "must run last so the formatter has the final say on layout" },
+    { "stage": 5, "name": "mechanical", "why": "git mv renames and idempotent header injection" }
+  ],
+  "advisory": {
+    "config_not_in_ci": [],
+    "ci_not_in_config": [],
+    "competing_formatters": [],
+    "unresolved_external_actions": [],
+    "unresolved_aliases": []
+  },
+  "contributing_requirements": {
+    "source_file": "REPLACE_OR_NULL",
+    "signals": [],
+    "note": "Process gates a script cannot verify. Confirm manually before opening a PR."
+  }
+}
