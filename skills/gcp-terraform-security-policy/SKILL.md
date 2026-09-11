@@ -35,19 +35,28 @@ cannot make on its own.
 - Bash available to run `scripts/remediate_tf_compliance.sh` (uses `python3`
   for JSON parsing internally, not `jq` — do not assume `jq` is installed on
   the target machine).
+- **Data classification:** Confidential. Terraform plans can contain resource
+  metadata and provider-supplied sensitive values; keep plan files and reports
+  local to the authorized repository and redact sensitive values before sharing.
+- **Tool boundary:** Use only the two bundled local scripts and read-only
+  Terraform commands. Never run `terraform init`, `terraform apply`,
+  `terraform destroy`, or cloud-provider CLI commands. Require a local regular
+  file for `--plan-json` and a local directory for `--tf-dir`; reject paths
+  that cannot be read rather than attempting a fallback.
 
 - Workflow
 
 - Step 1: Get the most authoritative view of the configuration you can
 Ask whether the user can run Terraform against the target module. If yes,
-have them (or run yourself, if you have the credentials and this is safe to
-do in the target environment):
+have them generate a local plan export:
 ```
 terraform init
 terraform plan -out=tf.plan
 terraform show -json tf.plan > plan.json
 ```
-This is the **preferred** path: Terraform has already resolved every
+Do not run these commands yourself: `terraform init` may download provider
+code and `terraform plan` may access cloud credentials. This is the
+**preferred** path: Terraform has already resolved every
 variable, local, module input, and `count`/`for_each` expansion, so the scan
 in Step 2 has no blind spots from unresolved HCL expressions.
 - If `terraform` isn't available (no credentials, CI-only environment, or
@@ -128,7 +137,10 @@ them as clean.
   missing `planned_values.root_module`, likely from a `terraform show -json`
   run against an unsupported/very old Terraform version) — never treat exit
   2 as "0 findings"; show the stderr message and ask the user to
-  regenerate the plan JSON.
+   regenerate the plan JSON.
+- A supplied path is unreadable, is not a regular plan file, or `--tf-dir`
+  is not a directory: stop and report the validation error. Do not broaden the
+  scan to a parent path or upload the input to any service.
 - A resource type is absent from `assets/gcp_compliance_checklist.json`
   entirely (e.g. Cloud Run, Pub/Sub, Artifact Registry): say so explicitly —
   this checklist covers the controls in
@@ -173,8 +185,11 @@ them as clean.
   script and this SKILL.md draw from — the single source of truth if a
   rule's wording or severity ever needs updating.
 - **assets/terraform_security_report_template.md**: fill-in-the-blanks
-  report structure — copy it in Step 5 rather than inventing a report
-  format ad hoc.
+   report structure — copy it in Step 5 rather than inventing a report
+   format ad hoc.
+- If a referenced script, asset, or reference file is missing, stop and report
+  the skill as incomplete; do not substitute an unreviewed command or recreate
+  control metadata from memory.
 
 - Output Format
 Return, in order: (1) the scan mode used (plan-json vs. tf-dir) and an

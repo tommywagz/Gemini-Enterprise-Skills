@@ -1,0 +1,19 @@
+# Finding: GCP-NET-001  severity=CRITICAL
+# Resource: google_compute_firewall.public_ssh
+# Detail:   protocol=tcp ports=['22'] source=0.0.0.0/0
+# Review and adapt before merging into your actual configuration.
+# This file is NOT loaded by terraform (.snippet extension) and was
+# never applied automatically.
+
+# Prefer IAP TCP forwarding over a public SSH/RDP rule:
+resource "google_compute_firewall" "REPLACE_ME_iap_ssh" {
+  name      = "allow-iap-ssh"
+  network   = "REPLACE_WITH_NETWORK"
+  direction = "INGRESS"
+  source_ranges = ["35.235.240.0/20"]  # IAP TCP forwarding range only
+  allow {
+    protocol = "tcp"
+    ports    = ["22"]
+  }
+}
+# Then delete (or narrow source_ranges on) the flagged public rule.

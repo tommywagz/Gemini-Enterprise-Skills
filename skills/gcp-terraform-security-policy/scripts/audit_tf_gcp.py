@@ -3,7 +3,7 @@
 
 Scans Google Cloud Terraform configuration for security and compliance
 violations against the curated rule set in
-`../assets/gcp_compliance_checklist.json` (CIS Google Cloud Platform
+the skill's `assets/gcp_compliance_checklist.json` (CIS Google Cloud Platform
 Foundation Benchmark controls, private-by-default storage/network rules,
 and least-privilege IAM). Every `automated: true` entry in that checklist
 has a matching check() function in this script, keyed by rule id -- the
@@ -70,8 +70,15 @@ def load_checklist():
 # --plan-json mode: walk `terraform show -json` output
 # --------------------------------------------------------------------------
 def resources_from_plan_json(path):
-    with open(path) as f:
-        plan = json.load(f)
+    if not os.path.isfile(path):
+        print(f"error: {path} is not a readable plan JSON file", file=sys.stderr)
+        sys.exit(2)
+    try:
+        with open(path) as f:
+            plan = json.load(f)
+    except (OSError, json.JSONDecodeError) as exc:
+        print(f"error: cannot read plan JSON {path}: {exc}", file=sys.stderr)
+        sys.exit(2)
     resources = []
 
     def walk(module):
@@ -239,11 +246,14 @@ def _extract_values_heuristic(rtype, body):
                 "iam_member": _scalar(ab, "iam_member"),
             })
     elif rtype in ("google_compute_instance", "google_compute_instance_template"):
-        meta_blocks = _extract_blocks(body, "metadata")
         merged = {}
-        for mb in meta_blocks:
-            for m in re.finditer(r'"([^"]+)"\s*=\s*"([^"]*)"', mb):
-                merged[m.group(1)] = m.group(2)
+        for m in re.finditer(r'\bmetadata\s*=\s*\{', body):
+            close = _matching_brace(body, m.end() - 1)
+            if close == -1:
+                continue
+            metadata_body = body[m.end():close]
+            for entry in re.finditer(r'"([^"]+)"\s*=\s*"([^"]*)"', metadata_body):
+                merged[entry.group(1)] = entry.group(2)
         v["metadata"] = merged
     elif rtype == "google_compute_subnetwork":
         v["log_config"] = _extract_blocks(body, "log_config")
