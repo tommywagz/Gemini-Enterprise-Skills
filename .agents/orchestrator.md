@@ -31,6 +31,9 @@ anything in `jobs/`. Correct workers through their inboxes.
    `FINDING`, `CREATING`, or `EVALUATING`, assign the worker, and dispatch a
    concrete `todo` in that worker’s inbox with `state: "DISPATCHED"`.
 2. Update your status with the active task and dispatch, then append a log line.
+   Follow the worker wake-up procedure below after every `DISPATCHED` or
+   `REWORK` inbox update, including each handoff within a skill. Do not require
+   the user to activate worker panes.
 3. Poll worker status every 15–30 seconds. Before accepting `COMPLETED`, verify
    both `git log main..agent-<session>-<agent> --oneline` and
    `git diff main..agent-<session>-<agent>`.
@@ -55,17 +58,51 @@ your `quarantined` status list, log the failure, return the worker inbox to
 `IDLE`, and continue. When no `PENDING` tasks remain, set `COMPLETED`, change
 all worker inboxes to `STAND_DOWN`, and stop.
 
-## Stalled workers
+## Wake idle workers after dispatch
 
-The inbox is the handoff. If a worker’s status is stale for several minutes
-while its inbox is `DISPATCHED`, resolve its pane by title and nudge it only as
-a last resort:
+An inbox write does not start a new OpenCode turn. Workers may have finished
+their turn after completing a task, standing down, or timing out while waiting.
+When the user asks for the next skill, dispatch it and wake the needed workers
+yourself. Keep the one-skill-at-a-time approval boundary; waking workers for
+the current skill does not require another user request.
 
-```bash
-tmux list-panes -t "${SESSION}:workers" -F '#{pane_index} #{pane_title}'
-tmux send-keys -t "${SESSION}:workers.<pane-index>" \
-  "check jobs/inbox/<agent>.json now" C-m
-```
+1. Write the assignment atomically to the worker inbox first, with state
+   `DISPATCHED` or `REWORK`, task ID, `dispatched_at`, attempt, and concrete todo.
+2. Discover panes using stable pane IDs and working directories:
 
-If the pane is dead, log it and quarantine the task rather than silently
-stalling the run.
+   ```bash
+   tmux list-panes -a -F '#{session_name}\t#{pane_id}\t#{pane_current_path}\t#{pane_current_command}\t#{pane_dead}'
+   ```
+
+   Match the worker directory against `git worktree list --porcelain` and its
+   `agent-<session>-<role>` branch in this repository. Use the same tmux session
+   as your orchestrator pane. Do not rely on pane titles (OpenCode changes them),
+   window names, or positional pane indexes. Require exactly one matching pane.
+3. Inspect that pane with `tmux capture-pane -p -t <pane-id>`. Confirm it is a
+   live OpenCode process at an idle, empty input prompt. A stale status file
+   alone does not prove idleness. If it is generating, running a tool, or
+   polling (for example, its footer says `esc interrupt`), let it read the
+   inbox through its existing turn. Do not type into a shell, permission dialog,
+   existing draft input, blank/hung screen, or an ambiguous pane.
+4. For an idle worker, send one short literal prompt and then Enter as a
+   separate command. For example, after resolving creator to `%2`:
+
+   ```bash
+   tmux send-keys -t %2 -l 'Read jobs/README.md and jobs/inbox/creator.json now. Process the current DISPATCHED or REWORK assignment using your role instructions; update jobs/status/creator.json. If this assignment is already completed, report that without repeating the work.'
+   tmux send-keys -t %2 Enter
+   ```
+
+   Substitute the verified pane ID and worker role. The inbox remains the
+   authoritative assignment; do not embed task content or shell commands in
+   the wake-up prompt. Do not send Ctrl-C or restart the worker.
+5. Log the wake-up with task ID, dispatch timestamp, and pane ID. Check for a
+   fresh worker status acknowledging the current task (`WORKING`, `COMPLETED`,
+   or an explained `BLOCKED`). Sending keys is not proof of pickup. If there
+   is no acknowledgment after 30–60 seconds, inspect the pane again. Avoid
+   duplicate wake-ups while a turn is running; retry once only if the pane is
+   clearly idle and the same assignment remains unacknowledged.
+
+If the pane is dead, hung, missing, or cannot be identified safely, record the
+dispatch as blocked and report the specific recovery needed. Do not silently
+wait for several minutes or quarantine valid work just because its terminal
+needs recovery.
