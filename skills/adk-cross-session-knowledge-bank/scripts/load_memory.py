@@ -105,6 +105,9 @@ def main():
     except json.JSONDecodeError as e:
         print(f"error: --scope-json is not valid JSON: {e}", file=sys.stderr)
         sys.exit(2)
+    if not isinstance(scope, dict):
+        print("error: --scope-json must decode to a JSON object", file=sys.stderr)
+        sys.exit(2)
 
     if args.dry_run:
         if not args.local_file:
