@@ -1,0 +1,15 @@
+# Finding: GCP-IAM-001  severity=CRITICAL
+# Resource: google_project_iam_member.editor
+# Detail:   role=roles/editor members=['user:admin@example.com']
+# Review and adapt before merging into your actual configuration.
+# This file is NOT loaded by terraform (.snippet extension) and was
+# never applied automatically.
+
+# Replace the primitive role member below with a predefined role scoped
+# to the actual need (see references/iam_least_privilege_guidelines.md):
+resource "google_project_iam_member" "REPLACE_ME" {
+  project = "REPLACE_WITH_PROJECT_ID"
+  role    = "roles/REPLACE_WITH_NARROWEST_PREDEFINED_ROLE"
+  member  = "REPLACE_WITH_SAME_MEMBER"
+}
+# Then remove the roles/owner or roles/editor binding/member entirely.

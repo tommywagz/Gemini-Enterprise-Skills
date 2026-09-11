@@ -31,7 +31,14 @@ if [[ ! -f "$FINDINGS_FILE" ]]; then
   exit 2
 fi
 
-if ! python3 -c "import json; json.load(open('$FINDINGS_FILE'))" 2>/dev/null; then
+if ! python3 - "$FINDINGS_FILE" <<'PY' >/dev/null 2>&1
+import json
+import sys
+
+with open(sys.argv[1]) as findings_file:
+    json.load(findings_file)
+PY
+then
   echo "error: $FINDINGS_FILE is not valid JSON -- run with 'audit_tf_gcp.py --json' first" >&2
   exit 2
 fi

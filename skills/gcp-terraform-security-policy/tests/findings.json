@@ -1,0 +1,56 @@
+{
+  "mode": "plan-json",
+  "resource_count": 3,
+  "findings": [
+    {
+      "rule_id": "GCP-NET-001",
+      "cis_id": "3.6",
+      "severity": "CRITICAL",
+      "title": "Ingress firewall rule opens SSH (22) or RDP (3389) from 0.0.0.0/0",
+      "resource_address": "google_compute_firewall.public_ssh",
+      "resource_type": "google_compute_firewall",
+      "detail": "protocol=tcp ports=['22'] source=0.0.0.0/0",
+      "remediation": "Restrict source_ranges to known bastion/VPN CIDR ranges, or remove the rule and use Identity-Aware Proxy (IAP) TCP forwarding with a firewall rule scoped to 35.235.240.0/20 instead."
+    },
+    {
+      "rule_id": "GCP-IAM-001",
+      "cis_id": "1.4",
+      "severity": "CRITICAL",
+      "title": "Primitive role (roles/owner, roles/editor) granted at project scope",
+      "resource_address": "google_project_iam_member.editor",
+      "resource_type": "google_project_iam_member",
+      "detail": "role=roles/editor members=['user:admin@example.com']",
+      "remediation": "Replace with the narrowest predefined role(s) that cover the principal's actual needs (see references/iam_least_privilege_guidelines.md), or a custom role scoped to the exact permission set."
+    }
+  ],
+  "manual_review_required": [
+    {
+      "id": "GCP-ORGPOLICY-001",
+      "cis_id": "2.1-2.3",
+      "category": "logging",
+      "resource_types": [
+        "google_project_iam_audit_config",
+        "google_logging_project_sink"
+      ],
+      "severity": "HIGH",
+      "automated": false,
+      "title": "Project-level Cloud Audit Logging or an aggregated log sink is not configured",
+      "rationale": "Without Data Access audit logs and a durable, access-controlled log sink, there is no tamper-resistant record of who accessed what, which is usually the deciding evidence in an incident review.",
+      "remediation": "Configure google_project_iam_audit_config for the services in scope, and a google_logging_project_sink routing logs to a dedicated, access-restricted project or bucket. This requires organization-level context this scanner cannot fully verify from one module's plan -- confirm manually."
+    },
+    {
+      "id": "GCP-ORGPOLICY-002",
+      "cis_id": "org-policy",
+      "category": "org-policy",
+      "resource_types": [
+        "google_org_policy_policy",
+        "google_project_organization_policy"
+      ],
+      "severity": "HIGH",
+      "automated": false,
+      "title": "Org policy constraints for public access prevention / external IPs / SA keys are not enforced",
+      "rationale": "Resource-level fixes (e.g. public_access_prevention on one bucket) can be silently undone by the next commit unless an org policy constraint makes the secure state the default for every future resource.",
+      "remediation": "Enforce constraints/storage.publicAccessPrevention, constraints/compute.vmExternalIpAccess, and constraints/iam.disableServiceAccountKeyCreation at the folder or org level. Verify manually -- these constraints usually live outside the module being scanned."
+    }
+  ]
+}

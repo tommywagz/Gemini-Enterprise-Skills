@@ -63,7 +63,7 @@
       "id": "GCP-IAM-001",
       "cis_id": "1.4",
       "category": "iam",
-      "resource_types": ["google_project_iam_binding", "google_project_iam_member", "google_project_iam_policy"],
+      "resource_types": ["google_project_iam_binding", "google_project_iam_member"],
       "severity": "CRITICAL",
       "automated": true,
       "title": "Primitive role (roles/owner, roles/editor) granted at project scope",
