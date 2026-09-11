@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Memory Bank Seed Entry List",
+  "description": "Canonical local file format used by scripts/preload_memory.py (--facts-file) and scripts/load_memory.py (--dry-run --local-file). Each entry maps to one pre-extracted fact that Memory Bank's direct_memories_source / GenerateMemories or CreateMemory API can consolidate or store. Grounded in the Agent Platform Memory Bank API (https://docs.cloud.google.com/gemini-enterprise-agent-platform/scale/memory-bank/api-quickstart and .../generate-memories) as of 2026-09-11 -- re-verify field names against those pages before depending on this for a production seeding pipeline, the API is still evolving.",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "required": ["fact"],
+    "additionalProperties": false,
+    "properties": {
+      "fact": {
+        "type": "string",
+        "minLength": 1,
+        "description": "The memory content, written in first-person perspective to match Memory Bank's default generation perspective (e.g. 'I live in Austin, Texas.' not 'The user lives in Austin, Texas.'). See references/long_term_memory_patterns.md for why perspective consistency matters for consolidation quality."
+      },
+      "scope": {
+        "type": "object",
+        "maxProperties": 5,
+        "additionalProperties": {"type": "string"},
+        "description": "Scope dict this fact belongs to, e.g. {\"user_id\": \"123\"} or {\"user_id\": \"123\", \"session_id\": \"456\"}. Max 5 key-value pairs, no '*' characters (reserved for filter wildcards). If omitted, the script falls back to the --scope-json CLI flag applied uniformly to every entry in the file."
+      },
+      "topic": {
+        "type": ["string", "null"],
+        "description": "Informational label only -- one of the managed topics (USER_PERSONAL_INFO, USER_PREFERENCES, KEY_CONVERSATION_DETAILS, EXPLICIT_INSTRUCTIONS) or a custom topic label configured on the target Memory Bank instance. Direct pre-extracted facts are NOT re-classified against topics the way conversational extraction is -- this field is for your own bookkeeping/filtering of the seed file, not enforced by the API on write."
+      },
+      "metadata": {
+        "type": "object",
+        "description": "Optional structured metadata map using the API's typed-value wrapper, e.g. {\"source\": {\"string_value\": \"onboarding-doc\"}, \"confidence\": {\"double_value\": 0.9}}. Supported value keys: string_value, double_value, bool_value, timestamp_value. See references/vertex_memory_bank_api.md for metadata_merge_strategy (MERGE default, OVERWRITE, REQUIRE_EXACT_MATCH) which controls how this interacts with existing memories during consolidation."
+      }
+    }
+  }
+}
