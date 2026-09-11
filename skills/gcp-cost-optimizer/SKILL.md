@@ -45,6 +45,12 @@ snapshot.
   populate each resource's `monthly_cost_usd` — without it, findings are
   still reported, just without a dollar estimate attached.
 - Python 3.9+ (standard library only) to run the scripts; no `jq` assumed.
+- **Data classification:** Confidential. Inventory and billing exports can
+  disclose project names, service usage, labels, and spend; keep them local to
+  authorized storage and redact sensitive fields before sharing reports.
+- **Tool boundary:** Use only the bundled local scripts on a local regular JSON
+  inventory file. Do not run `gcloud`, `bq`, Terraform, cloud deletion, or
+  billing API commands yourself; ask the user to supply authorized exports.
 
 - Workflow
 
@@ -143,7 +149,10 @@ before prioritizing.
   small: it is a documented `waste_fraction` multiplied against a
   user-supplied cost, not a live pricing calculation — flag it as an
   estimate needing verification against the actual Cloud Billing invoice,
-  don't present it as exact.
+   don't present it as exact.
+- A referenced script, asset, or reference file is missing: stop and report
+  the skill as incomplete rather than substituting an unreviewed command or
+  inventing pricing/control information.
 
 - Reference Files
 - **scripts/audit_gcp_costs.py**: runs the automated checklist against a

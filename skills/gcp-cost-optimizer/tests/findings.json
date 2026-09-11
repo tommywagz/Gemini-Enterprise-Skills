@@ -1,0 +1,101 @@
+{
+  "findings": [
+    {
+      "rule_id": "GCP-COST-COMPUTE-001",
+      "category": "compute",
+      "severity": "HIGH",
+      "title": "Running instance with sustained near-zero CPU utilization",
+      "resource_category": "compute_instances",
+      "resource": "idle-dev",
+      "detail": "status=RUNNING cpu_utilization_pct_p95=1.0 (< 5.0%)",
+      "recommendation": "If the workload is not needed continuously: stop it and use an instance schedule (Cloud Scheduler + start/stop, or the built-in schedule feature) instead of running it 24/7. If it must run continuously but rarely uses CPU: run `gcloud recommender recommendations list --recommender=google.compute.instance.MachineTypeRecommender` for a data-driven rightsizing suggestion rather than guessing a smaller machine type.",
+      "estimated_monthly_savings_usd": 100.0,
+      "estimate_is_documented_not_live_priced": true
+    },
+    {
+      "rule_id": "GCP-COST-DISK-001",
+      "category": "storage",
+      "severity": "HIGH",
+      "title": "Persistent disk not attached to any instance",
+      "resource_category": "persistent_disks",
+      "resource": "orphan",
+      "detail": "size_gb=100 type=pd-ssd attached_instances=[]",
+      "recommendation": "If the data is still needed: snapshot it (google_compute_snapshot) for cold storage at a fraction of the disk cost, then delete the disk. If the data is not needed: delete it directly. Never delete without a snapshot unless the disk is confirmed scratch/ephemeral data.",
+      "estimated_monthly_savings_usd": 50.0,
+      "estimate_is_documented_not_live_priced": true
+    },
+    {
+      "rule_id": "GCP-COST-COMPUTE-002",
+      "category": "compute",
+      "severity": "MEDIUM",
+      "title": "Fault-tolerant-labeled workload not using Spot/Preemptible VMs",
+      "resource_category": "compute_instances",
+      "resource": "idle-dev",
+      "detail": "labels={'workload': 'batch'} suggest a restartable workload not using Spot/Preemptible",
+      "recommendation": "Confirm the workload is genuinely restartable (checkpointing, a job queue, a managed instance group that reschedules), then migrate to Spot VMs (google_compute_instance.scheduling.provisioning_model = \"SPOT\" or a Spot-backed MIG). Never apply this to anything stateful or latency-sensitive without an explicit owner sign-off -- preemption is real, not theoretical.",
+      "estimated_monthly_savings_usd": 60.0,
+      "estimate_is_documented_not_live_priced": true
+    },
+    {
+      "rule_id": "GCP-COST-IP-001",
+      "category": "networking",
+      "severity": "MEDIUM",
+      "title": "Reserved static external IP not attached to any resource",
+      "resource_category": "static_ips",
+      "resource": "unused",
+      "detail": "status=RESERVED users=[] (billed at the idle static-IP rate)",
+      "recommendation": "Release the static IP if it is no longer needed, or attach it to the resource it was reserved for. Confirm it isn't referenced by an external DNS record or firewall rule allow-list before releasing.",
+      "estimated_monthly_savings_usd": 7.0,
+      "estimate_is_documented_not_live_priced": true
+    },
+    {
+      "rule_id": "GCP-COST-RUN-001",
+      "category": "serverless",
+      "severity": "MEDIUM",
+      "title": "Cloud Run service holds warm min_instances with low observed traffic",
+      "resource_category": "cloud_run_services",
+      "resource": "api",
+      "detail": "min_instances=2 avg_requests_per_min=1 (< 5.0 rpm)",
+      "recommendation": "Reduce `min_instances` toward 0 (accepting occasional cold starts) unless the service has a documented latency SLA that requires warm instances; if partial warmth is needed, size `min_instances` to the p50 concurrent request count instead of a round number picked without traffic data.",
+      "estimated_monthly_savings_usd": 16.0,
+      "estimate_is_documented_not_live_priced": true
+    },
+    {
+      "rule_id": "GCP-COST-RUN-002",
+      "category": "serverless",
+      "severity": "LOW",
+      "title": "Multi-vCPU Cloud Run service configured with concurrency = 1",
+      "resource_category": "cloud_run_services",
+      "resource": "api",
+      "detail": "cpu=2 concurrency=1",
+      "recommendation": "Either raise `concurrency` so multiple requests share the provisioned CPU (if the handler is thread-/async-safe), or reduce `cpu` to match the single-request workload if concurrency must stay at 1.",
+      "estimated_monthly_savings_usd": 5.0,
+      "estimate_is_documented_not_live_priced": true
+    }
+  ],
+  "total_estimated_monthly_savings_usd": 238.0,
+  "manual_review_required": [
+    {
+      "id": "GCP-COST-CUD-001",
+      "category": "commitments",
+      "resource_category": "compute_instances",
+      "severity": "HIGH",
+      "automated": false,
+      "waste_fraction": null,
+      "title": "Steady-state on-demand compute spend not covered by a Committed Use Discount",
+      "rationale": "Committed Use Discounts (1- or 3-year, spend-based or resource-based) discount steady-state compute spend that's already known to be stable -- but committing requires 6-12 months of stable historical usage trend to size safely, which a point-in-time inventory snapshot cannot show on its own.",
+      "recommendation": "Pull the trailing 6-12 month usage trend from Cloud Billing reports or `gcloud recommender recommendations list --recommender=google.compute.commitment.UsageCommitmentRecommender` (which is already trend-aware) rather than committing off a single inventory snapshot. Verify manually."
+    },
+    {
+      "id": "GCP-COST-SNAP-001",
+      "category": "storage",
+      "resource_category": "persistent_disks",
+      "severity": "MEDIUM",
+      "automated": false,
+      "waste_fraction": null,
+      "title": "Custom images and disk snapshots retained with no lifecycle/retention policy",
+      "rationale": "Snapshots and custom images are cheap individually but accumulate indefinitely without a retention policy, and a normalized point-in-time inventory of disks does not typically enumerate every historical snapshot/image or its age -- that requires a separate `gcloud compute snapshots list` / `gcloud compute images list` pass this checklist does not model.",
+      "recommendation": "Set a Snapshot Schedule with a retention policy (`google_compute_resource_policy` snapshot schedule) instead of ad hoc manual snapshots, and audit `gcloud compute snapshots list --format='table(name,diskSizeGb,creationTimestamp)'` for old entries with no matching active disk. Verify manually."
+    }
+  ]
+}

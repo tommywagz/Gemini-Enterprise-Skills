@@ -1,0 +1,9 @@
+# GCP-COST-IP-001: Reserved static external IP not attached to any resource
+# Resource: unused
+# Detail: status=RESERVED users=[] (billed at the idle static-IP rate)
+#
+# Confirm no external DNS record or firewall allow-list references this IP
+# before releasing it.
+# To release: remove the google_compute_address resource for this IP from
+# your configuration and apply. There is no "keep the address, stop billing"
+# state for a reserved-but-unattached static IP -- release or attach it.

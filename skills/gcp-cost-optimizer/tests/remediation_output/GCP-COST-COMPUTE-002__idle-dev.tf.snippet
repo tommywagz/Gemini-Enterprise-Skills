@@ -1,0 +1,14 @@
+# GCP-COST-COMPUTE-002: Fault-tolerant-labeled workload not using Spot/Preemptible VMs
+# Resource: idle-dev
+# Detail: labels={'workload': 'batch'} suggest a restartable workload not using Spot/Preemptible
+#
+# Confirm the workload is actually restartable before applying this.
+resource "google_compute_instance" "REPLACE_ME" {
+  # ... existing config ...
+  scheduling {
+    provisioning_model  = "SPOT"
+    preemptible         = true
+    automatic_restart   = false
+    instance_termination_action = "STOP"
+  }
+}
