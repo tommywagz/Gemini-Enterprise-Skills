@@ -1,0 +1,206 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "checklist_version": "1.0.0",
+  "grounded_in": "CIS Google Cloud Platform Foundation Benchmark v3.0 control numbering, reproduced from the publicly documented control catalog. Re-verify control numbers against the current CIS benchmark PDF before citing a version number to a user.",
+  "note": "Each entry is the canonical metadata for one rule. scripts/audit_tf_gcp.py loads this file at runtime and only implements a check() function for entries where automated is true; automated:false entries are surfaced as manual-review items in the report because they require org-level or cross-resource context a single Terraform plan cannot see.",
+  "controls": [
+    {
+      "id": "GCP-STORAGE-001",
+      "cis_id": "5.1",
+      "category": "storage",
+      "resource_types": ["google_storage_bucket_iam_binding", "google_storage_bucket_iam_member"],
+      "severity": "CRITICAL",
+      "automated": true,
+      "title": "Bucket grants access to allUsers or allAuthenticatedUsers",
+      "rationale": "Any IAM binding/member on a bucket (or its object ACLs) that names allUsers or allAuthenticatedUsers makes the bucket's contents readable/writable by anyone on the internet, bypassing per-object ACL review entirely.",
+      "remediation": "Remove the allUsers/allAuthenticatedUsers member from the binding. Set public_access_prevention = \"enforced\" on the google_storage_bucket resource so this cannot be reintroduced by a future object ACL change."
+    },
+    {
+      "id": "GCP-STORAGE-002",
+      "cis_id": "5.2",
+      "category": "storage",
+      "resource_types": ["google_storage_bucket"],
+      "severity": "HIGH",
+      "automated": true,
+      "title": "Bucket does not enforce uniform bucket-level access",
+      "rationale": "Without uniform_bucket_level_access = true, individual objects can carry their own legacy ACLs that silently override the bucket-level IAM policy administrators believe is authoritative.",
+      "remediation": "Set uniform_bucket_level_access = true in the google_storage_bucket resource block."
+    },
+    {
+      "id": "GCP-NET-001",
+      "cis_id": "3.6",
+      "category": "networking",
+      "resource_types": ["google_compute_firewall"],
+      "severity": "CRITICAL",
+      "automated": true,
+      "title": "Ingress firewall rule opens SSH (22) or RDP (3389) from 0.0.0.0/0",
+      "rationale": "Management ports reachable from the entire internet are the single most common initial-access vector in GCP compromises; brute-force and credential-stuffing bots scan 0.0.0.0/0 continuously.",
+      "remediation": "Restrict source_ranges to known bastion/VPN CIDR ranges, or remove the rule and use Identity-Aware Proxy (IAP) TCP forwarding with a firewall rule scoped to 35.235.240.0/20 instead."
+    },
+    {
+      "id": "GCP-NET-002",
+      "cis_id": "3.7",
+      "category": "networking",
+      "resource_types": ["google_compute_firewall"],
+      "severity": "HIGH",
+      "automated": true,
+      "title": "Ingress firewall rule allows all protocols/ports from 0.0.0.0/0",
+      "rationale": "A rule with no protocol/port restriction and a public source range is a de facto 'allow all' rule regardless of what other, narrower rules exist alongside it.",
+      "remediation": "Scope the allow block to the specific protocol and port range the workload needs; never leave ports unset on a rule with a 0.0.0.0/0 source range."
+    },
+    {
+      "id": "GCP-NET-003",
+      "cis_id": "3.9",
+      "category": "networking",
+      "resource_types": ["google_compute_subnetwork"],
+      "severity": "MEDIUM",
+      "automated": true,
+      "title": "Subnetwork does not have VPC Flow Logs enabled",
+      "rationale": "Flow Logs are the primary forensic record for lateral-movement and exfiltration investigations; without them there is no network-layer audit trail once an incident is already in progress.",
+      "remediation": "Add a log_config block to the google_compute_subnetwork resource (aggregation_interval, flow_sampling, metadata)."
+    },
+    {
+      "id": "GCP-IAM-001",
+      "cis_id": "1.4",
+      "category": "iam",
+      "resource_types": ["google_project_iam_binding", "google_project_iam_member", "google_project_iam_policy"],
+      "severity": "CRITICAL",
+      "automated": true,
+      "title": "Primitive role (roles/owner, roles/editor) granted at project scope",
+      "rationale": "Primitive roles grant broad, undifferentiated permissions across every service in the project. A compromised principal with roles/editor can read secrets, exfiltrate data, and modify IAM policy itself.",
+      "remediation": "Replace with the narrowest predefined role(s) that cover the principal's actual needs (see references/iam_least_privilege_guidelines.md), or a custom role scoped to the exact permission set."
+    },
+    {
+      "id": "GCP-IAM-002",
+      "cis_id": "1.7",
+      "category": "iam",
+      "resource_types": ["google_service_account_key"],
+      "severity": "HIGH",
+      "automated": true,
+      "title": "User-managed service account key created",
+      "rationale": "Long-lived, downloadable service account keys are the most commonly leaked GCP credential (committed to repos, embedded in CI logs) and never expire unless manually rotated or revoked.",
+      "remediation": "Remove the google_service_account_key resource. Use Workload Identity Federation (GKE Workload Identity, or external Workload Identity Federation for non-GCP workloads) or short-lived impersonated credentials instead."
+    },
+    {
+      "id": "GCP-SQL-001",
+      "cis_id": "6.4",
+      "category": "cloudsql",
+      "resource_types": ["google_sql_database_instance"],
+      "severity": "HIGH",
+      "automated": true,
+      "title": "Cloud SQL instance has a public IP (ipv4_enabled = true)",
+      "rationale": "A publicly routable Cloud SQL instance depends entirely on authorized-networks and password strength for protection, removing the network-layer isolation that private IP + VPC peering provides by default.",
+      "remediation": "Set ipv4_enabled = false in the ip_configuration block and connect via private_network (VPC peering) or the Cloud SQL Auth Proxy."
+    },
+    {
+      "id": "GCP-SQL-002",
+      "cis_id": "6.5",
+      "category": "cloudsql",
+      "resource_types": ["google_sql_database_instance"],
+      "severity": "MEDIUM",
+      "automated": true,
+      "title": "Cloud SQL instance does not require SSL/TLS for connections",
+      "rationale": "Without require_ssl (or the newer ssl_mode requiring encrypted transport), client-to-instance traffic including credentials can be observed on any network path between them.",
+      "remediation": "Set require_ssl = true (or ssl_mode = \"ENCRYPTED_ONLY\"/\"TRUSTED_CLIENT_CERTIFICATE_REQUIRED\" on providers that support it) in the ip_configuration block."
+    },
+    {
+      "id": "GCP-SQL-003",
+      "cis_id": "6.7",
+      "category": "cloudsql",
+      "resource_types": ["google_sql_database_instance"],
+      "severity": "MEDIUM",
+      "automated": true,
+      "title": "Cloud SQL instance has automated backups disabled",
+      "rationale": "Without backup_configuration.enabled, there is no point-in-time recovery path for accidental deletion, ransomware, or a bad migration.",
+      "remediation": "Add a backup_configuration block with enabled = true and a point_in_time_recovery_enabled = true where the engine supports it."
+    },
+    {
+      "id": "GCP-GKE-001",
+      "cis_id": "7.3",
+      "category": "gke",
+      "resource_types": ["google_container_cluster"],
+      "severity": "CRITICAL",
+      "automated": true,
+      "title": "GKE cluster has legacy ABAC authorization enabled",
+      "rationale": "enable_legacy_abac = true re-enables the coarse, pre-RBAC authorization model GKE deprecated specifically because it cannot express least-privilege access to cluster resources.",
+      "remediation": "Remove enable_legacy_abac or set it to false; rely on Kubernetes RBAC (the GKE default) instead."
+    },
+    {
+      "id": "GCP-GKE-002",
+      "cis_id": "7.5",
+      "category": "gke",
+      "resource_types": ["google_container_cluster"],
+      "severity": "HIGH",
+      "automated": true,
+      "title": "GKE cluster is not configured as a private cluster",
+      "rationale": "Without a private_cluster_config block enabling private nodes, cluster nodes receive external IPs, directly exposing the kubelet and node OS to the internet.",
+      "remediation": "Add private_cluster_config { enable_private_nodes = true ... } and restrict control-plane access with master_authorized_networks_config."
+    },
+    {
+      "id": "GCP-GKE-003",
+      "cis_id": "7.7",
+      "category": "gke",
+      "resource_types": ["google_container_cluster"],
+      "severity": "MEDIUM",
+      "automated": true,
+      "title": "GKE cluster does not have Network Policy enabled",
+      "rationale": "Without network_policy.enabled, every pod can reach every other pod in the cluster by default, so a single compromised pod can pivot laterally without any firewalling.",
+      "remediation": "Add network_policy { enabled = true } (and enable the corresponding addon on the node pool's provider, e.g. Calico/Dataplane V2)."
+    },
+    {
+      "id": "GCP-KMS-001",
+      "cis_id": "1.10",
+      "category": "kms",
+      "resource_types": ["google_kms_crypto_key"],
+      "severity": "MEDIUM",
+      "automated": true,
+      "title": "KMS key has no rotation period, or one longer than 90 days",
+      "rationale": "A key that is never rotated has an ever-growing blast radius: every object ever encrypted with it remains exposed for as long as that one key material is valid.",
+      "remediation": "Set rotation_period to \"7776000s\" (90 days) or less on the google_kms_crypto_key resource."
+    },
+    {
+      "id": "GCP-BQ-001",
+      "cis_id": "5.4",
+      "category": "bigquery",
+      "resource_types": ["google_bigquery_dataset"],
+      "severity": "CRITICAL",
+      "automated": true,
+      "title": "BigQuery dataset grants access to allUsers/allAuthenticatedUsers",
+      "rationale": "An access block special_group or iam_member naming allUsers/allAuthenticatedUsers makes every table in the dataset queryable by anyone with a Google account or, in the allUsers case, anyone at all.",
+      "remediation": "Remove the allUsers/allAuthenticatedUsers entry from the access block; grant named principals or groups the narrowest predefined BigQuery role that covers their need."
+    },
+    {
+      "id": "GCP-COMPUTE-001",
+      "cis_id": "4.5",
+      "category": "compute",
+      "resource_types": ["google_compute_instance", "google_compute_instance_template"],
+      "severity": "MEDIUM",
+      "automated": true,
+      "title": "Compute instance has serial port access enabled",
+      "rationale": "metadata[\"serial-port-enable\"] = \"true\" exposes an interactive console over the network to anyone with the right IAM permission, bypassing SSH key and OS Login controls entirely.",
+      "remediation": "Remove the serial-port-enable metadata key, or set it to \"false\" explicitly."
+    },
+    {
+      "id": "GCP-ORGPOLICY-001",
+      "cis_id": "2.1-2.3",
+      "category": "logging",
+      "resource_types": ["google_project_iam_audit_config", "google_logging_project_sink"],
+      "severity": "HIGH",
+      "automated": false,
+      "title": "Project-level Cloud Audit Logging or an aggregated log sink is not configured",
+      "rationale": "Without Data Access audit logs and a durable, access-controlled log sink, there is no tamper-resistant record of who accessed what, which is usually the deciding evidence in an incident review.",
+      "remediation": "Configure google_project_iam_audit_config for the services in scope, and a google_logging_project_sink routing logs to a dedicated, access-restricted project or bucket. This requires organization-level context this scanner cannot fully verify from one module's plan -- confirm manually."
+    },
+    {
+      "id": "GCP-ORGPOLICY-002",
+      "cis_id": "org-policy",
+      "category": "org-policy",
+      "resource_types": ["google_org_policy_policy", "google_project_organization_policy"],
+      "severity": "HIGH",
+      "automated": false,
+      "title": "Org policy constraints for public access prevention / external IPs / SA keys are not enforced",
+      "rationale": "Resource-level fixes (e.g. public_access_prevention on one bucket) can be silently undone by the next commit unless an org policy constraint makes the secure state the default for every future resource.",
+      "remediation": "Enforce constraints/storage.publicAccessPrevention, constraints/compute.vmExternalIpAccess, and constraints/iam.disableServiceAccountKeyCreation at the folder or org level. Verify manually -- these constraints usually live outside the module being scanned."
+    }
+  ]
+}
