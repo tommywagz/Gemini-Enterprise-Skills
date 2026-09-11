@@ -1,0 +1,14 @@
+# GCP-COST-DISK-001: Persistent disk not attached to any instance
+# Resource: orphan
+# Detail: size_gb=100 type=pd-ssd attached_instances=[]
+#
+# Snapshot before deleting -- never delete an unattached disk directly
+# unless it is confirmed scratch/ephemeral data.
+resource "google_compute_snapshot" "REPLACE_ME_final_snapshot" {
+  name        = "REPLACE_WITH_SNAPSHOT_NAME"
+  source_disk = "REPLACE_WITH_DISK_SELF_LINK_OR_NAME"
+  zone        = "REPLACE_WITH_ZONE"
+}
+# After confirming the snapshot succeeded, remove the google_compute_disk
+# resource for this disk from your configuration (and `terraform apply` /
+# `terraform state rm` as appropriate for how it's currently managed).

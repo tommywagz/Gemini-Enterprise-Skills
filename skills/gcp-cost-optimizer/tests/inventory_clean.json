@@ -1,0 +1,1 @@
+{"compute_instances": [{"name": "active", "status": "RUNNING", "cpu_utilization_pct_p95": 60, "is_preemptible_or_spot": true, "labels": {}}]}

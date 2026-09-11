@@ -1,0 +1,13 @@
+# GCP-COST-RUN-001: Cloud Run service holds warm min_instances with low observed traffic
+# Resource: api
+# Detail: min_instances=2 avg_requests_per_min=1 (< 5.0 rpm)
+#
+# Confirm there is no latency SLA requiring warm instances before lowering.
+resource "google_cloud_run_v2_service" "REPLACE_ME" {
+  # ... existing config ...
+  template {
+    scaling {
+      min_instance_count = 0 # was set higher than observed traffic supports
+    }
+  }
+}

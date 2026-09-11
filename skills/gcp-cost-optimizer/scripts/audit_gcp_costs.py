@@ -2,7 +2,7 @@
 """audit_gcp_costs.py
 
 Scans a normalized Google Cloud resource inventory for cost-waste patterns
-defined in `../assets/finops_checklist.json` (idle Compute Engine instances,
+defined in the skill's `assets/finops_checklist.json` (idle Compute Engine instances,
 unattached persistent disks, unattached static IPs, under-utilized BigQuery
 slot reservations, unexpiring BigQuery datasets, over-provisioned Cloud Run
 scaling). The checklist file is the single source of truth for severity,
@@ -87,6 +87,9 @@ def load_checklist():
 
 
 def load_inventory(path):
+    if not os.path.isfile(path):
+        print(f"error: inventory is not a readable regular file: {path}", file=sys.stderr)
+        sys.exit(2)
     try:
         with open(path) as f:
             inv = json.load(f)
@@ -100,6 +103,14 @@ def load_inventory(path):
         print("error: inventory JSON must be an object keyed by resource "
               "category (compute_instances, persistent_disks, ...)", file=sys.stderr)
         sys.exit(2)
+    for category in CHECKS.values():
+        name = category[0]
+        if name in inv and not isinstance(inv[name], list):
+            print(f"error: inventory category {name} must be a list", file=sys.stderr)
+            sys.exit(2)
+        if name in inv and not all(isinstance(item, dict) for item in inv[name]):
+            print(f"error: every {name} entry must be an object", file=sys.stderr)
+            sys.exit(2)
     return inv
 
 
