@@ -1,0 +1,4 @@
+[
+  {"fact": "I prefer concise answers.", "scope": {"user_id": "test-user"}, "topic": "USER_PREFERENCES"},
+  {"fact": "PR-gate means the required CI job.", "scope": {"team_id": "platform"}, "topic": "team_glossary"}
+]

@@ -144,7 +144,9 @@ def main():
     ap.add_argument("--project", default=os.environ.get("GOOGLE_CLOUD_PROJECT"))
     ap.add_argument("--location", default=os.environ.get("GOOGLE_CLOUD_LOCATION", "us-central1"))
     ap.add_argument("--dry-run", action="store_true",
-                     help="Validate input and print the request payload(s); no GCP call, no vertexai import")
+                      help="Validate input and print the request payload(s); no GCP call, no vertexai import")
+    ap.add_argument("--confirm-write", action="store_true",
+                    help="Required for a real persistent Memory Bank write after reviewing a dry run")
     args = ap.parse_args()
 
     try:
@@ -152,9 +154,15 @@ def main():
     except json.JSONDecodeError as e:
         print(f"error: --scope-json is not valid JSON: {e}", file=sys.stderr)
         sys.exit(2)
+    if not isinstance(default_scope, dict):
+        print("error: --scope-json must decode to a JSON object", file=sys.stderr)
+        sys.exit(2)
 
     if not args.dry_run and not args.memory_bank_name:
         print("error: --memory-bank-name is required unless --dry-run", file=sys.stderr)
+        sys.exit(2)
+    if not args.dry_run and not args.confirm_write:
+        print("error: real persistent writes require --confirm-write after reviewing --dry-run output", file=sys.stderr)
         sys.exit(2)
 
     if args.facts_file:

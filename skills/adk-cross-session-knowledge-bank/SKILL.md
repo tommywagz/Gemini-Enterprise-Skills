@@ -40,7 +40,11 @@ guessing.
   (`client.agent_engines.create()`, see
   `references/vertex_memory_bank_api.md`).
 - None of the above is required for `--dry-run` — use it to validate seed
-  files and preview requests with no GCP access at all.
+   files and preview requests with no GCP access at all.
+- **Data classification:** Confidential. Memories may contain personal
+  preferences, identity facts, or internal terminology; restrict scopes to
+  authorized users and do not expose retrieved output outside its intended
+  audience.
 
 - Workflow
 
@@ -66,14 +70,17 @@ scripts/preload_memory.py --facts-file seed.json --dry-run
 Fix any validation errors, THEN run for real:
 ```
 scripts/preload_memory.py --memory-bank-name projects/P/locations/L/reasoningEngines/R \
-    --facts-file seed.json --scope-json '{"user_id":"123"}'
+    --facts-file seed.json --scope-json '{"user_id":"123"}' --confirm-write
 ```
 - Default mode is consolidation-aware (`GenerateMemories`); only pass
   `--no-consolidate` when guaranteed-distinct records matter more than
   avoiding duplicates (e.g. a disposable test fixture) — see the script's
   own docstring for why this is the exception, not the default.
 - Never seed a real user's data this way without their knowledge — see
-  the closing note in `assets/sample_knowledge_base.md`.
+   the closing note in `assets/sample_knowledge_base.md`.
+- `--confirm-write` is required for every real persistent write. It confirms
+  the operator reviewed a successful dry run; never add it on the user's
+  behalf or bypass it with a direct API call.
 
 - Step 3: Verify or inspect with `load_memory.py`
 ```
