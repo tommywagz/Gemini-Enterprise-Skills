@@ -1,0 +1,208 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "suite_version": "1.0.0",
+  "note": "Canonical MUST/SHOULD-level test assertions for the bundled local conformance suite. scripts/run_conformance_suite.py loads this file at runtime; it never hardcodes test bodies. See references/conformance_test_standards.md for the rationale behind each test and how this subset relates to the official upstream suites.",
+  "fixtures": {
+    "ucp": {
+      "valid_item": {"id": "item_1", "quantity": 1},
+      "non_existent_item": {"id": "does_not_exist_9999"},
+      "buyer": {"full_name": "Conformance Tester", "email": "conformance@example.test"},
+      "currency": "USD"
+    }
+  },
+  "protocols": {
+    "ucp": {
+      "discovery_path": "/.well-known/ucp",
+      "tests": [
+        {
+          "id": "UCP-DISC-001",
+          "level": "must",
+          "description": "Discovery manifest is served at /.well-known/ucp as valid JSON with the required top-level fields.",
+          "request": {"method": "GET", "path": "/.well-known/ucp"},
+          "expect": {
+            "status": [200],
+            "json_paths_present": ["ucp.version", "ucp.services", "ucp.capabilities"]
+          }
+        },
+        {
+          "id": "UCP-DISC-002",
+          "level": "must",
+          "description": "Discovery manifest declares a checkout capability.",
+          "request": {"method": "GET", "path": "/.well-known/ucp"},
+          "expect": {
+            "status": [200],
+            "array_any_contains": {"path": "ucp.capabilities", "field": "spec", "contains_substring": "checkout"}
+          }
+        },
+        {
+          "id": "UCP-CART-001",
+          "level": "must",
+          "description": "Creating a cart with one valid line item succeeds and returns an id.",
+          "request": {
+            "method": "POST",
+            "path": "/carts",
+            "body": {"line_items": [{"item_id": "{{fixtures.ucp.valid_item.id}}", "quantity": 1}]}
+          },
+          "expect": {"status": [200, 201], "json_paths_present": ["id"]}
+        },
+        {
+          "id": "UCP-CART-002",
+          "level": "must",
+          "description": "Creating a cart with a non-existent item id never returns a bare 5xx.",
+          "request": {
+            "method": "POST",
+            "path": "/carts",
+            "body": {"line_items": [{"item_id": "{{fixtures.ucp.non_existent_item.id}}", "quantity": 1}]}
+          },
+          "expect": {"status": [400, 404, 409], "json_paths_present": ["messages"]}
+        },
+        {
+          "id": "UCP-CHECKOUT-001",
+          "level": "must",
+          "description": "Creating a checkout session with a valid line item returns an id and a status.",
+          "request": {
+            "method": "POST",
+            "path": "/checkout-sessions",
+            "body": {
+              "line_items": [{"item_id": "{{fixtures.ucp.valid_item.id}}", "quantity": 1}],
+              "buyer": "{{fixtures.ucp.buyer}}",
+              "currency": "{{fixtures.ucp.currency}}"
+            }
+          },
+          "expect": {"status": [200, 201], "json_paths_present": ["id", "status"]}
+        },
+        {
+          "id": "UCP-CHECKOUT-002",
+          "level": "must",
+          "description": "Completing checkout for a non-existent item returns a structured UCP error envelope, not a 500.",
+          "request": {
+            "method": "POST",
+            "path": "/checkout-sessions",
+            "body": {
+              "line_items": [{"item_id": "{{fixtures.ucp.non_existent_item.id}}", "quantity": 1}],
+              "buyer": "{{fixtures.ucp.buyer}}",
+              "currency": "{{fixtures.ucp.currency}}"
+            }
+          },
+          "expect": {"status": [400, 404, 409], "json_paths_present": ["messages"]}
+        },
+        {
+          "id": "UCP-ERR-001",
+          "level": "must",
+          "description": "Every 4xx response observed so far in this run parses as JSON and includes a messages array (checked post-hoc across prior test results, not a separate request).",
+          "request": null,
+          "expect": {"post_hoc_error_envelope_check": true}
+        },
+        {
+          "id": "UCP-SIG-001",
+          "level": "should",
+          "description": "A state-changing request sent without Signature/Signature-Input headers is rejected with 401/400 when the target advertises --require_signatures in its discovery manifest.",
+          "request": {
+            "method": "POST",
+            "path": "/checkout-sessions",
+            "body": {
+              "line_items": [{"item_id": "{{fixtures.ucp.valid_item.id}}", "quantity": 1}],
+              "buyer": "{{fixtures.ucp.buyer}}",
+              "currency": "{{fixtures.ucp.currency}}"
+            },
+            "omit_headers": ["Signature", "Signature-Input"]
+          },
+          "expect": {"status": [400, 401], "skip_if_json_path_absent": "keys"}
+        },
+        {
+          "id": "UCP-IDEMP-001",
+          "level": "should",
+          "description": "Repeating a checkout-session creation with the same Idempotency-Key returns a consistent, non-5xx status on both attempts.",
+          "request": {
+            "method": "POST",
+            "path": "/checkout-sessions",
+            "body": {
+              "line_items": [{"item_id": "{{fixtures.ucp.valid_item.id}}", "quantity": 1}],
+              "buyer": "{{fixtures.ucp.buyer}}",
+              "currency": "{{fixtures.ucp.currency}}"
+            },
+            "headers": {"Idempotency-Key": "conformance-fixed-key-0001"},
+            "repeat": 2,
+            "compare_status_equal_across_repeats": true
+          },
+          "expect": {"status": [200, 201]}
+        }
+      ]
+    },
+    "a2a": {
+      "agent_card_path": "/.well-known/agent-card.json",
+      "tests": [
+        {
+          "id": "A2A-CARD-001",
+          "level": "must",
+          "description": "AgentCard is served at /.well-known/agent-card.json with name, description, and version present.",
+          "request": {"method": "GET", "path": "/.well-known/agent-card.json"},
+          "expect": {"status": [200], "json_paths_present": ["name", "description", "version"]}
+        },
+        {
+          "id": "A2A-CARD-002",
+          "level": "should",
+          "description": "AgentCard declares at least one skill under the skills list.",
+          "request": {"method": "GET", "path": "/.well-known/agent-card.json"},
+          "expect": {"status": [200], "array_non_empty": "skills"}
+        },
+        {
+          "id": "A2A-RPC-001",
+          "level": "must",
+          "description": "A well-formed message/send JSON-RPC call returns 200 with a top-level result object.",
+          "request": {
+            "method": "POST",
+            "path": "/",
+            "headers": {"Content-Type": "application/json"},
+            "body": {
+              "jsonrpc": "2.0",
+              "id": "conformance-1",
+              "method": "message/send",
+              "params": {
+                "message": {
+                  "message_id": "conformance-msg-1",
+                  "role": "user",
+                  "parts": [{"text": "conformance check"}]
+                }
+              }
+            }
+          },
+          "expect": {"status": [200], "json_paths_present": ["result"]}
+        },
+        {
+          "id": "A2A-TASK-001",
+          "level": "must",
+          "description": "GetTask for a fabricated, never-issued task id returns a structured JSON-RPC error, not an unhandled 500.",
+          "request": {
+            "method": "POST",
+            "path": "/",
+            "headers": {"Content-Type": "application/json"},
+            "body": {
+              "jsonrpc": "2.0",
+              "id": "conformance-2",
+              "method": "tasks/get",
+              "params": {"id": "conformance-unknown-task-id-0000"}
+            }
+          },
+          "expect": {"status": [200, 400, 404], "json_paths_present": ["error"]}
+        },
+        {
+          "id": "A2A-STATE-001",
+          "level": "should",
+          "description": "If the SendMessage result includes a status.state, its value is one of the eight documented TaskState values.",
+          "request": null,
+          "expect": {
+            "post_hoc_enum_check": {
+              "from_test": "A2A-RPC-001",
+              "path": "result.status.state",
+              "allowed": [
+                "submitted", "working", "completed", "failed",
+                "canceled", "rejected", "input-required", "auth-required"
+              ]
+            }
+          }
+        }
+      ]
+    }
+  }
+}
