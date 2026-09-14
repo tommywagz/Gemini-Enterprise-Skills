@@ -62,23 +62,22 @@ server or agent — for that, use the `ucp-merchant-servers` or
 4. Call `server.shutdown()` and `server.server_close()` in a `finally`
    block — the sandbox is torn down whether the suite passed, failed, or
    raised, and before the script exits or prints its report.
-5. A hard wall-clock cap (`--mock-timeout`, default `30` seconds) guards
-   against a hung test hand-crafted to keep a connection open — the
-   server thread is a daemon thread specifically so process exit is never
-   blocked on it even if this cap is somehow bypassed.
+5. The server uses the request client's 10-second per-request timeout, and
+   the daemon thread ensures process exit is never blocked if a request
+   cannot complete.
 
 ## 4. Network Boundary Policy
 
 - **Loopback only, both directions.** `--target-url` is validated before
-  any request is sent: the hostname must resolve to `127.0.0.1`,
-  `::1`, or literally be `localhost`. Any other host — a LAN IP, a public
-  domain, a cloud staging URL — is rejected with a clear error before a
-  single byte is sent. This skill is a local dev-loop and CI pre-flight
-  tool, not a general-purpose HTTP conformance client; testing a
-  deployed/staging/production endpoint is explicitly out of scope (use the
-  official suites in `references/conformance_test_standards.md` §1.1/§2.1
-  for that, which are designed for exactly this and document their own
-  auth/secret handling).
+  any request is sent: it must use HTTP(S), and every resolved address must
+  be a loopback address (`127.0.0.0/8` or `::1`). Any other host — a LAN IP,
+  a public domain, a cloud staging URL, or a hostname with mixed loopback
+  and non-loopback answers — is rejected with a clear error before a single
+  byte is sent. This skill is a local dev-loop and CI pre-flight tool, not a
+  general-purpose HTTP conformance client; testing a deployed/staging/
+  production endpoint is explicitly out of scope (use the official suites
+  in `references/conformance_test_standards.md` §1.1/§2.1 for that, which
+  are designed for exactly this and document their own auth/secret handling).
 - **No third-party calls.** The mock server in Mode B never makes an
   outbound request of its own — it only answers the inbound requests this
   script sends it. Neither mode resolves DNS for anything other than the

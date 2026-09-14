@@ -1,5 +1,4 @@
 {
-  "$schema": "https://json-schema.org/draft/2020-12/schema",
   "suite_version": "1.0.0",
   "note": "Canonical MUST/SHOULD-level test assertions for the bundled local conformance suite. scripts/run_conformance_suite.py loads this file at runtime; it never hardcodes test bodies. See references/conformance_test_standards.md for the rationale behind each test and how this subset relates to the official upstream suites.",
   "fixtures": {
