@@ -1,0 +1,71 @@
+# @@name@@
+
+Local TypeScript/Hono gateway → Python/ADK sequential planner/writer workflow.
+Node 20+ and Python 3.10+ are required. Commands below assume a POSIX shell.
+
+## Install (workspace root)
+
+```sh
+npm install
+python3 -m venv .venv
+.venv/bin/python -m pip install -r apps/agents/requirements.txt
+npm run build
+```
+
+Keep the generated npm lockfile; capture a resolved Python dependency lock for CI.
+The template pins direct dependency compatibility baselines, not all transitives.
+
+## Start (two terminals, workspace root)
+
+Terminal 1, credential-free integration demo using the real ADK runtime:
+
+```sh
+WORKSPACE_DEMO=1 .venv/bin/adk api_server --host 127.0.0.1 --port @@adk_port@@ apps/agents
+```
+
+Terminal 2:
+
+```sh
+npm run start:web
+```
+
+For live model calls, stop terminal 1, configure `GOOGLE_API_KEY` in that
+process environment, set `GOOGLE_GENAI_USE_VERTEXAI=FALSE`, and restart without
+`WORKSPACE_DEMO=1`. Default model: `@@model@@`; override with `ADK_MODEL`.
+Live mode runs two LLM stages and incurs provider usage. No credentials are
+needed by the web process. Never send provider credentials in `/api/message`.
+
+## Exercise
+
+```sh
+curl --fail http://127.0.0.1:@@web_port@@/health
+curl --fail http://127.0.0.1:@@adk_port@@/list-apps
+curl --fail http://127.0.0.1:@@web_port@@/api/message \
+  -H 'Content-Type: application/json' -d '{"text":"Hello polyglot"}'
+```
+
+Demo output contains `{"sessionId":"...","text":"DEMO: Hello polyglot"}`.
+`/health` tests the gateway process only. `/api/message` exercises both runtimes.
+Use Ctrl+C in both terminals to stop them.
+
+## Boundary
+
+- `apps/web/src/app.ts`: validates text-only requests, creates a fresh ADK session,
+  calls `/run`, returns the last model text event. Contract: `contracts/message.schema.json`.
+- `apps/agents/@@agent_name@@/agent.py`: exports `root_agent`; planner stores
+  `draft` in session state, writer consumes it. The ADK app name is the folder name.
+- `ADK_BASE_URL` (gateway environment) defaults to `http://127.0.0.1:@@adk_port@@`.
+  It is trusted process configuration; requests cannot override it.
+- `PORT` overrides the gateway's default `@@web_port@@` listener.
+- Every request creates a session; this local demo has no authenticated chat
+  history, persistence guarantee, or cleanup scheduler. Restart/clean up the dev
+  session store as needed. Add identity binding and session lifecycle management
+  before adapting it to a multi-user application.
+- 400: malformed/invalid request; 413: body over 64 KiB; 502: ADK unavailable,
+  failed, or returned unexpected output; 504: 60-second gateway deadline.
+  A timeout does not cancel an already-running model invocation; do not auto-retry.
+- The generator creates files only; it does not install tools, provision cloud
+  services, or register a command with Google Agents CLI.
+
+To add this to an existing repo, first generate into a new sibling directory,
+then merge selected files with that repo's workspace/package conventions.
