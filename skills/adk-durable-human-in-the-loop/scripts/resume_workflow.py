@@ -317,7 +317,6 @@ def cmd_resume(args):
         print(json.dumps(resume_request, indent=2))
         return 0
 
-    store.mark_resolved(payload["ticket_id"], payload["decision"])
     url = args.adk_server_url.rstrip("/") + "/run_sse"
     req = urllib.request.Request(
         url, data=json.dumps(resume_request).encode("utf-8"),
@@ -325,6 +324,7 @@ def cmd_resume(args):
     )
     try:
         with urllib.request.urlopen(req, timeout=args.timeout) as resp:
+            store.mark_resolved(payload["ticket_id"], payload["decision"])
             print(f"resumed invocation {resume_request['invocation_id']!r}: "
                   f"HTTP {resp.status}")
         return 0
@@ -370,7 +370,6 @@ def cmd_serve(args):
                 self._respond(200, {"status": "dry-run", "would_send": resume_request})
                 return
 
-            store.mark_resolved(payload["ticket_id"], payload["decision"])
             url = adk_server_url.rstrip("/") + "/run_sse"
             req = urllib.request.Request(
                 url, data=json.dumps(resume_request).encode("utf-8"),
@@ -378,6 +377,7 @@ def cmd_serve(args):
             )
             try:
                 with urllib.request.urlopen(req, timeout=10) as resp:
+                    store.mark_resolved(payload["ticket_id"], payload["decision"])
                     self._respond(200, {"status": "resumed", "adk_status": resp.status})
             except urllib.error.URLError as e:
                 self._respond(502, {"error": f"failed to reach ADK API server: {e}"})
