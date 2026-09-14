@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Generated polyglot workspace descriptor",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "name", "agent_name", "model", "web_port", "adk_port", "services", "files"],
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "name": {"type": "string", "maxLength": 64, "pattern": "^[a-z][a-z0-9]*(-[a-z0-9]+)*$"},
+    "agent_name": {"type": "string", "maxLength": 64, "pattern": "^[a-z][a-z0-9_]*$"},
+    "model": {"type": "string", "maxLength": 128, "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]*$"},
+    "web_port": {"type": "integer", "minimum": 1024, "maximum": 65535},
+    "adk_port": {"type": "integer", "minimum": 1024, "maximum": 65535},
+    "services": {
+      "type": "object", "additionalProperties": false,
+      "required": ["web", "agents"],
+      "properties": {
+        "web": {"const": "apps/web"},
+        "agents": {"const": "apps/agents"}
+      }
+    },
+    "files": {
+      "type": "array", "minItems": 12, "uniqueItems": true,
+      "items": {"type": "string", "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))[^\\\\]+$"},
+      "allOf": [
+        {"contains": {"const": "package.json"}},
+        {"contains": {"const": "apps/web/src/app.ts"}},
+        {"contains": {"const": "apps/web/src/index.ts"}},
+        {"contains": {"const": "apps/agents/requirements.txt"}},
+        {"contains": {"const": "contracts/message.schema.json"}},
+        {"contains": {"const": "workspace.json"}}
+      ]
+    }
+  }
+}

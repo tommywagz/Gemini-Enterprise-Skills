@@ -1,0 +1,64 @@
+import { randomUUID } from 'node:crypto'
+import { Hono } from 'hono'
+import { bodyLimit } from 'hono/body-limit'
+
+const appName = '@@agent_name@@'
+// Trusted process configuration; request bodies cannot choose the upstream.
+const upstream = new URL(process.env.ADK_BASE_URL ?? 'http://127.0.0.1:@@adk_port@@')
+if (!['http:', 'https:'].includes(upstream.protocol) || upstream.username || upstream.password
+    || upstream.search || upstream.hash || upstream.pathname !== '/') {
+  throw new Error('ADK_BASE_URL must be an HTTP(S) origin without credentials')
+}
+const isObject = (v: unknown): v is Record<string, unknown> =>
+  typeof v === 'object' && v !== null && !Array.isArray(v)
+
+async function callAdk(path: string, body: unknown, signal: AbortSignal): Promise<unknown> {
+  const response = await fetch(new URL(path, upstream), {
+    method: 'POST', headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body), signal, redirect: 'error',
+  })
+  if (!response.ok) throw new Error(`ADK returned HTTP ${response.status}`)
+  return response.json()
+}
+
+export const app = new Hono()
+app.get('/health', (c) => c.json({ status: 'ok', service: '@@name@@-web' }))
+app.use('/api/message', bodyLimit({ maxSize: 65536 }))
+app.post('/api/message', async (c) => {
+  let input: unknown
+  try { input = await c.req.json() } catch { return c.json({ error: 'invalid_json' }, 400) }
+  if (!isObject(input) || Object.keys(input).some((key) => key !== 'text')
+      || typeof input.text !== 'string' || !input.text.trim() || input.text.length > 8000) {
+    return c.json({ error: 'expected_text_only_1_to_8000_chars' }, 400)
+  }
+  // One isolated session per request. This starter intentionally has no chat history API.
+  const sessionId = randomUUID()
+  const userId = 'local-developer'
+  const signal = AbortSignal.timeout(60000)
+  try {
+    await callAdk(`/apps/${appName}/users/${userId}/sessions/${sessionId}`, {}, signal)
+    const events = await callAdk('/run', {
+      appName, userId, sessionId, newMessage: { role: 'user', parts: [{ text: input.text }] },
+    }, signal)
+    if (!Array.isArray(events) || events.some((event) => isObject(event) && event.errorCode)) {
+      throw new Error('ADK execution failed')
+    }
+    // Select the last model text event, not intermediate planner output or tool payloads.
+    let text = ''
+    for (const event of events) {
+      if (!isObject(event) || event.partial || !isObject(event.content)) continue
+      const content = event.content
+      if (content.role !== 'model' || !Array.isArray(content.parts)) continue
+      const candidate = content.parts.filter(isObject)
+        .filter((part) => typeof part.text === 'string' && !part.thought)
+        .map((part) => part.text as string).join('')
+      if (candidate.trim()) text = candidate
+    }
+    if (!text) throw new Error('ADK returned no model text')
+    return c.json({ sessionId, text })
+  } catch {
+    // No automatic retry: the timed-out invocation may still be running.
+    return c.json({ error: signal.aborted ? 'upstream_timeout' : 'upstream_failure' },
+      signal.aborted ? 504 : 502)
+  }
+})

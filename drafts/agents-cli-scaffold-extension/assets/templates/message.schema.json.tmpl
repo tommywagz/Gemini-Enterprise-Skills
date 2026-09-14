@@ -1,0 +1,12 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "POST /api/message request",
+  "type": "object", "additionalProperties": false, "required": ["text"],
+  "properties": {"text": {"type": "string", "minLength": 1, "maxLength": 8000, "pattern": "\\S"}},
+  "$defs": {
+    "response": {
+      "type": "object", "additionalProperties": false, "required": ["sessionId", "text"],
+      "properties": {"sessionId": {"type": "string", "minLength": 1}, "text": {"type": "string", "minLength": 1}}
+    }
+  }
+}
