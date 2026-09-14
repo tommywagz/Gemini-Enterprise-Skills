@@ -1,0 +1,59 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://actual-agentic-solutions.internal/schemas/hitl_approval_response.json",
+  "title": "Durable HITL Approval Response (inbound / resume)",
+  "description": "Signed payload the external dashboard/reviewer POSTs back to resume a paused ADK invocation. Validated and signature-verified by scripts/resume_workflow.py before it is ever used to construct a FunctionResponse. See references/durable_hitl_patterns.md \u00a73 and \u00a75.",
+  "type": "object",
+  "required": [
+    "ticket_id",
+    "invocation_id",
+    "function_call_id",
+    "decision",
+    "decided_by",
+    "decided_at",
+    "signature"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "ticket_id": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Must match a ticket_id previously recorded from an outbound webhook (assets/approval_webhook_schema.json). A ticket_id not found in the pending-approvals store must be rejected, not repaired."
+    },
+    "invocation_id": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Must match the invocation_id stored for this ticket_id. A mismatch is rejected -- see references/durable_hitl_patterns.md \u00a75."
+    },
+    "function_call_id": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Must match the function_call_id stored for this ticket_id. Echoed back as function_response.id on resume."
+    },
+    "decision": {
+      "type": "string",
+      "enum": ["approved", "rejected"],
+      "description": "The human's decision. This skill deliberately restricts to a closed enum rather than an open-ended string; encode richer outcomes (e.g. partial approval amounts) via 'response_payload' instead."
+    },
+    "response_payload": {
+      "type": "object",
+      "description": "Structured data accompanying the decision (e.g. {'approved_amount': 250}), merged into the FunctionResponse.response sent back to the agent.",
+      "default": {}
+    },
+    "decided_by": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Identity of the approver (email, user ID, or system account) for audit purposes. Never inferred -- must be supplied by the authenticated dashboard session."
+    },
+    "decided_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO-8601 UTC timestamp when the decision was made."
+    },
+    "signature": {
+      "type": "string",
+      "minLength": 1,
+      "description": "hex-encoded HMAC-SHA256 over the canonical JSON (sorted keys, this field excluded) of the rest of this payload, keyed by the shared webhook secret. Verified with hmac.compare_digest -- never a plain string comparison."
+    }
+  }
+}

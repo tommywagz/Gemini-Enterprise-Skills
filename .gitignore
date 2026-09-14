@@ -11,3 +11,10 @@ instructions/
 # working tree the orchestrator needs clean before it merges. No trailing slash
 # so this also matches the symlink git sees in each worktree.
 /jobs
+
+# Python bytecode caches produced by running/importing scaffolded scripts
+# during skill development and testing. Flagged during real-estate-floorplan
+# review: these were previously committed by accident into drafts/ and
+# skills/.
+__pycache__/
+*.pyc
