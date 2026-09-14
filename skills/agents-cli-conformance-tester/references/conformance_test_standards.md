@@ -96,12 +96,11 @@ reads the same across both protocols:
   headers is rejected with `401`/`400` when the server advertises
   `--require_signatures`; this is `should`, not `must`, because some local
   dev servers intentionally run with signature enforcement off.
-- **Idempotency (`should`):** repeating `POST
-  /checkout-sessions/{id}/complete` with the same `Idempotency-Key` returns
-  the same result rather than a second side effect — the bundled test can
-  only check for a non-`5xx`, consistent status code on the retry; it
-  cannot verify no duplicate order was created without database access,
-  which is exactly the gap the official `idempotency_test.py` closes.
+- **Idempotency (`should`):** repeating `POST /checkout-sessions` with the
+  same `Idempotency-Key` returns the same non-`5xx` status on both attempts.
+  The bundled test cannot verify that no duplicate order was created without
+  database access, which is exactly the gap the official
+  `idempotency_test.py` closes.
 
 ## 2. A2A Conformance
 
@@ -138,9 +137,9 @@ HTTP+JSON transport only (the one this skill's stdlib-only script can speak
 without a gRPC stub or JSON-RPC client library):
 
 - **AgentCard (`must`):** `GET /.well-known/agent-card.json` returns `200`
-  with `name`, `description`, and `version` present, and at least one
-  entry under the interfaces/capabilities structure described in
-  `references/a2a-spec.md` §2.1 (bundled with the `a2a-workflows` skill).
+  with `name`, `description`, and `version` present. The bundled
+  `A2A-CARD-002` `should` test separately checks that the card lists at
+  least one skill.
 - **SendMessage RPC (`must`):** a `message/send` JSON-RPC call returns a
   `200` with a top-level `result` object — either a `Task` or a `Message`
   — never a bare transport-level error for a well-formed request.

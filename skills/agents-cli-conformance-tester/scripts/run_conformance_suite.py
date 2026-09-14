@@ -61,21 +61,22 @@ LOOPBACK_LITERALS = {"localhost"}
 # Loopback enforcement
 # --------------------------------------------------------------------------
 def is_loopback(url):
-    """True only if url's host is 127.0.0.0/8, ::1, or literally 'localhost'."""
-    host = urlparse(url).hostname
-    if not host:
+    """True only for HTTP(S) URLs whose host resolves entirely to loopback."""
+    parsed = urlparse(url)
+    host = parsed.hostname
+    if parsed.scheme not in {"http", "https"} or not host:
         return False
-    if host in LOOPBACK_LITERALS:
-        return True
     try:
-        ipaddress.ip_address(host)
-        ip = host
+        return ipaddress.ip_address(host).is_loopback
     except ValueError:
         try:
-            ip = socket.gethostbyname(host)
+            addresses = {
+                result[4][0]
+                for result in socket.getaddrinfo(host, None, type=socket.SOCK_STREAM)
+            }
         except socket.gaierror:
             return False
-    return ip.startswith("127.") or ip == "::1"
+    return bool(addresses) and all(ipaddress.ip_address(address).is_loopback for address in addresses)
 
 
 # --------------------------------------------------------------------------
