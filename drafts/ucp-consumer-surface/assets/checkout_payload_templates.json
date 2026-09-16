@@ -1,0 +1,192 @@
+{
+  "_comment": "Mock request/response payload templates for the UCP consumer-surface (client) lifecycle. Grounded in https://ucp.dev/2026-08-25/specification/shopping/{cart,checkout,order}/rest and the Universal-Commerce-Protocol/samples happy-path client. Use these as literal starting bodies for scripts/ucp_client_helper.py or for manual testing against a mock/sandbox UCP business server.",
+  "create_cart_request": {
+    "line_items": [
+      {"item": {"id": "item_123"}, "quantity": 2}
+    ],
+    "context": {
+      "address_country": "US",
+      "address_region": "CA",
+      "postal_code": "94105"
+    }
+  },
+  "update_cart_request_with_discount": {
+    "line_items": [
+      {"id": "li_1", "item": {"id": "item_123"}, "quantity": 2}
+    ],
+    "discounts": {"codes": ["10OFF"]}
+  },
+  "create_checkout_from_cart_request": {
+    "cart_id": "cart_abc123"
+  },
+  "create_checkout_from_line_items_request": {
+    "line_items": [
+      {"item": {"id": "item_123"}, "quantity": 2}
+    ]
+  },
+  "update_checkout_buyer_request": {
+    "buyer": {
+      "email": "jane@example.com",
+      "first_name": "Jane",
+      "last_name": "Doe"
+    },
+    "line_items": [
+      {"id": "li_1", "item": {"id": "item_123"}, "quantity": 2}
+    ]
+  },
+  "update_checkout_fulfillment_request": {
+    "buyer": {
+      "email": "jane@example.com",
+      "first_name": "Jane",
+      "last_name": "Doe"
+    },
+    "line_items": [
+      {"id": "li_1", "item": {"id": "item_123"}, "quantity": 2}
+    ],
+    "fulfillment": {
+      "methods": [
+        {
+          "type": "shipping",
+          "destinations": [
+            {
+              "street_address": "123 Main St",
+              "address_locality": "Springfield",
+              "address_region": "IL",
+              "postal_code": "62701",
+              "address_country": "US"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "update_checkout_select_fulfillment_option_request": {
+    "buyer": {
+      "email": "jane@example.com",
+      "first_name": "Jane",
+      "last_name": "Doe"
+    },
+    "line_items": [
+      {"id": "li_1", "item": {"id": "item_123"}, "quantity": 2}
+    ],
+    "fulfillment": {
+      "methods": [
+        {
+          "id": "shipping_1",
+          "type": "shipping",
+          "line_item_ids": ["li_1"],
+          "selected_destination_id": "dest_home",
+          "destinations": [
+            {
+              "id": "dest_home",
+              "street_address": "123 Main St",
+              "address_locality": "Springfield",
+              "address_region": "IL",
+              "postal_code": "62701",
+              "address_country": "US"
+            }
+          ],
+          "groups": [
+            {"id": "package_1", "selected_option_id": "express"}
+          ]
+        }
+      ]
+    }
+  },
+  "complete_checkout_request": {
+    "payment": {
+      "instruments": [
+        {
+          "id": "instr_1",
+          "handler_id": "mock_payment_handler",
+          "type": "card",
+          "display": {"brand": "visa", "last_digits": "4242"},
+          "credential": {"type": "token", "token": "success_token"},
+          "billing_address": {
+            "street_address": "123 Main St",
+            "address_locality": "Anytown",
+            "address_region": "CA",
+            "address_country": "US",
+            "postal_code": "12345"
+          }
+        }
+      ]
+    },
+    "signals": {
+      "dev.ucp.buyer_ip": "203.0.113.42",
+      "dev.ucp.user_agent": "Mozilla/5.0 (mock client)"
+    }
+  },
+  "complete_checkout_response_example": {
+    "ucp": {
+      "version": "2026-08-25",
+      "capabilities": {"dev.ucp.shopping.checkout": [{"version": "2026-08-25"}]}
+    },
+    "id": "chk_123456789",
+    "status": "completed",
+    "currency": "USD",
+    "order": {
+      "id": "ord_99887766",
+      "permalink_url": "https://business.example.com/orders/ord_99887766"
+    }
+  },
+  "get_order_response_example": {
+    "ucp": {
+      "version": "2026-08-25",
+      "capabilities": {"dev.ucp.shopping.order": [{"version": "2026-08-25"}]}
+    },
+    "id": "order_abc123",
+    "checkout_id": "chk_123456789",
+    "permalink_url": "https://business.example.com/orders/abc123",
+    "currency": "USD",
+    "line_items": [
+      {
+        "id": "li_shoes",
+        "item": {"id": "prod_shoes", "title": "Running Shoes", "price": 3000},
+        "quantity": {"total": 1, "fulfilled": 1},
+        "status": "fulfilled"
+      }
+    ],
+    "fulfillment": {
+      "events": [
+        {
+          "id": "evt_1",
+          "occurred_at": "2026-01-08T10:30:00Z",
+          "type": "delivered",
+          "tracking_number": "1Z999AA10123456784"
+        }
+      ]
+    },
+    "totals": [
+      {"type": "subtotal", "amount": 3000},
+      {"type": "total", "amount": 3804}
+    ]
+  },
+  "order_event_webhook_payload_example": {
+    "_comment": "Illustrative business -> platform push notifying of an order status change. Verify Signature/Signature-Input/Content-Digest before trusting this payload; see references/ucp_client_negotiation.md.",
+    "webhook_id": "wh_5f2e1a",
+    "idempotency_key": "550e8400-e29b-41d4-a716-446655440000",
+    "event_type": "dev.ucp.shopping.order.fulfillment_event",
+    "occurred_at": "2026-01-08T10:30:00Z",
+    "order_id": "order_abc123",
+    "data": {
+      "fulfillment_event": {
+        "id": "evt_1",
+        "type": "delivered",
+        "tracking_number": "1Z999AA10123456784"
+      }
+    }
+  },
+  "business_outcome_error_response_example": {
+    "ucp": {"version": "2026-08-25", "status": "error"},
+    "messages": [
+      {
+        "type": "error",
+        "code": "out_of_stock",
+        "content": "All requested items are currently out of stock",
+        "severity": "unrecoverable"
+      }
+    ],
+    "continue_url": "https://business.example.com/"
+  }
+}

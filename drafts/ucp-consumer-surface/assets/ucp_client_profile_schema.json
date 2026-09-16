@@ -1,0 +1,95 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/ucp/client_profile_schema.json",
+  "title": "UCP Discovery Profile (Client-Consumed Subset)",
+  "description": "Structural schema for the subset of a business's /.well-known/ucp discovery profile that a consumer-surface (shopping agent) client parses: services, capabilities, and payment handlers. Not a full UCP schema authority — see https://ucp.dev/2026-08-25/specification/reference/ for the canonical registry.",
+  "type": "object",
+  "required": ["ucp"],
+  "properties": {
+    "ucp": {
+      "type": "object",
+      "required": ["version"],
+      "properties": {
+        "version": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+          "description": "Protocol version in YYYY-MM-DD format."
+        },
+        "services": {
+          "type": "object",
+          "description": "Service registry keyed by reverse-domain name, e.g. dev.ucp.shopping.",
+          "additionalProperties": {
+            "type": "array",
+            "items": {"$ref": "#/$defs/service_binding"}
+          }
+        },
+        "capabilities": {
+          "type": "object",
+          "description": "Capability registry keyed by reverse-domain name, e.g. dev.ucp.shopping.checkout.",
+          "additionalProperties": {
+            "type": "array",
+            "items": {"$ref": "#/$defs/capability"}
+          }
+        },
+        "payment_handlers": {
+          "type": "object",
+          "description": "Payment handler registry keyed by reverse-domain or vendor-defined name.",
+          "additionalProperties": {
+            "type": "array",
+            "items": {"$ref": "#/$defs/payment_handler"}
+          }
+        },
+        "status": {
+          "type": "string",
+          "enum": ["success", "error"]
+        }
+      }
+    }
+  },
+  "$defs": {
+    "service_binding": {
+      "type": "object",
+      "required": ["version", "spec", "transport"],
+      "properties": {
+        "version": {"type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}$"},
+        "spec": {"type": "string", "format": "uri"},
+        "schema": {"type": "string", "format": "uri"},
+        "id": {"type": "string"},
+        "config": {"type": "object"},
+        "transport": {"type": "string", "enum": ["rest", "mcp", "a2a", "embedded"]},
+        "endpoint": {"type": "string", "format": "uri"}
+      }
+    },
+    "capability": {
+      "type": "object",
+      "required": ["version", "spec", "schema"],
+      "properties": {
+        "version": {"type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}$"},
+        "spec": {"type": "string", "format": "uri"},
+        "schema": {"type": "string", "format": "uri"},
+        "id": {"type": "string"},
+        "config": {"type": "object"},
+        "extends": {
+          "oneOf": [
+            {"type": "string"},
+            {"type": "array", "items": {"type": "string"}}
+          ]
+        }
+      }
+    },
+    "payment_handler": {
+      "type": "object",
+      "required": ["id"],
+      "properties": {
+        "id": {"type": "string"},
+        "version": {"type": "string"},
+        "name": {"type": "string"},
+        "available_instruments": {
+          "type": "array",
+          "items": {"type": "object"}
+        },
+        "config": {"type": "object"}
+      }
+    }
+  }
+}
