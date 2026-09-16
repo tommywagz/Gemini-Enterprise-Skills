@@ -1,0 +1,25 @@
+{
+  "skill_name": "ucp-consumer-surface",
+  "evals": [
+    {"id": "T01", "prompt": "Build a UCP shopping agent that can buy a product.", "should_trigger": true, "actual_trigger": true, "assertions": [{"text": "Routes to the UCP consumer client skill.", "passed": true}]},
+    {"id": "T02", "prompt": "Implement a UCP consumer client for catalog search and cart checkout.", "should_trigger": true, "actual_trigger": true, "assertions": [{"text": "Routes to the client-side UCP workflow.", "passed": true}]},
+    {"id": "T03", "prompt": "Negotiate a merchant UCP discovery profile before a purchase.", "should_trigger": true, "actual_trigger": true, "assertions": [{"text": "Routes to capability negotiation.", "passed": true}]},
+    {"id": "T04", "prompt": "Use the UCP-Agent header to create a cart and checkout session.", "should_trigger": true, "actual_trigger": true, "assertions": [{"text": "Routes to UCP client request construction.", "passed": true}]},
+    {"id": "T05", "prompt": "Build an order webhook receiver for a UCP shopping platform.", "should_trigger": true, "actual_trigger": true, "assertions": [{"text": "Routes to UCP consumer order tracking.", "passed": true}]},
+    {"id": "T06", "prompt": "Buy a hotel stay through a UCP business API.", "should_trigger": true, "actual_trigger": true, "assertions": [{"text": "Routes to the buy/book/order UCP client flow.", "passed": true}]},
+    {"id": "T07", "prompt": "Write a Python UCP checkout client that selects a merchant payment handler.", "should_trigger": true, "actual_trigger": true, "assertions": [{"text": "Routes to consumer-side checkout.", "passed": true}]},
+    {"id": "T08", "prompt": "How should my shopping platform validate UCP schema authority binding?", "should_trigger": true, "actual_trigger": true, "assertions": [{"text": "Routes to consumer discovery validation.", "passed": true}]},
+    {"id": "T09", "prompt": "Create a headless UCP native checkout integration.", "should_trigger": true, "actual_trigger": true, "assertions": [{"text": "Routes to native client checkout.", "passed": true}]},
+    {"id": "T10", "prompt": "Track fulfillment events after ordering through UCP.", "should_trigger": true, "actual_trigger": true, "assertions": [{"text": "Routes to consumer order lifecycle handling.", "passed": true}]},
+    {"id": "N01", "prompt": "Implement a UCP merchant server and publish its discovery profile.", "should_trigger": false, "actual_trigger": false, "assertions": [{"text": "Defers to ucp-merchant-servers.", "passed": true}]},
+    {"id": "N02", "prompt": "Write server routes that accept UCP cart creation requests.", "should_trigger": false, "actual_trigger": false, "assertions": [{"text": "Does not activate for business-side routes.", "passed": true}]},
+    {"id": "N03", "prompt": "Design a new UCP lodging extension schema.", "should_trigger": false, "actual_trigger": false, "assertions": [{"text": "Does not activate for extension authoring.", "passed": true}]},
+    {"id": "N04", "prompt": "Create AP2 Checkout and Payment Mandates for delegated spending.", "should_trigger": false, "actual_trigger": false, "assertions": [{"text": "Defers to an AP2 skill.", "passed": true}]},
+    {"id": "N05", "prompt": "Integrate Stripe Checkout in my ecommerce site.", "should_trigger": false, "actual_trigger": false, "assertions": [{"text": "Does not activate without UCP.", "passed": true}]},
+    {"id": "N06", "prompt": "Calculate mortgage payments for a home purchase.", "should_trigger": false, "actual_trigger": false, "assertions": [{"text": "Does not activate for finance calculations.", "passed": true}]},
+    {"id": "N07", "prompt": "Build an MCP server for inventory management.", "should_trigger": false, "actual_trigger": false, "assertions": [{"text": "Does not activate for generic MCP server work.", "passed": true}]},
+    {"id": "N08", "prompt": "Add a PayPal button to a React storefront.", "should_trigger": false, "actual_trigger": false, "assertions": [{"text": "Does not activate for a non-UCP payment UI.", "passed": true}]},
+    {"id": "N09", "prompt": "Audit PCI controls for our payment service.", "should_trigger": false, "actual_trigger": false, "assertions": [{"text": "Does not activate for a general payment audit.", "passed": true}]},
+    {"id": "N10", "prompt": "Write a generic webhook receiver for GitHub events.", "should_trigger": false, "actual_trigger": false, "assertions": [{"text": "Does not activate for unrelated webhooks.", "passed": true}]}
+  ]
+}

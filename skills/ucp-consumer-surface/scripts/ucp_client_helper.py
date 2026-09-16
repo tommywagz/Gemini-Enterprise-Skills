@@ -142,6 +142,9 @@ def verify_webhook_delivery(
     body: bytes,
     content_digest_header: str,
     signature_input_header: str | None = None,
+    signature_header: str | None = None,
+    public_key_verifier: Any | None = None,
+    signature_required: bool = False,
     seen_idempotency_keys: set[str] | None = None,
     idempotency_key: str | None = None,
 ) -> dict[str, Any]:
@@ -149,10 +152,10 @@ def verify_webhook_delivery(
 
     Returns a dict {"ok": bool, "reasons": [str, ...]}. Checks performed:
       1. Content-Digest matches the delivered body (integrity).
-      2. Signature-Input, if provided, parses into a well-formed component
-         list (structure only -- actual ECDSA/RSA signature *verification*
-         requires a crypto library outside the stdlib; wire one in via the
-         `public_key_verifier` hook in UCPClient for production use).
+      2. A signature-required delivery has both Signature-Input and Signature
+         headers and is accepted by ``public_key_verifier``. The verifier is
+         supplied by the caller after resolving the business public key from
+         its validated discovery profile.
       3. Replay protection: idempotency_key has not been seen before.
     """
     reasons: list[str] = []
@@ -171,6 +174,22 @@ def verify_webhook_delivery(
         except ValueError:
             ok = False
             reasons.append("signature_input_unparseable")
+
+    if signature_required and not (signature_input_header and signature_header):
+        ok = False
+        reasons.append("required_signature_missing")
+    if signature_input_header or signature_header:
+        if not (signature_input_header and signature_header and callable(public_key_verifier)):
+            ok = False
+            reasons.append("signature_verifier_unavailable")
+        else:
+            try:
+                if not public_key_verifier(body, content_digest_header, signature_input_header, signature_header):
+                    ok = False
+                    reasons.append("signature_verification_failed")
+            except Exception:
+                ok = False
+                reasons.append("signature_verification_error")
 
     if seen_idempotency_keys is not None and idempotency_key is not None:
         if idempotency_key in seen_idempotency_keys:
@@ -210,14 +229,16 @@ class UCPClient:
 
     # -- headers -------------------------------------------------------
 
-    def build_headers(self, body: bytes | None = None, idempotent: bool = False) -> dict[str, str]:
+    def build_headers(
+        self, body: bytes | None = None, idempotent: bool = False, idempotency_key: str | None = None
+    ) -> dict[str, str]:
         headers = {
             "UCP-Agent": f'profile="{self.agent_profile_url}"',
             "Request-Id": str(uuid.uuid4()),
             "Content-Type": "application/json",
         }
         if idempotent:
-            headers["Idempotency-Key"] = str(uuid.uuid4())
+            headers["Idempotency-Key"] = idempotency_key or str(uuid.uuid4())
         if body is not None:
             headers["Content-Digest"] = compute_content_digest(body)
         return headers
@@ -266,53 +287,90 @@ class UCPClient:
 
     # -- cart --------------------------------------------------------------
 
-    def create_cart(self, endpoint: str, line_items: list[dict], context: dict | None = None) -> dict:
+    def create_cart(
+        self, endpoint: str, line_items: list[dict], context: dict | None = None, idempotency_key: str | None = None
+    ) -> dict:
         body = {"line_items": line_items}
         if context:
             body["context"] = context
-        return self._post_json(f"{endpoint}/carts", body, idempotent=True)
+        return self._post_json(f"{endpoint}/carts", body, idempotent=True, idempotency_key=idempotency_key)
 
     def get_cart(self, endpoint: str, cart_id: str) -> dict:
         return self._get_json(f"{endpoint}/carts/{cart_id}")
 
     def update_cart(
-        self, endpoint: str, cart_id: str, line_items: list[dict], discount_codes: list[str] | None = None
+        self, endpoint: str, cart_id: str, line_items: list[dict], discount_codes: list[str] | None = None,
+        idempotency_key: str | None = None,
     ) -> dict:
         body: dict[str, Any] = {"line_items": line_items}
         if discount_codes:
             body["discounts"] = {"codes": discount_codes}
-        return self._put_json(f"{endpoint}/carts/{cart_id}", body, idempotent=True)
+        return self._put_json(f"{endpoint}/carts/{cart_id}", body, idempotent=True, idempotency_key=idempotency_key)
 
-    def cancel_cart(self, endpoint: str, cart_id: str) -> dict:
-        return self._post_json(f"{endpoint}/carts/{cart_id}/cancel", {}, idempotent=True)
+    def cancel_cart(self, endpoint: str, cart_id: str, idempotency_key: str | None = None) -> dict:
+        return self._post_json(f"{endpoint}/carts/{cart_id}/cancel", {}, idempotent=True, idempotency_key=idempotency_key)
 
     # -- checkout ------------------------------------------------------------
 
-    def create_checkout_from_cart(self, endpoint: str, cart_id: str) -> dict:
-        return self._post_json(f"{endpoint}/checkout-sessions", {"cart_id": cart_id}, idempotent=True)
+    def create_checkout_from_cart(self, endpoint: str, cart_id: str, idempotency_key: str | None = None) -> dict:
+        return self._post_json(f"{endpoint}/checkout-sessions", {"cart_id": cart_id}, idempotent=True, idempotency_key=idempotency_key)
 
-    def create_checkout_from_line_items(self, endpoint: str, line_items: list[dict]) -> dict:
-        return self._post_json(f"{endpoint}/checkout-sessions", {"line_items": line_items}, idempotent=True)
+    def create_checkout_from_line_items(
+        self, endpoint: str, line_items: list[dict], idempotency_key: str | None = None
+    ) -> dict:
+        return self._post_json(f"{endpoint}/checkout-sessions", {"line_items": line_items}, idempotent=True, idempotency_key=idempotency_key)
 
     def get_checkout(self, endpoint: str, checkout_id: str) -> dict:
         return self._get_json(f"{endpoint}/checkout-sessions/{checkout_id}")
 
-    def update_checkout(self, endpoint: str, checkout_id: str, payload: dict) -> dict:
+    def update_checkout(
+        self, endpoint: str, checkout_id: str, payload: dict, idempotency_key: str | None = None
+    ) -> dict:
         if payload.get("status") == "complete_in_progress":
             raise UCPBusinessOutcomeError(
                 [{"type": "error", "code": "update_during_completion",
                   "content": "checkout is complete_in_progress; do not submit updates"}]
             )
-        return self._put_json(f"{endpoint}/checkout-sessions/{checkout_id}", payload, idempotent=True)
+        return self._put_json(f"{endpoint}/checkout-sessions/{checkout_id}", payload, idempotent=True, idempotency_key=idempotency_key)
 
-    def complete_checkout(self, endpoint: str, checkout_id: str, payment: dict, signals: dict | None = None) -> dict:
+    def complete_checkout(
+        self,
+        endpoint: str,
+        checkout_id: str,
+        payment: dict,
+        allowed_handler_ids: set[str],
+        user_confirmed: bool = False,
+        signals: dict | None = None,
+        idempotency_key: str | None = None,
+    ) -> dict:
+        """Complete an order only after confirmation and handler validation.
+
+        ``user_confirmed`` must be set only after the caller has shown the
+        buyer the final items, total, currency, fulfillment option, and
+        payment handler. ``allowed_handler_ids`` must come from the current
+        business discovery profile, not from a previous merchant session.
+        """
+        if not user_confirmed:
+            raise UCPBusinessOutcomeError([{
+                "type": "error", "code": "buyer_confirmation_required",
+                "content": "explicit buyer confirmation is required before completing checkout",
+            }])
+        instruments = payment.get("instruments") if isinstance(payment, dict) else None
+        if not isinstance(instruments, list) or not instruments:
+            raise ValueError("payment.instruments must be a non-empty list")
+        unadvertised = [item.get("handler_id") for item in instruments if item.get("handler_id") not in allowed_handler_ids]
+        if unadvertised:
+            raise UCPBusinessOutcomeError([{
+                "type": "error", "code": "unadvertised_payment_handler",
+                "content": f"payment handler(s) not advertised by this business: {unadvertised}",
+            }])
         body: dict[str, Any] = {"payment": payment}
         if signals:
             body["signals"] = signals
-        return self._post_json(f"{endpoint}/checkout-sessions/{checkout_id}/complete", body, idempotent=True)
+        return self._post_json(f"{endpoint}/checkout-sessions/{checkout_id}/complete", body, idempotent=True, idempotency_key=idempotency_key)
 
-    def cancel_checkout(self, endpoint: str, checkout_id: str) -> dict:
-        return self._post_json(f"{endpoint}/checkout-sessions/{checkout_id}/cancel", {}, idempotent=True)
+    def cancel_checkout(self, endpoint: str, checkout_id: str, idempotency_key: str | None = None) -> dict:
+        return self._post_json(f"{endpoint}/checkout-sessions/{checkout_id}/cancel", {}, idempotent=True, idempotency_key=idempotency_key)
 
     # -- order ---------------------------------------------------------------
 
@@ -328,15 +386,21 @@ class UCPClient:
     def _get_json(self, url: str) -> dict:
         return self._decode_business_response(self._get(url, headers=self.build_headers()))
 
-    def _post_json(self, url: str, body: dict, idempotent: bool = False) -> dict:
-        return self._request_json("POST", url, body, idempotent)
+    def _post_json(
+        self, url: str, body: dict, idempotent: bool = False, idempotency_key: str | None = None
+    ) -> dict:
+        return self._request_json("POST", url, body, idempotent, idempotency_key)
 
-    def _put_json(self, url: str, body: dict, idempotent: bool = False) -> dict:
-        return self._request_json("PUT", url, body, idempotent)
+    def _put_json(
+        self, url: str, body: dict, idempotent: bool = False, idempotency_key: str | None = None
+    ) -> dict:
+        return self._request_json("PUT", url, body, idempotent, idempotency_key)
 
-    def _request_json(self, method: str, url: str, body: dict, idempotent: bool) -> dict:
+    def _request_json(
+        self, method: str, url: str, body: dict, idempotent: bool, idempotency_key: str | None = None
+    ) -> dict:
         payload = json.dumps(body).encode("utf-8")
-        headers = self.build_headers(body=payload, idempotent=idempotent)
+        headers = self.build_headers(body=payload, idempotent=idempotent, idempotency_key=idempotency_key)
         req = urlrequest.Request(url, data=payload, headers=headers, method=method)
         raw = self._send(req)
         return self._decode_business_response(raw)
@@ -621,6 +685,9 @@ def run_selftest(verbose: bool = False) -> int:
 
         handlers = client.list_payment_handlers(profile)
         check("discovery returns mock_payment_handler", "mock_payment_handler" in handlers)
+        check("caller-provided idempotency key is preserved", client.build_headers(
+            idempotent=True, idempotency_key="retry-key"
+        )["Idempotency-Key"] == "retry-key")
 
         endpoint = client.resolve_service_endpoint(profile, "dev.ucp.shopping")
         check("resolved endpoint matches mock server", endpoint == base_url)
@@ -667,10 +734,18 @@ def run_selftest(verbose: bool = False) -> int:
         check("checkout ready_for_complete after selecting option",
               checkout["status"] == "ready_for_complete")
 
-        completed = client.complete_checkout(endpoint, checkout["id"], payment={
+        payment = {
             "instruments": [{"id": "instr_1", "handler_id": "mock_payment_handler", "type": "card",
-                              "credential": {"type": "token", "token": "success_token"}}]
-        })
+                               "credential": {"type": "token", "token": "success_token"}}]
+        }
+        try:
+            client.complete_checkout(endpoint, checkout["id"], payment, set(handlers))
+            check("checkout completion requires buyer confirmation", False)
+        except UCPBusinessOutcomeError:
+            check("checkout completion requires buyer confirmation", True)
+        completed = client.complete_checkout(
+            endpoint, checkout["id"], payment, allowed_handler_ids=set(handlers), user_confirmed=True
+        )
         check("checkout completed with order id", completed["status"] == "completed" and "order" in completed)
 
         order = client.get_order(endpoint, completed["order"]["id"])
@@ -688,12 +763,23 @@ def run_selftest(verbose: bool = False) -> int:
         digest = compute_content_digest(webhook_body)
         sig_input = 'sig1=("@method" "content-digest");created=1700000000;keyid="business-2026"'
         seen: set[str] = set()
-        result = verify_webhook_delivery(webhook_body, digest, sig_input, seen, "wh-key-1")
+        result = verify_webhook_delivery(
+            webhook_body, digest, sig_input, "sig1=:mock:",
+            lambda *_: True, True, seen, "wh-key-1",
+        )
         check("webhook verification passes on first delivery", result["ok"])
-        replay = verify_webhook_delivery(webhook_body, digest, sig_input, seen, "wh-key-1")
+        replay = verify_webhook_delivery(
+            webhook_body, digest, sig_input, "sig1=:mock:",
+            lambda *_: True, True, seen, "wh-key-1",
+        )
         check("webhook verification rejects replayed idempotency key", not replay["ok"])
-        tampered = verify_webhook_delivery(webhook_body + b"x", digest, sig_input, seen, "wh-key-2")
+        tampered = verify_webhook_delivery(
+            webhook_body + b"x", digest, sig_input, "sig1=:mock:",
+            lambda *_: True, True, seen, "wh-key-2",
+        )
         check("webhook verification rejects tampered body", not tampered["ok"])
+        missing_verifier = verify_webhook_delivery(webhook_body, digest, sig_input, "sig1=:mock:")
+        check("webhook verification rejects unavailable verifier", not missing_verifier["ok"])
 
         # Authority binding checks.
         try:

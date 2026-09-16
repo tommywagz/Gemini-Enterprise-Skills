@@ -102,7 +102,13 @@ Poll `status` after each update: `incomplete` → keep filling fields named in
 
 - Step 6: Complete the checkout
 `POST /checkout-sessions/{id}/complete` with `payment.instruments[]`
-referencing a `handler_id` confirmed in Step 2. A successful response has
+referencing a `handler_id` confirmed in Step 2. This endpoint places an
+order and is irreversible for this client: first show the buyer the final
+items, total/currency, fulfillment selection, and selected payment handler,
+then obtain explicit confirmation in the current interaction. Pass only the
+current discovery result as `allowed_handler_ids` and `user_confirmed=True`
+to `UCPClient.complete_checkout`; it rejects missing confirmation and
+unadvertised handlers. A successful response has
 `status: "completed"` and an `order.id` / `order.permalink_url`. See
 `references/ucp_cart_checkout.md` for the full request/response shape and
 `assets/checkout_payload_templates.json` for a copy-paste starting payload.
@@ -115,10 +121,11 @@ refunded). Before trusting any inbound webhook payload:
 2. Confirm its `Idempotency-Key`/`Webhook-Id` has not already been
    processed (replay protection — a rejected duplicate is not an error, it
    is the expected retry-safety behavior).
-3. If the business signs webhook deliveries (RFC 9421), verify the
-   signature against the business's key resolved from its own discovery
-   profile — never trust an unsigned delivery claiming to be from a
-   business whose profile declares signing as required.
+3. If the business signs webhook deliveries (RFC 9421), resolve its public
+   key from the validated discovery profile and supply a real cryptographic
+   verifier callback to `verify_webhook_delivery`. Set
+   `signature_required=True` when signing is declared; the helper rejects a
+   missing signature or verifier and does not treat parsing as verification.
 Delegate any post-purchase action this client doesn't model (returns,
 exchanges, disputes) to `order.permalink_url` rather than reimplementing it.
 
@@ -159,7 +166,9 @@ the business ignores it silently.
   rest of the profile parses cleanly.
 - **Idempotency-Key reuse with a different body**: expect `409 Conflict`;
   never blindly retry with a changed payload under the same key — retries
-  of the *same* logical operation must resend an identical body.
+  of the *same* logical operation must resend an identical body. Pass the
+  original `idempotency_key` argument again to the relevant helper method;
+  each method otherwise creates a fresh key for a new operation.
 - **Missing reference files**: if `references/*.md` are unavailable, fall
   back to the live spec index at `https://ucp.dev/llms.txt` (and the
   version-pinned `https://ucp.dev/<version>/llms.txt`) as the source of
@@ -181,7 +190,8 @@ the business ignores it silently.
   business's own `payment_handlers` discovery/checkout response, never from
   a previous integration with a different business.
 - **Skipping webhook verification**: never act on a delivered order-status
-  webhook without checking its content digest and idempotency key first.
+  webhook without checking its content digest and idempotency key first; for
+  a signed delivery, also require a cryptographic signature verifier.
 
 - Reference Files
 - **references/ucp_client_negotiation.md**: discovery-profile shape,
