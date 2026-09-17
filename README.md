@@ -52,6 +52,22 @@ The primary goal of this repository is to build a robust, scalable "garden" of p
 │   ├── ucp-merchant-servers/             # Server-side UCP-compliant business endpoints.
 │   └── write-skill/        # (Symlinked or copied) Skill package scaffolding/writing.
 │
+├── instructions/           # Staged and completed skill blueprint definitions (untracked, local references).
+│   ├── model_governance.md               # Model Governance prompt profiling blueprint.
+│   ├── real_estate_floorplan.md          # Floorplan scraper and vector CAD blueprint.
+│   ├── gcp_terraform_security_policy.md  # IaC security scanner and CIS audit blueprint.
+│   ├── gcp_cost_optimizer.md             # FinOps advisory and cost optimizer blueprint.
+│   ├── adk_cross_session_knowledge_bank.md # Long-term Vertex AI Memory Bank blueprint.
+│   ├── adk_durable_human_in_the_loop.md  # Durable asynchronous approval gate blueprint.
+│   ├── agents_cli_conformance_tester.md  # Loopback conformance mock sandbox blueprint.
+│   ├── agents_cli_scaffold_extension.md  # Polyglot multi-runtime workspace blueprint.
+│   ├── agents_cli_plugin_moderator.md    # Model Armor input/output moderation blueprint.
+│   ├── agents_cli_benchmark_eval.md      # Quantitative accuracy dataset eval blueprint.
+│   ├── gcp_kubernetes_resource_triage.md # GKE pod CrashLoopBackOff/OOM debugging blueprint.
+│   ├── gcp_iam_privilege_audit.md        # Least-privilege IAM Recommender audit blueprint.
+│   ├── adk_oauth_user_consent_flow.md    # Google Workspace OAuth2 user consent blueprint.
+│   └── adk_long_horizon_harness.md       # Headless event-driven/cron compaction blueprint.
+│
 ├── jobs/                   # [Untracked/Symlinked] Real-time squad coordination directory.
 │   ├── README.md           # Contract and technical design of jobs-based orchestration.
 │   ├── backlog.json        # Master task tracker & skill backlog.
@@ -92,12 +108,18 @@ All proposed skills initially staged in `AGENTS.md` have been fully developed, e
 | `ucp-consumer-surface` | `https://github.com/google/adk-samples/tree/main/skills` | 🟢 **Completed & Promoted** | Headless client-side UCP shopping agents managing discovery, carts, checkouts, and webhooks. Fully verified with evaluation report. |
 | `ucp-merchant-servers` | `https://github.com/google/adk-samples/tree/main/skills` | 🔵 **In Progress / Evaluation** | Server-side FastAPI/Hono UCP integration sample. Currently has test suite scaffolded; final evaluation report is pending. |
 | `write-skill` | `https://github.com/google/agents-cli/tree/main/skills` | 🟡 **System Meta-Skill** | Scaffolds standard skill packages. Used by the Creator Agent. Stable for squad execution; pending standalone garden-testing promotion. |
+| `agents-cli-plugin-moderator` | `https://github.com/google/agents-cli/tree/main/skills` | 🔴 **Staged / Blueprint** | Runner-wide input/output safety, content moderation, and sensitive data exfiltration filter plugin. |
+| `agents-cli-benchmark-eval` | `https://github.com/google/agents-cli/tree/main/skills` | 🔴 **Staged / Blueprint** | Standardizes executing and scoring local accuracy/adversarial datasets to emit JUnit XML reports. |
+| `gcp-kubernetes-resource-triage` | `https://github.com/google/skills/tree/main` | 🔴 **Staged / Blueprint** | Diagnostic debugger for failing GKE workloads, parsing logs/exit codes to generate patch manifests. |
+| `gcp-iam-privilege-audit` | `https://github.com/google/skills/tree/main` | 🔴 **Staged / Blueprint** | Audits active IAM bindings against usage logs (Logging/Recommender) to generate least-privilege Terraform. |
+| `adk-oauth-user-consent-flow` | `https://github.com/google/adk-samples/tree/main/skills` | 🔴 **Staged / Blueprint** | Integrates Google Workspace APIs behind user-authenticated OAuth 2.0 credential callbacks. |
+| `adk-long-horizon-harness` | `https://github.com/google/adk-samples/tree/main/skills` | 🔴 **Staged / Blueprint** | Headless event-driven (Pub/Sub) and scheduled background agents using context compaction. |
 
 ---
 
 ## 🌿 Active Skills in the Garden
 
-Below is a detailed reference of the active skills and meta-skills available in this repository, including their official names, descriptions, and primary use cases as defined in their respective `SKILL.md` configurations:
+Below is a detailed reference of the active skills, meta-skills, and staged blueprints available in this repository, including their official names, descriptions, and primary use cases as defined in their respective `SKILL.md` or `instructions/` configurations:
 
 | Skill Name (Folder) | YAML Name / ID | Concise Description | Primary Use Case |
 |---|---|---|---|
@@ -118,6 +140,12 @@ Below is a detailed reference of the active skills and meta-skills available in 
 | `ucp-consumer-surface` | `ucp-consumer-surface` | Client-side Universal Commerce Protocol (UCP) shopping agent orchestrating capability discovery, cart building, and checkout. | Implementing headless shopping assistants that securely purchase items and process status webhooks. |
 | `ucp-merchant-servers` | `ucp-merchant-servers` | Server-side architecture of a UCP-compliant Business Server, exposing discovery, cart, and checkout state engine APIs. | Deploying secure, compliant merchant endpoints with SQLite state tracking and request signature verification. |
 | `write-skill` | `write-skill` | Meta-skill for authoring, scaffolding, auditing, and structuring compliant Agent Skill packages in the standard format. | Structuring workflows, writing trigger patterns, and managing token budgets for new and existing skills. |
+| `agents-cli-plugin-moderator` | `agents-cli-plugin-moderator` | Configures and deploys runner-wide safety guardrails, content filters, and exfiltration prevention as ADK `BasePlugin`s. | Intercepting inputs and outputs to enforce safety policies across all sub-agents. |
+| `agents-cli-benchmark-eval` | `agents-cli-benchmark-eval` | Designs, executes, and scores local accuracy datasets against ADK agents to emit JUnit XML reports. | Continuous integration accuracy testing and pre-merge validation. |
+| `gcp-kubernetes-resource-triage` | `gcp-kubernetes-resource-triage` | Automatically diagnoses and recovers failing GKE workloads (CrashLoopBackOff, OOMKilled) by generating patch manifests. | Triaging container crashes and adjusting resources based on live diagnostics. |
+| `gcp-iam-privilege-audit` | `gcp-iam-privilege-audit` | Audits GCP IAM bindings against activity logs (Logging/Recommender) to propose safe least-privilege Terraform patches. | Hardening over-privileged roles and setting up Workload Identity Federation. |
+| `adk-oauth-user-consent-flow` | `adk-oauth-user-consent-flow` | Implements user-authenticated OAuth 2.0 flows for Workspace APIs (Drive, Gmail, Calendar) via ADK credential callbacks. | Accessing and editing user data safely through transient, user-authorized credentials. |
+| `adk-long-horizon-harness` | `adk-long-horizon-harness` | Configures autonomous headless ADK agents triggered by Pub/Sub or cron, using token-based context compaction. | Managing multi-day, background workflows without requiring live user presence. |
 
 ---
 
