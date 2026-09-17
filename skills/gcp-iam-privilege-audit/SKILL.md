@@ -88,8 +88,11 @@ Do not revoke the existing key until the new authentication is verified.
 - No recommendation returned: it is not proof the binding is safe; document
   missing usage evidence and retain it pending owner review.
 - A narrow role breaks a staged test: restore the prior approved binding,
-  capture the missing permission, and revise the proposal; do not add
-  `roles/editor` back as the default fix.
+   capture the missing permission, and revise the proposal; do not add
+   `roles/editor` back as the default fix.
+- A referenced role map or federation guide is unavailable: do not infer a
+  replacement permission set. Return the evidence as review-only and obtain
+  the current versioned reference before proposing a binding.
 
 - Reference Files
 - **references/predefined_roles_map.md**: role replacement map and cautions.
