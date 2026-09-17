@@ -1,0 +1,17 @@
+# Review-only template. A human must review and apply against the owning controller.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: REPLACE_OWNER_NAME
+  namespace: REPLACE_NAMESPACE
+spec:
+  template:
+    spec:
+      containers:
+        - name: REPLACE_CONTAINER_NAME
+          image: REPLACE_WITH_VERIFIED_IMAGE_REFERENCE
+          resources:
+            requests:
+              memory: REPLACE_REQUEST
+            limits:
+              memory: REPLACE_LIMIT
