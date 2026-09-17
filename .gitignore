@@ -2,6 +2,20 @@
 .gemini/
 .github/
 instructions/
+instructions/model_governance.md
+instructions/real_estate_floorplan.md
+instructions/gcp_terraform_security_policy.md
+instructions/gcp_cost_optimizer.md
+instructions/adk_cross_session_knowledge_bank.md
+instructions/adk_durable_human_in_the_loop.md
+instructions/agents_cli_conformance_tester.md
+instructions/agents_cli_scaffold_extension.md
+instructions/agents_cli_plugin_moderator.md
+instructions/agents_cli_benchmark_eval.md
+instructions/gcp_kubernetes_resource_triage.md
+instructions/gcp_iam_privilege_audit.md
+instructions/adk_oauth_user_consent_flow.md
+instructions/adk_long_horizon_harness.md
 
 .env
 
