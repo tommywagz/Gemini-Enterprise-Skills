@@ -1,6 +1,6 @@
 ---
 name: agents-cli-plugin-moderator
-description: "Configures and deploys a runner-wide ADK BasePlugin that wraps every coordinator and sub-agent with GCP Model Armor safety guardrails, blocking harmful inputs, session-state poisoning, and sensitive-data (PII) exfiltration before/after every LLM and tool call. TRIGGER when the user asks to \"add safety guardrails in ADK\", \"configure Model Armor in agents-cli\", \"block harmful content or prompts\", \"implement exfiltration detection\", \"write a runner-wide safety plugin\", or mentions `BasePlugin`, `before_model_callback`, `sanitizeUserPrompt`/`sanitizeModelResponse`. DO NOT TRIGGER for agent-specific (non-global) callback logic unrelated to safety, generic content moderation outside an ADK Runner, or GCP IAM/Terraform security auditing (use gcp-terraform-security-policy for that)."
+description: "Configures and deploys a runner-wide ADK BasePlugin that wraps every coordinator and sub-agent with GCP Model Armor safety guardrails, blocking harmful inputs, session-state poisoning, and sensitive-data (PII) exfiltration at model boundaries and configured outbound tools. TRIGGER when the user asks to \"add safety guardrails in ADK\", \"configure Model Armor in agents-cli\", \"block harmful content or prompts\", \"implement exfiltration detection\", \"write a runner-wide safety plugin\", or mentions `BasePlugin`, `before_model_callback`, `sanitizeUserPrompt`/`sanitizeModelResponse`. DO NOT TRIGGER for agent-specific (non-global) callback logic unrelated to safety, generic content moderation outside an ADK Runner, or GCP IAM/Terraform security auditing (use gcp-terraform-security-policy for that)."
 version: 1.0.0
 author: Actual Agentic Solutions
 tags: [adk, agents-cli, model-armor, safety, guardrails, plugin, security]
@@ -25,8 +25,8 @@ The plugin calls Google Cloud Model Armor's `sanitizeUserPrompt` and
 `sanitizeModelResponse` REST methods from `before_model_callback` and
 `after_model_callback` to screen for prompt injection/jailbreak, responsible-
 AI content categories, and sensitive data (PII); it uses `before_tool_callback`
-to catch exfiltration risk in outbound tool arguments (e.g., an HTTP-call
-tool receiving a credential-shaped string); and it validates session state at
+to catch exfiltration risk in configured outbound tool arguments (e.g., an
+HTTP-call tool receiving a credential-shaped string); and it validates session state at
 `on_user_message_callback`/`before_agent_callback` to resist session
 poisoning from a prior malicious turn. Success looks like: a single
 `GuardrailPlugin` class, registered once on the `Runner`, that blocks or
@@ -44,10 +44,14 @@ can retune without touching plugin code.
 - The ADK Python `Runner`/`InMemoryRunner` construction site in the user's
   code, where a `plugins=[...]` list can be added.
 - **Tool boundary:** this skill edits/adds plugin code and local config only.
-  It never calls the live Model Armor API itself, never provisions IAM
-  roles or templates via `gcloud`, and never runs the user's agent. Use
-  `scripts/simulate_moderation_violation.py` (a local stdlib-only mock) to
-  validate logic before wiring in real credentials.
+   It never calls the live Model Armor API itself, never provisions IAM
+   roles or templates via `gcloud`, and never runs the user's agent. Use
+   `scripts/simulate_moderation_violation.py` (a local stdlib-only mock) to
+   validate logic before wiring in real credentials.
+- **Data classification: Confidential.** Treat prompts, model responses,
+  session state, and tool arguments as potentially containing customer PII or
+  credentials. Do not log raw matched values; log only the filter category,
+  verdict, and request correlation ID.
 
 - Workflow
 
@@ -187,9 +191,12 @@ logged.
   `modelarmor.googleapis.com` host used for template CRUD — calls to the
   wrong host will fail outright.
 - `scripts/simulate_moderation_violation.py --selftest` reports a FAIL: do
-  not proceed to wiring real credentials; the block/allow decision logic in
-  the plugin (not the mock server) is almost always the bug — recheck the
-  `filterMatchState` branch from Steps 3-4.
+   not proceed to wiring real credentials; the block/allow decision logic in
+   the plugin (not the mock server) is almost always the bug — recheck the
+   `filterMatchState` branch from Steps 3-4.
+- A referenced API or plugin-pattern document is unavailable: do not guess a
+  hook signature, REST field, or endpoint. Stop the implementation and obtain
+  the matching versioned ADK or Model Armor documentation before continuing.
 
 - Reference Files
 - **references/model_armor_api.md**: exact REST method names, paths,
