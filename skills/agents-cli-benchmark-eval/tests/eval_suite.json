@@ -1,0 +1,22 @@
+{"skill_name":"agents-cli-benchmark-eval","evals":[
+{"id":1,"prompt":"Run evaluation datasets for my ADK agent.","should_trigger":true,"actual_trigger":true,"assertions":[{"text":"Routes to local dataset evaluation.","passed":true}]},
+{"id":2,"prompt":"Evaluate agent accuracy using golden prompts.","should_trigger":true,"actual_trigger":true,"assertions":[{"text":"Routes to agent accuracy scoring.","passed":true}]},
+{"id":3,"prompt":"Calculate trigger precision and recall.","should_trigger":true,"actual_trigger":true,"assertions":[{"text":"Routes to routing metrics.","passed":true}]},
+{"id":4,"prompt":"Generate a JUnit test report for my agent.","should_trigger":true,"actual_trigger":true,"assertions":[{"text":"Routes to JUnit generation.","passed":true}]},
+{"id":5,"prompt":"Set up an agent benchmark suite.","should_trigger":true,"actual_trigger":true,"assertions":[{"text":"Routes to benchmark setup.","passed":true}]},
+{"id":6,"prompt":"Score my ADK command locally from stdin.","should_trigger":true,"actual_trigger":true,"assertions":[{"text":"Routes to local command evaluation.","passed":true}]},
+{"id":7,"prompt":"Make XML results from a chatbot regression dataset.","should_trigger":true,"actual_trigger":true,"assertions":[{"text":"Routes to dataset reporting.","passed":true}]},
+{"id":8,"prompt":"Measure exact match on agent answers.","should_trigger":true,"actual_trigger":true,"assertions":[{"text":"Routes to deterministic scoring.","passed":true}]},
+{"id":9,"prompt":"Create adversarial anti-trigger cases for an agent benchmark.","should_trigger":true,"actual_trigger":true,"assertions":[{"text":"Routes to benchmark safety coverage.","passed":true}]},
+{"id":10,"prompt":"Write a Markdown report for local agent evaluation results.","should_trigger":true,"actual_trigger":true,"assertions":[{"text":"Routes to evaluator reporting.","passed":true}]},
+{"id":11,"prompt":"Load test my production API at 10,000 requests per second.","should_trigger":false,"actual_trigger":false,"assertions":[{"text":"Does not activate for production load testing.","passed":true}]},
+{"id":12,"prompt":"Fine-tune a model on customer conversations.","should_trigger":false,"actual_trigger":false,"assertions":[{"text":"Does not activate for model training.","passed":true}]},
+{"id":13,"prompt":"Write pytest tests for my date parser.","should_trigger":false,"actual_trigger":false,"assertions":[{"text":"Does not activate for general unit tests.","passed":true}]},
+{"id":14,"prompt":"Deploy my ADK agent to production.","should_trigger":false,"actual_trigger":false,"assertions":[{"text":"Does not activate for deployment.","passed":true}]},
+{"id":15,"prompt":"Audit Terraform GCP IAM security.","should_trigger":false,"actual_trigger":false,"assertions":[{"text":"Does not activate for IaC auditing.","passed":true}]},
+{"id":16,"prompt":"Add Model Armor content filtering to an ADK runner.","should_trigger":false,"actual_trigger":false,"assertions":[{"text":"Defers to safety plugin skill.","passed":true}]},
+{"id":17,"prompt":"Set up a GitHub Actions workflow.","should_trigger":false,"actual_trigger":false,"assertions":[{"text":"Does not activate for CI authoring.","passed":true}]},
+{"id":18,"prompt":"Optimize the cost of my Vertex AI models.","should_trigger":false,"actual_trigger":false,"assertions":[{"text":"Does not activate for FinOps.","passed":true}]},
+{"id":19,"prompt":"Build a RAG system with vector search.","should_trigger":false,"actual_trigger":false,"assertions":[{"text":"Does not activate for agent development.","passed":true}]},
+{"id":20,"prompt":"Moderate user comments on my Django site.","should_trigger":false,"actual_trigger":false,"assertions":[{"text":"Does not activate for generic moderation.","passed":true}]}
+]}

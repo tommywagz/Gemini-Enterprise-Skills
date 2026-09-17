@@ -1,0 +1,31 @@
+{
+  "version": "evaluator-fixture-1",
+  "cases": [
+    {
+      "id": "exact-match",
+      "prompt": "Return the deployment status.",
+      "expected": "ready",
+      "assertions": [{"type": "exact_match"}]
+    },
+    {
+      "id": "contains",
+      "prompt": "Describe the rollback procedure.",
+      "expected": "Use the approved rollback runbook.",
+      "assertions": [{"type": "contains", "value": "rollback runbook"}]
+    },
+    {
+      "id": "route-positive",
+      "prompt": "Should the benchmark skill activate?",
+      "expected": "trigger",
+      "expected_route": true,
+      "assertions": [{"type": "route"}]
+    },
+    {
+      "id": "route-negative",
+      "prompt": "Should a generic unit-test request activate the benchmark skill?",
+      "expected": "no",
+      "expected_route": false,
+      "assertions": [{"type": "route"}]
+    }
+  ]
+}

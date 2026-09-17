@@ -21,6 +21,21 @@ def run_case(case, command, timeout):
     except subprocess.TimeoutExpired: return None, f"command timed out after {timeout}s"
     if p.returncode: return None, f"command exited {p.returncode}: {p.stderr.strip()[:500]}"
     return p.stdout.strip(), None
+def validate_dataset(data):
+    cases=data.get("cases")
+    if not isinstance(cases,list) or not cases: return "cases must be a non-empty list"
+    allowed={"exact_match","contains","not_contains","route","min_token_overlap","min_semantic_similarity_proxy"}
+    for i,c in enumerate(cases,1):
+        if not isinstance(c,dict): return f"case {i} must be an object"
+        missing=[key for key in ("id","prompt","expected","assertions") if key not in c]
+        if missing: return f"case {c.get('id',i)!r} missing required field(s): {', '.join(missing)}"
+        if not isinstance(c["id"],str) or not c["id"]: return f"case {i} id must be a non-empty string"
+        if not isinstance(c["prompt"],str) or not isinstance(c["expected"],str): return f"case {c['id']!r} prompt and expected must be strings"
+        if not isinstance(c["assertions"],list) or not c["assertions"]: return f"case {c['id']!r} assertions must be a non-empty list"
+        if any(not isinstance(x,dict) or x.get("type") not in allowed for x in c["assertions"]): return f"case {c['id']!r} has an invalid assertion type"
+        if "expected_route" in c and not isinstance(c["expected_route"],bool): return f"case {c['id']!r} expected_route must be boolean"
+        if c.get("side_effect_risk","none") not in {"none","low","high"}: return f"case {c['id']!r} side_effect_risk is invalid"
+    return None
 def check(case, actual):
     fails=[]; expected=case["expected"]
     for x in case["assertions"]:
@@ -37,8 +52,9 @@ def main():
     ap=argparse.ArgumentParser(); ap.add_argument("--dataset",required=True); ap.add_argument("--command",nargs="+"); ap.add_argument("--timeout-seconds",type=float,default=30); ap.add_argument("--junit-out",required=True); ap.add_argument("--report-out",required=True); a=ap.parse_args()
     try: data=json.loads(Path(a.dataset).read_text())
     except Exception as e: print(f"dataset error: {e}",file=sys.stderr); return 2
-    cases=data.get("cases",[])
-    if not isinstance(cases,list) or not cases: print("dataset error: cases must be a non-empty list",file=sys.stderr); return 2
+    validation_error=validate_dataset(data)
+    if validation_error: print(f"dataset error: {validation_error}",file=sys.stderr); return 2
+    cases=data["cases"]
     suite=Element("testsuite",name="agent-evaluation",tests=str(len(cases))); results=[]; tp=fp=tn=fn=0
     for c in cases:
         node=SubElement(suite,"testcase",name=str(c.get("id","unnamed"))); started=time.time(); actual,err=run_case(c,a.command,a.timeout_seconds); node.set("time",f"{time.time()-started:.3f}")

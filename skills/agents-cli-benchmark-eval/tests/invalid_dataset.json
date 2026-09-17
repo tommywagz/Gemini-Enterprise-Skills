@@ -1,0 +1,4 @@
+{
+  "version": "invalid-fixture-1",
+  "cases": [{"id": "missing-required-fields"}]
+}
