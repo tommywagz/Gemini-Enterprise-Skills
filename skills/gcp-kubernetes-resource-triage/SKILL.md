@@ -23,7 +23,10 @@ rolls a deployment, patches a live cluster, or retries blindly.
 - Read-only RBAC for pods, events, ReplicaSets, and logs. Never request
   `cluster-admin` merely to diagnose a failure.
 - Run `scripts/collect_pod_diagnostics.sh`; it permits only `kubectl get`,
-  `describe`, and `logs` commands.
+   `describe`, and `logs` commands.
+- **Data classification: Confidential.** Pod specifications, events, and logs
+  can contain customer data or secrets; store the evidence bundle locally and
+  redact it before sharing.
 
 - Workflow
 
@@ -77,7 +80,10 @@ registry password to YAML.
 - RBAC `Forbidden`: record the denied read and request least-privilege access.
 - No logs because container never started: rely on events/container state.
 - Multiple containers: identify the named failing container; do not attribute
-  a sidecar failure to the application.
+   a sidecar failure to the application.
+- A referenced diagnostic guide is unavailable: do not guess an exit-code or
+  registry-auth remedy. Return the collected evidence and request the matching
+  versioned documentation.
 
 - Reference Files
 - **references/kubernetes_exit_codes.md**: terminated-container interpretation.
