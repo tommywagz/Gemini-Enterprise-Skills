@@ -25,8 +25,11 @@ from standard input and returns its answer on standard output.
   `assets/eval_dataset_schema.json`.
 - Python 3.9+ for `scripts/run_eval_and_score.py`; no packages are installed.
 - For execution mode, a reviewed local command expressed after `--command`
-  that reads one prompt from stdin and writes one response to stdout. Do not
-  pass a shell pipeline, API key, or production endpoint.
+   that reads one prompt from stdin and writes one response to stdout. Do not
+   pass a shell pipeline, API key, or production endpoint.
+- **Data classification: Confidential.** Evaluation datasets, agent outputs,
+  command stderr, and generated reports can contain customer prompts or
+  secrets; redact them before sharing and do not commit sensitive fixtures.
 
 - Workflow
 
@@ -102,7 +105,10 @@ and return the report plus per-case XML results.
 - A case has no precomputed `actual` and `--command` is absent: record an
   ERROR rather than fabricating an agent output.
 - Never place credentials or private production prompts in datasets, command
-  arguments, JUnit properties, or reports. Redact output before sharing.
+   arguments, JUnit properties, or reports. Redact output before sharing.
+- A referenced metric or adversarial-testing guide is unavailable: do not
+   invent a threshold or safety procedure. Stop and obtain the versioned
+   reference before defining or running the affected cases.
 
 - Reference Files
 - **references/eval_metrics_guide.md**: formulae, threshold guidance, and
