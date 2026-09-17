@@ -45,6 +45,8 @@ Deduplicate before side effects and record state transitions such as received,
 running, succeeded, retryable-failed, and permanently-failed. Retry only
 transient faults; route deterministic validation/tool-policy failures to DLQ
 with a sanitized reason. Do not retry a non-idempotent external action unless
+its provider supports an idempotency key and the original key was recorded
+durably before the first attempt.
 
 - Step 4: Bound session history
 Read `references/context_compaction_patterns.md`. Configure compaction before
