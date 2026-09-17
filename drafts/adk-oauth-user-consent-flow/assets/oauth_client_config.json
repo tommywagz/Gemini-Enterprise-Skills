@@ -1,0 +1,12 @@
+{
+  "client_id": "REPLACE_WITH_OAUTH_CLIENT_ID.apps.googleusercontent.com",
+  "client_secret": "DO_NOT_COMMIT_REAL_SECRET_USE_SECRET_MANAGER",
+  "redirect_uris": ["http://localhost:8080/oauth2/callback"],
+  "authorization_endpoint": "https://accounts.google.com/o/oauth2/v2/auth",
+  "token_endpoint": "https://oauth2.googleapis.com/token",
+  "scopes": ["https://www.googleapis.com/auth/calendar.events.readonly"],
+  "pkce_required": true,
+  "state_required": true,
+  "nonce_required": true,
+  "token_storage": "REPLACE_WITH_ENCRYPTED_HOST_CREDENTIAL_STORE"
+}
