@@ -1,0 +1,66 @@
+{
+  "$schema_note": "Sample GuardrailPlugin policy file. Copy this into the user's project (e.g. guardrail_policy_config.json), replace the two template_id placeholders with real Model Armor templates, and retune thresholds before switching enforcement_mode to inspect_and_block. Field names mirror the Model Armor v1 REST API documented in references/model_armor_api.md.",
+
+  "project_id": "REPLACE_WITH_GCP_PROJECT_ID",
+  "location": "us-central1",
+
+  "prompt_template": {
+    "template_id": "REPLACE_WITH_INPUT_TEMPLATE_ID",
+    "purpose": "Screens user prompts / model-bound requests for prompt injection, jailbreak attempts, and malicious uploads. Do not reuse this template_id for model responses.",
+    "confidence_thresholds": {
+      "pi_and_jailbreak": "MEDIUM_AND_ABOVE",
+      "hate_speech": "HIGH",
+      "harassment": "HIGH",
+      "sexually_explicit": "HIGH",
+      "dangerous": "HIGH"
+    }
+  },
+
+  "response_template": {
+    "template_id": "REPLACE_WITH_OUTPUT_TEMPLATE_ID",
+    "purpose": "Screens model responses for PII/sensitive-data leakage, off-brand or unsafe content, and malicious URLs. Do not reuse this template_id for user prompts.",
+    "confidence_thresholds": {
+      "hate_speech": "HIGH",
+      "harassment": "HIGH",
+      "sexually_explicit": "HIGH",
+      "dangerous": "HIGH",
+      "malicious_uris": "HIGH"
+    },
+    "sensitive_data_protection": {
+      "mode": "basic",
+      "basic_sdp_infotypes": [
+        "CREDIT_CARD_NUMBER",
+        "US_SOCIAL_SECURITY_NUMBER",
+        "FINANCIAL_ACCOUNT_NUMBER",
+        "US_INDIVIDUAL_TAXPAYER_IDENTIFICATION_NUMBER",
+        "GOOGLE_CLOUD_CREDENTIALS",
+        "GOOGLE_CLOUD_API_KEY"
+      ],
+      "redact_pii": true
+    }
+  },
+
+  "enforcement_mode": "inspect_only",
+  "_enforcement_mode_values": ["inspect_only", "inspect_and_block"],
+  "_enforcement_mode_note": "Start every new integration at inspect_only to baseline false-positive rate against real traffic; only switch to inspect_and_block after thresholds are validated (see SKILL.md Step 1 and Step 8 selftest).",
+
+  "fail_mode": "fail_closed",
+  "_fail_mode_values": ["fail_open", "fail_closed"],
+  "_fail_mode_note": "Applies only when sanitizationResult.invocationResult == 'FAILURE' (Model Armor call itself errored/all filters skipped) -- a distinct case from a content MATCH_FOUND verdict.",
+
+  "refusal_text": "This request cannot be completed because it violates content safety policy.",
+
+  "network_tools": [
+    "http_fetch",
+    "send_email",
+    "upload_file",
+    "execute_code"
+  ],
+  "_network_tools_note": "Tool names (matching BaseTool.name) whose before_tool_callback args should be scanned for exfiltration risk per SKILL.md Step 5. Extend this list for any tool that makes an outbound network call.",
+
+  "trusted_defaults": {
+    "policy_flags_locked": true,
+    "allow_tool_escalation": false
+  },
+  "_trusted_defaults_note": "Developer-controlled baseline used by on_user_message_callback / before_agent_callback to detect and reset session-state flags that a prior model turn or tool output may have tampered with (see references/safety_plugin_patterns.md Session State Integrity)."
+}
