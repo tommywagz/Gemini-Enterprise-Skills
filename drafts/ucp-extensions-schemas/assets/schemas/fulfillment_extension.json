@@ -1,0 +1,125 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ucp.dev/2026-09-18/schemas/shopping/fulfillment.json",
+  "title": "UCP Fulfillment Extension Schema",
+  "description": "Defines shipping destinations, quotes, and fulfillment option selections extending UCP checkout sessions.",
+  "type": "object",
+  "ucp": {
+    "namespace": "dev.ucp.shopping.fulfillment",
+    "version": "2026-09-18",
+    "extends": "dev.ucp.shopping.checkout"
+  },
+  "properties": {
+    "fulfillment": {
+      "type": "object",
+      "description": "Fulfillment configuration including shipping destinations and selected options.",
+      "properties": {
+        "selected_destination_id": {
+          "type": "string",
+          "description": "The destination address identifier selected for delivery."
+        },
+        "destinations": {
+          "type": "array",
+          "description": "Available delivery addresses supplied by the buyer.",
+          "items": {
+            "$ref": "#/$defs/FulfillmentDestination"
+          }
+        },
+        "groups": {
+          "type": "array",
+          "description": "Carrier rate groups and available shipping methods.",
+          "items": {
+            "$ref": "#/$defs/FulfillmentGroup"
+          }
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$defs": {
+    "FulfillmentDestination": {
+      "type": "object",
+      "required": ["id", "postal_code", "country"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for this destination record."
+        },
+        "recipient_name": {
+          "type": "string"
+        },
+        "address_line1": {
+          "type": "string"
+        },
+        "address_line2": {
+          "type": "string"
+        },
+        "city": {
+          "type": "string"
+        },
+        "state_province": {
+          "type": "string"
+        },
+        "postal_code": {
+          "type": "string"
+        },
+        "country": {
+          "type": "string",
+          "pattern": "^[A-Z]{2}$",
+          "description": "Two-letter ISO 3166-1 alpha-2 country code."
+        }
+      },
+      "additionalProperties": false
+    },
+    "FulfillmentGroup": {
+      "type": "object",
+      "required": ["id", "options"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Identifier for this line-item fulfillment grouping."
+        },
+        "selected_option_id": {
+          "type": "string",
+          "description": "The chosen shipping rate option ID."
+        },
+        "options": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/FulfillmentOption"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "FulfillmentOption": {
+      "type": "object",
+      "required": ["id", "title", "amount"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Carrier service option ID (e.g. std_ground, express_air)."
+        },
+        "title": {
+          "type": "string",
+          "description": "Human-readable label for the shipping option."
+        },
+        "carrier": {
+          "type": "string",
+          "description": "Shipping carrier name (e.g. FedEx, UPS, DHL, Postal)."
+        },
+        "amount": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Shipping cost in minor currency units (cents)."
+        },
+        "estimated_days": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Estimated business days in transit."
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}

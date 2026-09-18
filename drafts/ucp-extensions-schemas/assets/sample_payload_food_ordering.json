@@ -1,0 +1,52 @@
+{
+  "id": "chk_food_784912",
+  "status": "ready_for_complete",
+  "currency": "USD",
+  "line_items": [
+    {
+      "id": "line_1",
+      "item": {
+        "id": "burger_artisan_combo",
+        "title": "Artisan Cheeseburger Combo",
+        "price": 1650
+      },
+      "quantity": 1
+    }
+  ],
+  "totals": [
+    { "type": "subtotal", "amount": 1650 },
+    { "type": "tax", "amount": 140 },
+    { "type": "total", "amount": 1790 }
+  ],
+  "buyer": {
+    "full_name": "Jordan Doe",
+    "email": "jordan.doe@example.com",
+    "phone": "+15551234567"
+  },
+  "food_ordering": {
+    "service_type": "pickup",
+    "asap": false,
+    "requested_time": "2026-09-18T18:45:00Z",
+    "utensils_requested": false,
+    "kitchen_notes": "Please package condiment cups separately.",
+    "dietary_alerts": ["nut_allergy"],
+    "item_customizations": [
+      {
+        "line_item_id": "line_1",
+        "selected_options": [
+          {
+            "group_id": "cheese_type",
+            "choice_id": "aged_cheddar",
+            "additional_amount": 100
+          },
+          {
+            "group_id": "side_choice",
+            "choice_id": "truffle_fries",
+            "additional_amount": 250
+          }
+        ],
+        "special_instructions": "Extra crispy fries please."
+      }
+    ]
+  }
+}
