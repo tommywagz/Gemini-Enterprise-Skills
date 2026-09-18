@@ -47,6 +47,7 @@ anything in `jobs/`. Correct workers through their inboxes.
    promoted `SKILL.md` frontmatter manually. Mark the task `COMPLETED`, set
    `skill_path`, update task counts, return the worker inbox to `IDLE`, and log
    the result.
+7. At the end of the creation and promotion of a skill, cut its specification or listing from `AGENTS.md` and paste it into its own file in the `instructions/` folder (which is .gitignored).
 
 ```bash
 git merge <worker-branch> --no-ff \
