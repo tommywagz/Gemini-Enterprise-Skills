@@ -48,6 +48,7 @@ anything in `jobs/`. Correct workers through their inboxes.
    `skill_path`, update task counts, return the worker inbox to `IDLE`, and log
    the result.
 7. At the end of the creation and promotion of a skill, cut its specification or listing from `AGENTS.md` and paste it into its own file in the `instructions/` folder (which is .gitignored).
+8. Append the appropriate data to the `README.md` table to reflect the newly constructed skill
 
 ```bash
 git merge <worker-branch> --no-ff \
