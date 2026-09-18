@@ -54,7 +54,7 @@ This skill implements a robust, two-stage spatial intelligence and architectural
 ## Workflow
 
 ### Step 1: Query Listing Portals (Discovery)
-When a property address or listing reference is provided, query the appropriate MCP toolchain:
+When a property address or listing reference is provided, query the appropriate MCP toolchain (see references/mcp_realestate_servers.md for server contracts and parameter schemas):
 - **Zillow MCP**: Use `get_property_by_address` or `get_property_by_zpid` to retrieve gross living area (GLA), lot shape, room counts, and URLs of floor plans or sketch media.
 - **Redfin MCP**: Use `get_mls_record` to check municipal records, permit schematics, and tour galleries.
 - **Apartments.com MCP**: Use `get_community_floorplans` to extract standardized multi-family floor plan configurations (Studio, 1B1B, etc.).
@@ -74,14 +74,14 @@ Before drafting, execute the verification checks using `scripts/validate_geometr
 - **Area Variance**: Compare the sum of calculated polygon areas against the listing-reported GLA. Flag variances greater than 10% as warning notifications.
 
 ### Step 4: Procedural Layout Construction
-Invoke the **Floor Builder MCP** server tools:
+Invoke the **Floor Builder MCP** server tools (see references/mcp_cad_builder_tools.md for tool schemas and operations):
 - `create_room_polygon`: Construct 2D enclosures.
 - `snap_adjacent_walls`: Automatically align shared boundaries between neighboring rooms (e.g., Bedroom and Hallway) to remove microscopic overlapping areas.
 - `insert_portal`: Place door swings and window frames with clearances at coordinates matching the normalized schema.
 - `add_annotation`: Stamp calculated dimension callouts and labels (e.g., "Kitchen 12' x 10'") onto the canvas.
 
 ### Step 5: Export CAD Artifacts
-Drive precision drafting via the **CAD / BIM MCP** server to build layered vector geometry:
+Drive precision drafting via the **CAD / BIM MCP** server to build layered vector geometry per standard conventions (detailed in references/architectural_cad_standards.md):
 - Organize vectors onto standard layers according to standard AIA CAD guidelines (`WALLS`, `DOORS`, `WINDOWS`, `DIMENSIONS`, `FIXTURES`, `TEXT`).
 - Use block definitions from `assets/standard_cad_symbols.dxf` to place doors, windows, and fixture blocks.
 - Export to `.dxf` (Drawing Exchange Format), `.svg` (for immediate web rendering/previewing), or `.dwg`.

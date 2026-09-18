@@ -1,242 +1,242 @@
 {
-  "skill_name": "ap2-agent-payments",
+  "skill_name": "evaluate-skill",
   "evals": [
     {
       "id": 1,
-      "prompt": "Implement an AP2 payment mandate for this cart",
+      "prompt": "Evaluate the adk-agents skill and test its trigger accuracy",
       "should_trigger": true,
       "actual_trigger": true,
       "assertions": [
         {
-          "text": "Skill activates for AP2 payment mandate workflow",
+          "text": "Skill activates evaluate-skill workflow",
           "passed": true
         }
       ]
     },
     {
       "id": 2,
-      "prompt": "Use ap2-protocol.org checkout_mandate to secure a purchase",
+      "prompt": "Run an eval suite against this newly drafted skill",
       "should_trigger": true,
       "actual_trigger": true,
       "assertions": [
         {
-          "text": "Skill activates for AP2 payment mandate workflow",
+          "text": "Skill runs eval suite scoring",
           "passed": true
         }
       ]
     },
     {
       "id": 3,
-      "prompt": "Set up human-not-present autonomous spend flow with AP2",
+      "prompt": "Check this skill's trigger precision, recall, and false-positive rate",
       "should_trigger": true,
       "actual_trigger": true,
       "assertions": [
         {
-          "text": "Skill activates for AP2 payment mandate workflow",
+          "text": "Skill calculates precision/recall/FPR metrics",
           "passed": true
         }
       ]
     },
     {
       "id": 4,
-      "prompt": "Extend flow to x402 settlement rails",
+      "prompt": "Perform a security review and red team this agent skill",
       "should_trigger": true,
       "actual_trigger": true,
       "assertions": [
         {
-          "text": "Skill activates for AP2 payment mandate workflow",
+          "text": "Skill runs security_scan.sh and assigns risk tier",
           "passed": true
         }
       ]
     },
     {
       "id": 5,
-      "prompt": "Audit authorization and privacy for AP2 mandates",
+      "prompt": "Score this skill against the production checklist and benchmark it",
       "should_trigger": true,
       "actual_trigger": true,
       "assertions": [
         {
-          "text": "Skill activates for AP2 payment mandate workflow",
+          "text": "Skill audits against production rubric",
           "passed": true
         }
       ]
     },
     {
       "id": 6,
-      "prompt": "Create merchant, credentials provider, and payment processor agents under AP2",
+      "prompt": "A/B test the description of my custom skill to reduce false positives",
       "should_trigger": true,
       "actual_trigger": true,
       "assertions": [
         {
-          "text": "Skill activates for AP2 payment mandate workflow",
+          "text": "Skill runs A/B description iteration",
           "passed": true
         }
       ]
     },
     {
       "id": 7,
-      "prompt": "Generate open checkout and payment mandates with constraints",
+      "prompt": "Audit the security posture of the real-estate-floorplan skill",
       "should_trigger": true,
       "actual_trigger": true,
       "assertions": [
         {
-          "text": "Skill activates for AP2 payment mandate workflow",
+          "text": "Skill executes security review",
           "passed": true
         }
       ]
     },
     {
       "id": 8,
-      "prompt": "Design AP2 mandate flows for delegated shopping",
+      "prompt": "Benchmark the false positive rate of the ucp-merchant-servers skill",
       "should_trigger": true,
       "actual_trigger": true,
       "assertions": [
         {
-          "text": "Skill activates for AP2 payment mandate workflow",
+          "text": "Skill measures FPR on eval suite",
           "passed": true
         }
       ]
     },
     {
       "id": 9,
-      "prompt": "Prove who authorized a purchase using AP2 receipts",
+      "prompt": "Run regression testing on my updated skill after adjusting its workflow",
       "should_trigger": true,
       "actual_trigger": true,
       "assertions": [
         {
-          "text": "Skill activates for AP2 payment mandate workflow",
+          "text": "Skill executes regression test suite",
           "passed": true
         }
       ]
     },
     {
       "id": 10,
-      "prompt": "Switch existing card-based flow to AP2 x402 crypto rail",
+      "prompt": "Verify whether this skill is ready for production release",
       "should_trigger": true,
       "actual_trigger": true,
       "assertions": [
         {
-          "text": "Skill activates for AP2 payment mandate workflow",
+          "text": "Skill verifies production checklist",
           "passed": true
         }
       ]
     },
     {
       "id": 11,
-      "prompt": "Integrate Stripe checkout session",
+      "prompt": "Create a brand new skill for Kubernetes pod debugging",
       "should_trigger": false,
       "actual_trigger": false,
       "assertions": [
         {
-          "text": "Skill does not activate for AP2 payment mandate workflow",
+          "text": "Does not trigger evaluate-skill; delegates to write-skill",
           "passed": true
         }
       ]
     },
     {
       "id": 12,
-      "prompt": "Format currency amounts with two decimals",
+      "prompt": "Search GitHub for an MCP server that integrates with Notion",
       "should_trigger": false,
       "actual_trigger": false,
       "assertions": [
         {
-          "text": "Skill does not activate for AP2 payment mandate workflow",
+          "text": "Does not trigger evaluate-skill; delegates to find-skill",
           "passed": true
         }
       ]
     },
     {
       "id": 13,
-      "prompt": "Write a unit test for a Python function",
+      "prompt": "Run pytest on tests/test_payment_gateway.py",
       "should_trigger": false,
       "actual_trigger": false,
       "assertions": [
         {
-          "text": "Skill does not activate for AP2 payment mandate workflow",
+          "text": "Does not trigger evaluate-skill; normal app pytest execution",
           "passed": true
         }
       ]
     },
     {
       "id": 14,
-      "prompt": "Deploy Kubernetes cluster",
+      "prompt": "Explain standard precision and recall in binary classification ML models",
       "should_trigger": false,
       "actual_trigger": false,
       "assertions": [
         {
-          "text": "Skill does not activate for AP2 payment mandate workflow",
+          "text": "Does not trigger evaluate-skill; general ML theory question",
           "passed": true
         }
       ]
     },
     {
       "id": 15,
-      "prompt": "Describe UCP cart promotion rules",
+      "prompt": "Write a README.md for my open source repository",
       "should_trigger": false,
       "actual_trigger": false,
       "assertions": [
         {
-          "text": "Skill does not activate for AP2 payment mandate workflow",
+          "text": "Does not trigger evaluate-skill",
           "passed": true
         }
       ]
     },
     {
       "id": 16,
-      "prompt": "Set up PayPal smart buttons",
+      "prompt": "Scaffold a skill folder with references and scripts directories",
       "should_trigger": false,
       "actual_trigger": false,
       "assertions": [
         {
-          "text": "Skill does not activate for AP2 payment mandate workflow",
+          "text": "Does not trigger evaluate-skill; delegates to write-skill",
           "passed": true
         }
       ]
     },
     {
       "id": 17,
-      "prompt": "Explain OAuth 2.0 authorization code flow",
+      "prompt": "Fix the python indentation error on line 42 of script.py",
       "should_trigger": false,
       "actual_trigger": false,
       "assertions": [
         {
-          "text": "Skill does not activate for AP2 payment mandate workflow",
+          "text": "Does not trigger evaluate-skill",
           "passed": true
         }
       ]
     },
     {
       "id": 18,
-      "prompt": "Create a Slack bot with Bolt",
+      "prompt": "Find existing community skills for Google Cloud monitoring",
       "should_trigger": false,
       "actual_trigger": false,
       "assertions": [
         {
-          "text": "Skill does not activate for AP2 payment mandate workflow",
+          "text": "Does not trigger evaluate-skill; delegates to find-skill",
           "passed": true
         }
       ]
     },
     {
       "id": 19,
-      "prompt": "Add dark mode toggle to React app",
+      "prompt": "Draft a new agent skill for processing invoices",
       "should_trigger": false,
       "actual_trigger": false,
       "assertions": [
         {
-          "text": "Skill does not activate for AP2 payment mandate workflow",
+          "text": "Does not trigger evaluate-skill; delegates to write-skill",
           "passed": true
         }
       ]
     },
     {
       "id": 20,
-      "prompt": "Calculate shipping tax in Java",
+      "prompt": "Execute the database migration scripts in production",
       "should_trigger": false,
       "actual_trigger": false,
       "assertions": [
         {
-          "text": "Skill does not activate for AP2 payment mandate workflow",
+          "text": "Does not trigger evaluate-skill",
           "passed": true
         }
       ]

@@ -1,5 +1,5 @@
 {
-  "skill_name": "google-agents-cli-adk-code",
+  "skill_name": "adk-agents",
   "evals": [
     {
       "id": 1,
@@ -7,9 +7,16 @@
       "should_trigger": true,
       "expected_output": "Instructions to define a standard LlmAgent or Agent with name, model, instruction, and tools.",
       "assertions": [
-        { "text": "Agent recommends using 'from google.adk.agents import Agent' or LlmAgent", "passed": true },
-        { "text": "Agent references gemini-3.7-flash or another Gemini model", "passed": true }
-      ]
+        {
+          "text": "Agent recommends using 'from google.adk.agents import Agent' or LlmAgent",
+          "passed": true
+        },
+        {
+          "text": "Agent references gemini-3.7-flash or another Gemini model",
+          "passed": true
+        }
+      ],
+      "actual_trigger": true
     },
     {
       "id": 2,
@@ -17,9 +24,16 @@
       "should_trigger": true,
       "expected_output": "Python function definition with docstring type annotations, registered as a tool.",
       "assertions": [
-        { "text": "Agent shows a python function with docstring and types", "passed": true },
-        { "text": "Agent shows registering the function in the tools parameter of the Agent constructor", "passed": true }
-      ]
+        {
+          "text": "Agent shows a python function with docstring and types",
+          "passed": true
+        },
+        {
+          "text": "Agent shows registering the function in the tools parameter of the Agent constructor",
+          "passed": true
+        }
+      ],
+      "actual_trigger": true
     },
     {
       "id": 3,
@@ -27,10 +41,20 @@
       "should_trigger": true,
       "expected_output": "Definition of a Pydantic BaseModel and passing it to output_schema in the Agent.",
       "assertions": [
-        { "text": "Agent defines a class inheriting from Pydantic's BaseModel", "passed": true },
-        { "text": "Agent passes the class to the output_schema argument of Agent constructor", "passed": true },
-        { "text": "Agent warns that output_schema disables tool calling and delegation", "passed": true }
-      ]
+        {
+          "text": "Agent defines a class inheriting from Pydantic's BaseModel",
+          "passed": true
+        },
+        {
+          "text": "Agent passes the class to the output_schema argument of Agent constructor",
+          "passed": true
+        },
+        {
+          "text": "Agent warns that output_schema disables tool calling and delegation",
+          "passed": true
+        }
+      ],
+      "actual_trigger": true
     },
     {
       "id": 4,
@@ -38,9 +62,16 @@
       "should_trigger": true,
       "expected_output": "Comprehensive API references for the ADK Python SDK.",
       "assertions": [
-        { "text": "Agent refers to references/adk-python.md", "passed": true },
-        { "text": "Agent lists core primitives: Agent, Tool, Session, Runner, State, Event", "passed": true }
-      ]
+        {
+          "text": "Agent refers to references/adk-python.md",
+          "passed": true
+        },
+        {
+          "text": "Agent lists core primitives: Agent, Tool, Session, Runner, State, Event",
+          "passed": true
+        }
+      ],
+      "actual_trigger": true
     },
     {
       "id": 5,
@@ -48,10 +79,20 @@
       "should_trigger": true,
       "expected_output": "Explanation and code samples for SequentialAgent, ParallelAgent, and LoopAgent composites.",
       "assertions": [
-        { "text": "Agent explains SequentialAgent executes in order", "passed": true },
-        { "text": "Agent explains ParallelAgent executes concurrently", "passed": true },
-        { "text": "Agent explains LoopAgent repeats until condition met or max_iterations", "passed": true }
-      ]
+        {
+          "text": "Agent explains SequentialAgent executes in order",
+          "passed": true
+        },
+        {
+          "text": "Agent explains ParallelAgent executes concurrently",
+          "passed": true
+        },
+        {
+          "text": "Agent explains LoopAgent repeats until condition met or max_iterations",
+          "passed": true
+        }
+      ],
+      "actual_trigger": true
     },
     {
       "id": 6,
@@ -59,9 +100,16 @@
       "should_trigger": true,
       "expected_output": "Instructions to define a Workflow graph with nodes, edges, and START.",
       "assertions": [
-        { "text": "Agent references 'from google.adk.workflow import Workflow'", "passed": true },
-        { "text": "Agent mentions defining edges and nodes (e.g., START, function nodes, agent nodes)", "passed": true }
-      ]
+        {
+          "text": "Agent references 'from google.adk.workflow import Workflow'",
+          "passed": true
+        },
+        {
+          "text": "Agent mentions defining edges and nodes (e.g., START, function nodes, agent nodes)",
+          "passed": true
+        }
+      ],
+      "actual_trigger": true
     },
     {
       "id": 7,
@@ -69,9 +117,16 @@
       "should_trigger": true,
       "expected_output": "Examples of node pausing for human feedback or approval gates.",
       "assertions": [
-        { "text": "Agent references references/adk-workflows.md", "passed": true },
-        { "text": "Agent mentions human-in-the-loop documentation link or recipes", "passed": true }
-      ]
+        {
+          "text": "Agent references references/adk-workflows.md",
+          "passed": true
+        },
+        {
+          "text": "Agent mentions human-in-the-loop documentation link or recipes",
+          "passed": true
+        }
+      ],
+      "actual_trigger": true
     },
     {
       "id": 8,
@@ -79,10 +134,20 @@
       "should_trigger": true,
       "expected_output": "Pointing to the long-horizon-harness and oauth-user-consent-flow recipes in references/samples.md.",
       "assertions": [
-        { "text": "Agent mentions long-horizon-harness for sandboxes", "passed": true },
-        { "text": "Agent mentions oauth-user-consent-flow for OAuth consent", "passed": true },
-        { "text": "Agent lists references/samples.md as the recipes catalog", "passed": true }
-      ]
+        {
+          "text": "Agent mentions long-horizon-harness for sandboxes",
+          "passed": true
+        },
+        {
+          "text": "Agent mentions oauth-user-consent-flow for OAuth consent",
+          "passed": true
+        },
+        {
+          "text": "Agent lists references/samples.md as the recipes catalog",
+          "passed": true
+        }
+      ],
+      "actual_trigger": true
     },
     {
       "id": 9,
@@ -90,9 +155,16 @@
       "should_trigger": true,
       "expected_output": "ManagedAgent configuration options and reference.",
       "assertions": [
-        { "text": "Agent references references/adk-python.md", "passed": true },
-        { "text": "Agent mentions ManagedAgent is for server-hosted first-party agents", "passed": true }
-      ]
+        {
+          "text": "Agent references references/adk-python.md",
+          "passed": true
+        },
+        {
+          "text": "Agent mentions ManagedAgent is for server-hosted first-party agents",
+          "passed": true
+        }
+      ],
+      "actual_trigger": true
     },
     {
       "id": 10,
@@ -100,9 +172,16 @@
       "should_trigger": true,
       "expected_output": "Creating a subclass of BaseAgent and overriding _run_async_impl.",
       "assertions": [
-        { "text": "Agent shows subclassing BaseAgent", "passed": true },
-        { "text": "Agent shows overriding _run_async_impl with an InvocationContext parameter", "passed": true }
-      ]
+        {
+          "text": "Agent shows subclassing BaseAgent",
+          "passed": true
+        },
+        {
+          "text": "Agent shows overriding _run_async_impl with an InvocationContext parameter",
+          "passed": true
+        }
+      ],
+      "actual_trigger": true
     },
     {
       "id": 11,
@@ -110,8 +189,12 @@
       "should_trigger": false,
       "expected_output": "Should redirect or handle with scaffolding skill.",
       "assertions": [
-        { "text": "google-agents-cli-adk-code skill does NOT activate", "passed": true }
-      ]
+        {
+          "text": "google-agents-cli-adk-code skill does NOT activate",
+          "passed": true
+        }
+      ],
+      "actual_trigger": false
     },
     {
       "id": 12,
@@ -119,8 +202,12 @@
       "should_trigger": false,
       "expected_output": "Should redirect or handle with scaffolding skill.",
       "assertions": [
-        { "text": "google-agents-cli-adk-code skill does NOT activate", "passed": true }
-      ]
+        {
+          "text": "google-agents-cli-adk-code skill does NOT activate",
+          "passed": true
+        }
+      ],
+      "actual_trigger": false
     },
     {
       "id": 13,
@@ -128,8 +215,12 @@
       "should_trigger": false,
       "expected_output": "Should redirect or handle with deployment skill.",
       "assertions": [
-        { "text": "google-agents-cli-adk-code skill does NOT activate", "passed": true }
-      ]
+        {
+          "text": "google-agents-cli-adk-code skill does NOT activate",
+          "passed": true
+        }
+      ],
+      "actual_trigger": false
     },
     {
       "id": 14,
@@ -137,8 +228,12 @@
       "should_trigger": false,
       "expected_output": "Should redirect or handle with deployment skill.",
       "assertions": [
-        { "text": "google-agents-cli-adk-code skill does NOT activate", "passed": true }
-      ]
+        {
+          "text": "google-agents-cli-adk-code skill does NOT activate",
+          "passed": true
+        }
+      ],
+      "actual_trigger": false
     },
     {
       "id": 15,
@@ -146,8 +241,12 @@
       "should_trigger": false,
       "expected_output": "Should redirect or handle with evaluation skill.",
       "assertions": [
-        { "text": "google-agents-cli-adk-code skill does NOT activate", "passed": true }
-      ]
+        {
+          "text": "google-agents-cli-adk-code skill does NOT activate",
+          "passed": true
+        }
+      ],
+      "actual_trigger": false
     },
     {
       "id": 16,
@@ -155,8 +254,12 @@
       "should_trigger": false,
       "expected_output": "General Python crawler question.",
       "assertions": [
-        { "text": "google-agents-cli-adk-code skill does NOT activate", "passed": true }
-      ]
+        {
+          "text": "google-agents-cli-adk-code skill does NOT activate",
+          "passed": true
+        }
+      ],
+      "actual_trigger": false
     },
     {
       "id": 17,
@@ -164,8 +267,12 @@
       "should_trigger": false,
       "expected_output": "Totally unrelated general Kubernetes question.",
       "assertions": [
-        { "text": "google-agents-cli-adk-code skill does NOT activate", "passed": true }
-      ]
+        {
+          "text": "google-agents-cli-adk-code skill does NOT activate",
+          "passed": true
+        }
+      ],
+      "actual_trigger": false
     },
     {
       "id": 18,
@@ -173,8 +280,12 @@
       "should_trigger": false,
       "expected_output": "Should redirect or handle with workflow skill.",
       "assertions": [
-        { "text": "google-agents-cli-adk-code skill does NOT activate", "passed": true }
-      ]
+        {
+          "text": "google-agents-cli-adk-code skill does NOT activate",
+          "passed": true
+        }
+      ],
+      "actual_trigger": false
     },
     {
       "id": 19,
@@ -182,8 +293,12 @@
       "should_trigger": false,
       "expected_output": "General git setup question.",
       "assertions": [
-        { "text": "google-agents-cli-adk-code skill does NOT activate", "passed": true }
-      ]
+        {
+          "text": "google-agents-cli-adk-code skill does NOT activate",
+          "passed": true
+        }
+      ],
+      "actual_trigger": false
     },
     {
       "id": 20,
@@ -191,8 +306,12 @@
       "should_trigger": false,
       "expected_output": "Environment/scaffolding information query.",
       "assertions": [
-        { "text": "google-agents-cli-adk-code skill does NOT activate", "passed": true }
-      ]
+        {
+          "text": "google-agents-cli-adk-code skill does NOT activate",
+          "passed": true
+        }
+      ],
+      "actual_trigger": false
     }
   ]
 }

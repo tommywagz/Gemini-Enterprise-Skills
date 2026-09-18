@@ -1,242 +1,242 @@
 {
-  "skill_name": "ap2-agent-payments",
+  "skill_name": "find-skill",
   "evals": [
     {
       "id": 1,
-      "prompt": "Implement an AP2 payment mandate for this cart",
+      "prompt": "Search awesome-agent-skills for an existing PostgreSQL tool skill",
       "should_trigger": true,
       "actual_trigger": true,
       "assertions": [
         {
-          "text": "Skill activates for AP2 payment mandate workflow",
+          "text": "Skill activates find-skill workflow",
           "passed": true
         }
       ]
     },
     {
       "id": 2,
-      "prompt": "Use ap2-protocol.org checkout_mandate to secure a purchase",
+      "prompt": "Find an MCP server for Slack notifications",
       "should_trigger": true,
       "actual_trigger": true,
       "assertions": [
         {
-          "text": "Skill activates for AP2 payment mandate workflow",
+          "text": "Skill queries MCP registry sources",
           "passed": true
         }
       ]
     },
     {
       "id": 3,
-      "prompt": "Set up human-not-present autonomous spend flow with AP2",
+      "prompt": "Is there an existing skill for Jira ticket management?",
       "should_trigger": true,
       "actual_trigger": true,
       "assertions": [
         {
-          "text": "Skill activates for AP2 payment mandate workflow",
+          "text": "Skill searches registry for Jira skill",
           "passed": true
         }
       ]
     },
     {
       "id": 4,
-      "prompt": "Extend flow to x402 settlement rails",
+      "prompt": "Discover Composio integrations or agent skills for GitHub PR reviews",
       "should_trigger": true,
       "actual_trigger": true,
       "assertions": [
         {
-          "text": "Skill activates for AP2 payment mandate workflow",
+          "text": "Skill searches Composio/community skills",
           "passed": true
         }
       ]
     },
     {
       "id": 5,
-      "prompt": "Audit authorization and privacy for AP2 mandates",
+      "prompt": "Search external skill registries to find a Snowflake query runner",
       "should_trigger": true,
       "actual_trigger": true,
       "assertions": [
         {
-          "text": "Skill activates for AP2 payment mandate workflow",
+          "text": "Skill performs registry search",
           "passed": true
         }
       ]
     },
     {
       "id": 6,
-      "prompt": "Create merchant, credentials provider, and payment processor agents under AP2",
+      "prompt": "Find an MCP server that provides Salesforce CRM access",
       "should_trigger": true,
       "actual_trigger": true,
       "assertions": [
         {
-          "text": "Skill activates for AP2 payment mandate workflow",
+          "text": "Skill queries MCP catalog",
           "passed": true
         }
       ]
     },
     {
       "id": 7,
-      "prompt": "Generate open checkout and payment mandates with constraints",
+      "prompt": "Look up community agent skills for Stripe checkout handling",
       "should_trigger": true,
       "actual_trigger": true,
       "assertions": [
         {
-          "text": "Skill activates for AP2 payment mandate workflow",
+          "text": "Skill checks community registry",
           "passed": true
         }
       ]
     },
     {
       "id": 8,
-      "prompt": "Design AP2 mandate flows for delegated shopping",
+      "prompt": "Find any vetted skill packages for Docker container lifecycle management",
       "should_trigger": true,
       "actual_trigger": true,
       "assertions": [
         {
-          "text": "Skill activates for AP2 payment mandate workflow",
+          "text": "Skill searches and screens packages",
           "passed": true
         }
       ]
     },
     {
       "id": 9,
-      "prompt": "Prove who authorized a purchase using AP2 receipts",
+      "prompt": "Can you find an MCP server or tool integration for SendGrid?",
       "should_trigger": true,
       "actual_trigger": true,
       "assertions": [
         {
-          "text": "Skill activates for AP2 payment mandate workflow",
+          "text": "Skill locates tool integration",
           "passed": true
         }
       ]
     },
     {
       "id": 10,
-      "prompt": "Switch existing card-based flow to AP2 x402 crypto rail",
+      "prompt": "Search for pre-built agent skills that integrate with Datadog alerts",
       "should_trigger": true,
       "actual_trigger": true,
       "assertions": [
         {
-          "text": "Skill activates for AP2 payment mandate workflow",
+          "text": "Skill searches for pre-built skills",
           "passed": true
         }
       ]
     },
     {
       "id": 11,
-      "prompt": "Integrate Stripe checkout session",
+      "prompt": "Write a new custom skill from scratch for auditing AWS IAM roles",
       "should_trigger": false,
       "actual_trigger": false,
       "assertions": [
         {
-          "text": "Skill does not activate for AP2 payment mandate workflow",
+          "text": "Does not trigger find-skill; delegates to write-skill",
           "passed": true
         }
       ]
     },
     {
       "id": 12,
-      "prompt": "Format currency amounts with two decimals",
+      "prompt": "Evaluate the trigger precision of the a2a-workflows skill",
       "should_trigger": false,
       "actual_trigger": false,
       "assertions": [
         {
-          "text": "Skill does not activate for AP2 payment mandate workflow",
+          "text": "Does not trigger find-skill; delegates to evaluate-skill",
           "passed": true
         }
       ]
     },
     {
       "id": 13,
-      "prompt": "Write a unit test for a Python function",
+      "prompt": "Search Google for the documentation on Python asyncio.gather",
       "should_trigger": false,
       "actual_trigger": false,
       "assertions": [
         {
-          "text": "Skill does not activate for AP2 payment mandate workflow",
+          "text": "Does not trigger find-skill; generic web search",
           "passed": true
         }
       ]
     },
     {
       "id": 14,
-      "prompt": "Deploy Kubernetes cluster",
+      "prompt": "Write unit tests for my UserService class in src/users.py",
       "should_trigger": false,
       "actual_trigger": false,
       "assertions": [
         {
-          "text": "Skill does not activate for AP2 payment mandate workflow",
+          "text": "Does not trigger find-skill",
           "passed": true
         }
       ]
     },
     {
       "id": 15,
-      "prompt": "Describe UCP cart promotion rules",
+      "prompt": "Run the security scanner against this repository",
       "should_trigger": false,
       "actual_trigger": false,
       "assertions": [
         {
-          "text": "Skill does not activate for AP2 payment mandate workflow",
+          "text": "Does not trigger find-skill",
           "passed": true
         }
       ]
     },
     {
       "id": 16,
-      "prompt": "Set up PayPal smart buttons",
+      "prompt": "Draft a SKILL.md template for a new data pipeline skill",
       "should_trigger": false,
       "actual_trigger": false,
       "assertions": [
         {
-          "text": "Skill does not activate for AP2 payment mandate workflow",
+          "text": "Does not trigger find-skill; delegates to write-skill",
           "passed": true
         }
       ]
     },
     {
       "id": 17,
-      "prompt": "Explain OAuth 2.0 authorization code flow",
+      "prompt": "Explain how OAuth 2.0 PKCE works under the hood",
       "should_trigger": false,
       "actual_trigger": false,
       "assertions": [
         {
-          "text": "Skill does not activate for AP2 payment mandate workflow",
+          "text": "Does not trigger find-skill; conceptual query",
           "passed": true
         }
       ]
     },
     {
       "id": 18,
-      "prompt": "Create a Slack bot with Bolt",
+      "prompt": "Score this skill against the production rubric",
       "should_trigger": false,
       "actual_trigger": false,
       "assertions": [
         {
-          "text": "Skill does not activate for AP2 payment mandate workflow",
+          "text": "Does not trigger find-skill; delegates to evaluate-skill",
           "passed": true
         }
       ]
     },
     {
       "id": 19,
-      "prompt": "Add dark mode toggle to React app",
+      "prompt": "Refactor the authentication middleware to use JWT tokens",
       "should_trigger": false,
       "actual_trigger": false,
       "assertions": [
         {
-          "text": "Skill does not activate for AP2 payment mandate workflow",
+          "text": "Does not trigger find-skill",
           "passed": true
         }
       ]
     },
     {
       "id": 20,
-      "prompt": "Calculate shipping tax in Java",
+      "prompt": "What is the weather forecast in San Francisco tomorrow?",
       "should_trigger": false,
       "actual_trigger": false,
       "assertions": [
         {
-          "text": "Skill does not activate for AP2 payment mandate workflow",
+          "text": "Does not trigger find-skill",
           "passed": true
         }
       ]

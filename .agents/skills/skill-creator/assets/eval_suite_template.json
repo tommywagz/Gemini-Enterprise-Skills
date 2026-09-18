@@ -1,0 +1,24 @@
+{
+  "skill_name": "REPLACE_WITH_SKILL_NAME",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "REPLACE: a prompt that SHOULD trigger the skill",
+      "should_trigger": true,
+      "expected_output": "REPLACE: one-sentence description of the correct behavior",
+      "assertions": [
+        "REPLACE: a specific, observable, countable assertion",
+        "REPLACE: a second assertion, ideally a process check not just an output check"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "REPLACE: a prompt that should NOT trigger the skill (adjacent task)",
+      "should_trigger": false,
+      "assertions": [
+        "Skill under test does NOT activate",
+        "REPLACE: what should handle this instead, if relevant"
+      ]
+    }
+  ]
+}

@@ -1,4 +1,4 @@
-{ 
+{
   "$schema": "https://opencode.ai/config.json",
   "provider": {
     "google-vertex": {
@@ -8,32 +8,71 @@
         "location": "global"
       },
       "models": {
-        "gemini-3.8-flash": { "reasoning": false },
-        "gemini-3.5-flash": { "reasoning": false }
+        "gemini-3.8-flash": { "reasoning": true },
+        "gemini-3.5-flash": { "reasoning": false },
+        "gemini-3.1-pro-preview": { "reasoning": true }
       }
     }
   },
+  "governance": {
+    "mode": "balanced",
+    "safe_concurrency_limit": 6,
+    "concurrency_rationale": "6 parallel Jetski worker instances + 1 orchestrator maximize evaluation throughput while safely operating well within Google Vertex AI quota constraints (300 RPM ceiling) and preventing local Mac OS git worktree lock contention."
+  },
   "agents": {
     "orchestrator": {
-      "model": "google-vertex/gemini-3.5-flash",
-      "systemPromptFile": ".agents/orchestrator.md",
+      "model": "google-vertex/gemini-3.8-flash",
+      "systemPromptFile": ".agents/orchestrator-evaluator.md",
       "autoApprove": true,
       "worktree": false
+    },
+    "evaluator-1": {
+      "model": "google-vertex/gemini-3.8-flash",
+      "systemPromptFile": ".agents/worker-evaluator-1.md",
+      "autoApprove": true,
+      "worktree": true
+    },
+    "evaluator-2": {
+      "model": "google-vertex/gemini-3.8-flash",
+      "systemPromptFile": ".agents/worker-evaluator-2.md",
+      "autoApprove": true,
+      "worktree": true
+    },
+    "evaluator-3": {
+      "model": "google-vertex/gemini-3.8-flash",
+      "systemPromptFile": ".agents/worker-evaluator-3.md",
+      "autoApprove": true,
+      "worktree": true
+    },
+    "evaluator-4": {
+      "model": "google-vertex/gemini-3.8-flash",
+      "systemPromptFile": ".agents/worker-evaluator-4.md",
+      "autoApprove": true,
+      "worktree": true
+    },
+    "evaluator-5": {
+      "model": "google-vertex/gemini-3.8-flash",
+      "systemPromptFile": ".agents/worker-evaluator-5.md",
+      "autoApprove": true,
+      "worktree": true
+    },
+    "evaluator-6": {
+      "model": "google-vertex/gemini-3.8-flash",
+      "systemPromptFile": ".agents/worker-evaluator-6.md",
+      "autoApprove": true,
+      "worktree": true
+    },
+    "creator": {
+      "model": "google-vertex/gemini-3.8-flash",
+      "systemPromptFile": ".agents/creator.md",
+      "autoApprove": true,
+      "worktree": true
     },
     "finder": {
       "model": "google-vertex/gemini-3.8-flash",
       "systemPromptFile": ".agents/finder.md",
-      "autoApprove": true
-    },
-    "creator": {
-      "model": "anthropic/claude-sonnet-5",
-      "systemPromptFile": ".agents/creator.md",
-      "autoApprove": true
-    },
-    "evaluator": {
-      "model": "openai/gpt-5.6-terra",
-      "systemPromptFile": ".agents/evaluator.md",
-      "autoApprove": true
+      "autoApprove": true,
+      "worktree": true
     }
   }
 }
