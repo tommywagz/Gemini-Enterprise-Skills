@@ -1,0 +1,64 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.com/schemas/2026-09-18/lodging.json",
+  "title": "UCP Lodging & Hospitality Extension Schema",
+  "description": "Defines hotel reservation dates, room selections, and occupancy details extending UCP checkout.",
+  "type": "object",
+  "ucp": {
+    "namespace": "com.example.lodging",
+    "version": "2026-09-18",
+    "extends": "dev.ucp.shopping.checkout"
+  },
+  "properties": {
+    "lodging": {
+      "type": "object",
+      "required": ["property_id", "check_in_date", "check_out_date", "guests", "room_type_id"],
+      "properties": {
+        "property_id": {
+          "type": "string",
+          "description": "Unique identifier of the hotel or vacation rental property."
+        },
+        "check_in_date": {
+          "type": "string",
+          "format": "date",
+          "description": "Arrival date in ISO 8601 YYYY-MM-DD format."
+        },
+        "check_out_date": {
+          "type": "string",
+          "format": "date",
+          "description": "Departure date in ISO 8601 YYYY-MM-DD format."
+        },
+        "room_type_id": {
+          "type": "string",
+          "description": "Selected room category or suite code."
+        },
+        "guests": {
+          "type": "object",
+          "required": ["adults"],
+          "properties": {
+            "adults": { "type": "integer", "minimum": 1 },
+            "children": { "type": "integer", "minimum": 0, "default": 0 },
+            "infants": { "type": "integer", "minimum": 0, "default": 0 }
+          },
+          "additionalProperties": false
+        },
+        "bed_preference": {
+          "type": "string",
+          "enum": ["king", "queen", "two_doubles", "two_twins", "accessible", "any"],
+          "default": "any"
+        },
+        "estimated_arrival_time": {
+          "type": "string",
+          "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$",
+          "description": "Estimated arrival time in 24-hour HH:MM format."
+        },
+        "special_requests": {
+          "type": "string",
+          "maxLength": 1000,
+          "description": "Guest requests such as high floor, quiet room, or feather-free bedding."
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}

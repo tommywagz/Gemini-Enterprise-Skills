@@ -1,0 +1,74 @@
+{
+  "ucp": {
+    "version": "2026-09-18",
+    "services": {
+      "dev.ucp.shopping": [
+        {
+          "version": "2026-09-18",
+          "spec": "https://ucp.dev/2026-09-18/specification/shopping",
+          "transport": "rest",
+          "schema": "https://ucp.dev/2026-09-18/services/shopping/rest.openapi.json",
+          "endpoint": "https://merchant.example.com/ucp/v1"
+        }
+      ]
+    },
+    "capabilities": {
+      "dev.ucp.shopping.cart": [
+        {
+          "version": "2026-09-18",
+          "spec": "https://ucp.dev/2026-09-18/specification/shopping/cart",
+          "schema": "https://ucp.dev/2026-09-18/schemas/shopping/cart.json",
+          "extends": null
+        }
+      ],
+      "dev.ucp.shopping.checkout": [
+        {
+          "version": "2026-09-18",
+          "spec": "https://ucp.dev/2026-09-18/specification/shopping/checkout",
+          "schema": "https://ucp.dev/2026-09-18/schemas/shopping/checkout.json",
+          "extends": null
+        }
+      ],
+      "dev.ucp.shopping.discount": [
+        {
+          "version": "2026-09-18",
+          "spec": "https://ucp.dev/2026-09-18/specification/shopping/discount",
+          "schema": "https://ucp.dev/2026-09-18/schemas/shopping/discount.json",
+          "extends": "dev.ucp.shopping.checkout"
+        }
+      ],
+      "dev.ucp.shopping.fulfillment": [
+        {
+          "version": "2026-09-18",
+          "spec": "https://ucp.dev/2026-09-18/specification/shopping/fulfillment",
+          "schema": "https://ucp.dev/2026-09-18/schemas/shopping/fulfillment.json",
+          "extends": "dev.ucp.shopping.checkout"
+        }
+      ],
+      "com.example.food_ordering": [
+        {
+          "version": "2026-09-18",
+          "spec": "https://example.com/2026-09-18/specification/food_ordering",
+          "schema": "https://example.com/schemas/2026-09-18/food_ordering.json",
+          "extends": "dev.ucp.shopping.checkout"
+        }
+      ],
+      "com.example.lodging": [
+        {
+          "version": "2026-09-18",
+          "spec": "https://example.com/2026-09-18/specification/lodging",
+          "schema": "https://example.com/schemas/2026-09-18/lodging.json",
+          "extends": "dev.ucp.shopping.checkout"
+        }
+      ]
+    },
+    "payment_handlers": {
+      "mock_payment_handler": [
+        {
+          "id": "mock_payment_handler",
+          "version": "2026-09-18"
+        }
+      ]
+    }
+  }
+}

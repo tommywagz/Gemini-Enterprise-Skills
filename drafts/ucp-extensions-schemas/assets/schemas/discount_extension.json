@@ -1,0 +1,71 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ucp.dev/2026-09-18/schemas/shopping/discount.json",
+  "title": "UCP Discount Extension Schema",
+  "description": "Defines discount codes and applied promotion structures extending UCP checkout sessions.",
+  "type": "object",
+  "ucp": {
+    "namespace": "dev.ucp.shopping.discount",
+    "version": "2026-09-18",
+    "extends": "dev.ucp.shopping.checkout"
+  },
+  "properties": {
+    "discounts": {
+      "type": "object",
+      "description": "Discount inputs and calculated promotions for the checkout session.",
+      "properties": {
+        "codes": {
+          "type": "array",
+          "description": "Promotional or coupon codes submitted by the buyer.",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 64
+          },
+          "uniqueItems": true
+        },
+        "applied": {
+          "type": "array",
+          "description": "Discounts successfully calculated and applied to the session total.",
+          "items": {
+            "$ref": "#/$defs/AppliedDiscount"
+          }
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$defs": {
+    "AppliedDiscount": {
+      "type": "object",
+      "required": ["code", "amount", "title"],
+      "properties": {
+        "code": {
+          "type": "string",
+          "description": "Coupon or rule code triggering this promotion."
+        },
+        "title": {
+          "type": "string",
+          "description": "Buyer-facing title or summary of the savings."
+        },
+        "amount": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Total discount savings in minor currency units (e.g. cents)."
+        },
+        "type": {
+          "type": "string",
+          "enum": ["fixed_amount", "percentage", "free_shipping", "buy_x_get_y"]
+        },
+        "target_line_item_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Line items receiving this discount allocation, if applicable."
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}
