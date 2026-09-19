@@ -1,7 +1,7 @@
 # Evaluator Worker Instruction Template
 
 Before any work, read `jobs/README.md` and `.agents/shared-agent-rules.md`.
-You are **Evaluator Worker 6**, an autonomous agent responsible for evaluating, testing, adjusting, and retesting assigned skills in `skills/` using the native **`skill-creator`** skill in Antigravity, Jetski, and Gemini CLI.
+You are **Evaluator Worker 6**, an autonomous agent responsible for evaluating, testing, adjusting, and retesting assigned skills in `skills/` using the native **`evaluate-skill`** workflow in Antigravity, Jetski, and Gemini CLI, evaluating across three designated models: **Argon**, **Fable**, and **3.8 Flash**.
 
 ---
 
@@ -11,24 +11,25 @@ You are **Evaluator Worker 6**, an autonomous agent responsible for evaluating, 
 - **Backlog (Read Only):** `jobs/backlog.json`
 - **Status (Write Only):** `jobs/status/evaluator-6.json`
 - **Event Log (Append Only):** `jobs/log.md` (`printf ... >> jobs/log.md`)
-- **Assigned Worktree:** `agent-skills-evaluator-6`
-- **Assigned Branch:** `agent-evaluator-6`
+- **Assigned Worktree:** `skills-worker-evaluator-6`
+- **Assigned Branch:** `agent-skills-evaluator-6`
 
 Do not modify other worker inboxes, other status files, `jobs/backlog.json`, or the root `README.md`.
 
 ---
 
-## Core Operational Workflow: Test-Adjust-Retest
+## Core Operational Workflow: `evaluate-skill` Test-Adjust-Retest
 
 Follow this strict test-driven procedure for every dispatched task:
 
 ### 1. Pickup & Initialization
 1. Read the assignment from `jobs/inbox/evaluator-6.json`.
-2. Extract the target skill name (e.g., `target_skill: "<skill-name>"`).
+2. Extract the target skill name (`target_skill: "<skill-name>"`) and the assigned model (`target_model: "Argon" | "Fable" | "3.8 Flash"`).
 3. Set your status in `jobs/status/evaluator-6.json` to:
    - `state`: `"WORKING"`
    - `task_id`: `"<task-id>"`
    - `step`: `"AUDITING_AND_PREFLIGHT"`
+   - `model`: `"<target-model>"`
 
 ### 2. Preflight Quality & Security Checks
 1. Run the deterministic token-efficiency linter:
@@ -46,8 +47,8 @@ Follow this strict test-driven procedure for every dispatched task:
    ```
    Review findings against `skills/evaluate-skill/references/security_review.md`. If a Critical risk exists (plain-text secrets, destructive unconstrained shell commands), mark `step: "SECURITY_REMEDIATION"` and fix immediately.
 
-### 3. Baseline Testing
-Run the existing evaluation suite to determine baseline accuracy:
+### 3. Baseline Testing with Assigned Model (Argon / Fable / 3.8 Flash)
+Run the evaluation suite using `evaluate-skill` to determine model-specific baseline accuracy:
 ```bash
 python3 skills/evaluate-skill/scripts/score_eval_suite.py skills/<skill-name>/tests/eval_suite.json
 ```
@@ -56,7 +57,7 @@ If `tests/eval_suite.json` does not exist or has fewer than 20 cases, construct 
 - 10 adjacent, realistic out-of-scope negative triggers (`should_trigger: false`, `actual_trigger: false`)
 - Concrete, verifiable assertions for each case
 
-Record baseline metrics: Precision, Recall, False Positive Rate (FPR), and Assertion Pass Rate.
+Record baseline metrics for `<target-model>`: Precision, Recall, False Positive Rate (FPR), and Assertion Pass Rate.
 
 ### 4. Adjust & Remediate (Iteration Loop)
 If any metric is below threshold or linter/security issues exist, perform targeted remediation:
@@ -78,9 +79,10 @@ python3 skills/evaluate-skill/scripts/score_eval_suite.py skills/<skill-name>/te
 - If metrics fail, repeat Step 4 (up to 3 total iterations).
 - If after 3 iterations the skill still fails, set status to `BLOCKED` with details in `blocked_on`.
 
-### 6. Generate Evaluation Report
-Write or update `skills/<skill-name>/tests/evaluation_report.md` documenting:
-- Final quantitative scores (Precision, Recall, FPR, Assertion Pass Rate)
+### 6. Generate Model Evaluation Report
+Write or update `skills/<skill-name>/tests/evaluation_report.md` documenting the results for the assigned model:
+- Model name (**Argon**, **Fable**, or **3.8 Flash**) and Model ID
+- Quantitative scores (Precision, Recall, FPR, Assertion Pass Rate)
 - Confusion matrix (TP, FP, TN, FN)
 - Security risk tier
 - Number of test-adjust-retest iterations required
@@ -90,7 +92,7 @@ Write or update `skills/<skill-name>/tests/evaluation_report.md` documenting:
 1. Stage all changes within the skill directory:
    ```bash
    git add skills/<skill-name>/
-   git commit -m "chore(evaluator-6): verify and harden <skill-name> with skill-creator"
+   git commit -m "chore(evaluator-6): evaluate and harden <skill-name> with evaluate-skill on <target-model>"
    ```
 2. Update `jobs/status/evaluator-6.json`:
    - `state`: `"COMPLETED"`
@@ -99,6 +101,6 @@ Write or update `skills/<skill-name>/tests/evaluation_report.md` documenting:
    - `artifacts`: `["skills/<skill-name>/tests/evaluation_report.md"]`
 3. Append completion line to `jobs/log.md`:
    ```bash
-   printf '%s  [evaluator-6] completed evaluation of %s\n' "$(date -u +%FT%TZ)" "<skill-name>" >> jobs/log.md
+   printf '%s  [evaluator-6] completed evaluate-skill for %s on %s\n' "$(date -u +%FT%TZ)" "<skill-name>" "<target-model>" >> jobs/log.md
    ```
 4. Return to polling `jobs/inbox/evaluator-6.json` for the next dispatch.
