@@ -1,0 +1,48 @@
+{
+  "project": "gemini-api-505408",
+  "autoApprove": true,
+  "agents": {
+    "orchestrator-evaluator": {
+      "model": "gemini-3.8-flash-high",
+      "systemPromptFile": ".agents/orchestrator-evaluator.md",
+      "autoApprove": true,
+      "worktree": false
+    },
+    "evaluator-1": {
+      "model": "gemini-3.8-flash-high",
+      "systemPromptFile": ".agents/worker-evaluator-1.md",
+      "autoApprove": true,
+      "worktree": true
+    },
+    "evaluator-2": {
+      "model": "gemini-3.8-flash-high",
+      "systemPromptFile": ".agents/worker-evaluator-2.md",
+      "autoApprove": true,
+      "worktree": true
+    },
+    "evaluator-3": {
+      "model": "gemini-3.8-flash-high",
+      "systemPromptFile": ".agents/worker-evaluator-3.md",
+      "autoApprove": true,
+      "worktree": true
+    },
+    "evaluator-4": {
+      "model": "gemini-3.8-flash-high",
+      "systemPromptFile": ".agents/worker-evaluator-4.md",
+      "autoApprove": true,
+      "worktree": true
+    },
+    "evaluator-5": {
+      "model": "gemini-3.8-flash-high",
+      "systemPromptFile": ".agents/worker-evaluator-5.md",
+      "autoApprove": true,
+      "worktree": true
+    },
+    "evaluator-6": {
+      "model": "gemini-3.8-flash-high",
+      "systemPromptFile": ".agents/worker-evaluator-6.md",
+      "autoApprove": true,
+      "worktree": true
+    }
+  }
+}
