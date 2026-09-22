@@ -12,75 +12,6 @@ The primary goal of this repository is to build a robust, scalable "garden" of p
 
 ---
 
-## 📂 Repository Layout
-
-```
-/home/tow73/AAS/Gemini-Enterprise-Skills/
-├── README.md               # This documentation file.
-├── AGENTS.md               # High-level objectives, use cases, and targets.
-├── LICENSE                 # Repository license (Apache-2.0).
-├── opencode.json           # Orchestration schema & LLM configuration for the squad.
-├── .gitignore              # Git ignore rules (ignores /jobs, credentials, temporary folders).
-│
-├── .agents/                # System prompts & rules defining the agent squad.
-│   ├── orchestrator.md     # Lead release manager: coordinates dispatches & merges branches.
-│   ├── finder.md           # Finder worker: searches registries for matching skills.
-│   ├── creator.md          # Creator worker: drafts new skills from source material.
-│   ├── evaluator.md        # Evaluator worker: evaluates, refines, and promotes drafts.
-│   ├── shared-agent-rules.md # Coordination, state-polling, and Git protocols for workers.
-│   └── skills/             # Meta-skills used directly by the agents to perform their work:
-│       ├── find-skill/     # Skill used by Finder to discover existing packages.
-│       ├── write-skill/    # Skill used by Creator to draft skill packages.
-│       └── evaluate-skill/ # Skill used by Evaluator to run tests and refine skills.
-│
-├── skills/                 # The "Garden" - finalized, production-ready agent skills.
-│   ├── a2a-workflows/      # Multi-agent collaboration & communication workflows.
-│   ├── adk-agents/         # Core Google Agent Development Kit (ADK) agent design.
-│   ├── adk-cross-session-knowledge-bank/ # Long-term memory using Vertex AI Memory Bank.
-│   ├── adk-durable-human-in-the-loop/    # Asynchronous human-in-the-loop approval gates.
-│   ├── agents-cli-conformance-tester/    # UCP/A2A local conformance and smoke testing.
-│   ├── agents-cli-scaffold-extension/    # Polyglot TypeScript/Hono + Python/ADK workspaces.
-│   ├── ap2-agent-payments/ # Cryptographic agent payments via SD-JWT mandates.
-│   ├── evaluate-skill/     # (Symlinked or copied) Skill package evaluation & scoring.
-│   ├── find-skill/         # (Symlinked or copied) Skill package discovery.
-│   ├── gcp-cost-optimizer/ # FinOps advisory scanner and Terraform cost optimization.
-│   ├── gcp-terraform-security-policy/    # IaC security scanner for CIS GCP Benchmarks.
-│   ├── integrate-repo/     # External/AI-authored code repository style integrator.
-│   ├── model-governance/   # OpenCode model tier and cost/capability selection resolver.
-│   ├── real-estate-floorplan/            # Spatial research and procedural CAD drawing.
-│   ├── ucp-consumer-surface/             # Headless client-side UCP shopping agents.
-│   ├── ucp-merchant-servers/             # Server-side UCP-compliant business endpoints.
-│   └── write-skill/        # (Symlinked or copied) Skill package scaffolding/writing.
-│
-├── instructions/           # Staged and completed skill blueprint definitions (untracked, local references).
-│   ├── model_governance.md               # Model Governance prompt profiling blueprint.
-│   ├── real_estate_floorplan.md          # Floorplan scraper and vector CAD blueprint.
-│   ├── gcp_terraform_security_policy.md  # IaC security scanner and CIS audit blueprint.
-│   ├── gcp_cost_optimizer.md             # FinOps advisory and cost optimizer blueprint.
-│   ├── adk_cross_session_knowledge_bank.md # Long-term Vertex AI Memory Bank blueprint.
-│   ├── adk_durable_human_in_the_loop.md  # Durable asynchronous approval gate blueprint.
-│   ├── agents_cli_conformance_tester.md  # Loopback conformance mock sandbox blueprint.
-│   ├── agents_cli_scaffold_extension.md  # Polyglot multi-runtime workspace blueprint.
-│   ├── agents_cli_plugin_moderator.md    # Model Armor input/output moderation blueprint.
-│   ├── agents_cli_benchmark_eval.md      # Quantitative accuracy dataset eval blueprint.
-│   ├── gcp_kubernetes_resource_triage.md # GKE pod CrashLoopBackOff/OOM debugging blueprint.
-│   ├── gcp_iam_privilege_audit.md        # Least-privilege IAM Recommender audit blueprint.
-│   ├── adk_oauth_user_consent_flow.md    # Google Workspace OAuth2 user consent blueprint.
-│   └── adk_long_horizon_harness.md       # Headless event-driven/cron compaction blueprint.
-│
-├── jobs/                   # [Untracked/Symlinked] Real-time squad coordination directory.
-│   ├── README.md           # Contract and technical design of jobs-based orchestration.
-│   ├── backlog.json        # Master task tracker & skill backlog.
-│   ├── inbox/              # Dispatch queues for workers (finder.json, creator.json, evaluator.json).
-│   ├── status/             # Real-time state files for each agent (orchestrator.json, finder.json, etc.).
-│   └── log.md              # Chronological event log of the squad's progress.
-│
-└── scripts/                # Shared developer/squad tooling.
-    └── validate_skill_token_efficiency.py # Pre-commit/CI linter for token efficiency.
-```
-
----
-
 ## 🗺️ Skill Allocation & Deployment Roadmap
 
 This repository acts as a staging garden. Once skills are fully implemented, tested, and evaluated, they are distributed to their optimal destination repositories. Below is the complete allocation plan and current completion status:
@@ -95,26 +26,27 @@ The following table is the single catalog for every unique skill package under `
 | `adk-agents` | `google-agents-cli-adk-code` | ADK agent, tool, callback, and state-management reference patterns. | [agents-cli](https://github.com/google/agents-cli/tree/main/skills) | 🟢 **Completed & Promoted** | Bootstrap core ADK agent components. |
 | `adk-cross-session-knowledge-bank` | `adk-cross-session-knowledge-bank` | Vertex AI Memory Bank integration for cross-session ADK agent memory. | [adk-samples](https://github.com/google/adk-samples/tree/main/skills) | 🟢 **Completed & Promoted** | Persist preferences and terminology across conversations. |
 | `adk-durable-human-in-the-loop` | `adk-durable-human-in-the-loop` | Durable asynchronous HITL approval gates with `LongRunningFunctionTool` and signed webhooks. | [adk-samples](https://github.com/google/adk-samples/tree/main/skills) | 🟢 **Completed & Promoted** | Pause and resume risky workflows across process lifetimes. |
+| `adk-long-horizon-harness` | `adk-long-horizon-harness` | Headless ADK agents triggered by Pub/Sub or cron with context compaction. | [adk-samples](https://github.com/google/adk-samples/tree/main/skills) | 🟢 **Completed & Promoted** | Manage multi-day background workflows. |
+| `adk-oauth-user-consent-flow` | `adk-oauth-user-consent-flow` | User-authorized OAuth 2.0 flows for ADK Workspace integrations. | [adk-samples](https://github.com/google/adk-samples/tree/main/skills) | 🟢 **Completed & Promoted** | Access user data with consented credentials. |
+| `agents-cli-benchmark-eval` | `agents-cli-benchmark-eval` | Local agent dataset scoring with JUnit XML and Markdown reports. | [agents-cli](https://github.com/google/agents-cli/tree/main/skills) | 🟢 **Completed & Promoted** | Perform CI accuracy testing. |
 | `agents-cli-conformance-tester` | `agents-cli-conformance-tester` | Local MUST/SHOULD/MAY conformance tests for UCP or A2A servers. | [agents-cli](https://github.com/google/agents-cli/tree/main/skills) | 🟢 **Completed & Promoted** | Run pre-flight protocol compatibility checks. |
+| `agents-cli-plugin-moderator` | `agents-cli-plugin-moderator` | Runner-wide ADK safety guardrails, content filters, and exfiltration prevention. | [agents-cli](https://github.com/google/agents-cli/tree/main/skills) | 🟢 **Completed & Promoted** | Enforce safety policies across sub-agents. |
 | `agents-cli-scaffold-extension` | `agents-cli-scaffold-extension` | Polyglot TypeScript/Hono and Python/ADK agent workspace generator. | [agents-cli](https://github.com/google/agents-cli/tree/main/skills) | 🟢 **Completed & Promoted** | Scaffold multi-language agent environments. |
 | `ap2-agent-payments` | `ap2-agent-payments` | AP2 payment agents using SD-JWT Checkout and Payment Mandates. | [adk-samples](https://github.com/google/adk-samples/tree/main/skills) | 🟢 **Completed & Promoted** | Delegate bounded autonomous spend with audit trails. |
 | `evaluate-skill` | `evaluate-skill` | Agent Skill evaluation for routing accuracy, performance, and security. | [agents-cli](https://github.com/google/agents-cli/tree/main/skills) | 🟡 **System Meta-Skill** | Run trigger, performance, and security evaluations. |
 | `find-skill` | `find-skill` | Safe discovery and installation of Skills, MCP servers, and Composio integrations. | [agents-cli](https://github.com/google/agents-cli/tree/main/skills) | 🟡 **System Meta-Skill** | Discover pre-vetted capabilities. |
 | `gcp-cost-optimizer` | `gcp-cost-optimizer` | GCP waste audit with reviewable Terraform cost remediations. | [adk-samples](https://github.com/google/adk-samples/tree/main/skills) | 🟢 **Completed & Promoted** | Reduce idle or over-provisioned resource spend. |
+| `gcp-iam-privilege-audit` | `gcp-iam-privilege-audit` | GCP IAM usage audit with least-privilege Terraform proposals. | [Google Skills](https://github.com/google/skills/tree/main) | 🟢 **Completed & Promoted** | Harden broad roles and service-account access. |
+| `gcp-kubernetes-resource-triage` | `gcp-kubernetes-resource-triage` | GKE workload diagnosis with reviewable patch manifests. | [Google Skills](https://github.com/google/skills/tree/main) | 🟢 **Completed & Promoted** | Triage CrashLoopBackOff, OOMKilled, and image-pull failures. |
 | `gcp-terraform-security-policy` | `gcp-terraform-security-policy` | GCP Terraform audit against CIS controls and least-privilege IAM. | [agents-cli](https://github.com/google/agents-cli/tree/main/skills) | 🟢 **Completed & Promoted** | Block insecure infrastructure before `terraform apply`. |
 | `integrate-repo` | `integrate-repo` | Aligns external or AI-authored code with host repository quality gates. | [agents-cli](https://github.com/google/agents-cli/tree/main/skills) | 🟢 **Completed & Promoted** | Produce remediation scripts and CI preflights. |
 | `model-governance` | `model-governance` | Governed profiling and selection of LLM providers and model tiers. | [agents-cli](https://github.com/google/agents-cli/tree/main/skills) | 🟢 **Completed & Promoted** | Select cost-effective models and pin configuration. |
 | `real-estate-floorplan` | `real-estate-floorplan` | Listing floor-plan research and vector CAD drafting through MCP servers. | [adk-samples](https://github.com/google/adk-samples/tree/main/skills) | 🟢 **Completed & Promoted** | Extract blueprints and export DXF/SVG. |
+| `skill-creator` | `skill-creator` | Unified test-driven authoring, evaluation, and refinement engine for Agent Skills. | [agents-cli](https://github.com/google/agents-cli/tree/main/skills) | 🟡 **System Meta-Skill** | Author, test, evaluate, and iteratively refine Agent Skills. |
 | `ucp-consumer-surface` | `ucp-consumer-surface` | Client-side UCP discovery, catalog, cart, checkout, and webhook flows. | [adk-samples](https://github.com/google/adk-samples/tree/main/skills) | 🟢 **Completed & Promoted** | Build headless shopping agents. |
 | `ucp-extensions-schemas` | `ucp-extensions-schemas` | Authors and versions UCP capability extension schemas with JSON Schema Draft 2020-12 and discovery integration. | [adk-samples](https://github.com/google/adk-samples/tree/main/skills) | 🟢 **Completed & Promoted** | Design and validate forward-compatible commerce extensions. |
 | `ucp-merchant-servers` | `ucp-merchant-servers` | Server-side UCP discovery, cart, checkout, and signed event APIs. | [adk-samples](https://github.com/google/adk-samples/tree/main/skills) | 🟢 **Completed & Promoted** | Deploy compliant merchant endpoints. |
 | `write-skill` | `write-skill` | Authors, restructures, and scaffolds standard Agent Skill packages. | [agents-cli](https://github.com/google/agents-cli/tree/main/skills) | 🟡 **System Meta-Skill** | Create compliant prompts and support resources. |
-| `agents-cli-plugin-moderator` | `agents-cli-plugin-moderator` | Runner-wide ADK safety guardrails, content filters, and exfiltration prevention. | [agents-cli](https://github.com/google/agents-cli/tree/main/skills) | 🟢 **Completed & Promoted** | Enforce safety policies across sub-agents. |
-| `agents-cli-benchmark-eval` | `agents-cli-benchmark-eval` | Local agent dataset scoring with JUnit XML and Markdown reports. | [agents-cli](https://github.com/google/agents-cli/tree/main/skills) | 🟢 **Completed & Promoted** | Perform CI accuracy testing. |
-| `gcp-kubernetes-resource-triage` | `gcp-kubernetes-resource-triage` | GKE workload diagnosis with reviewable patch manifests. | [Google Skills](https://github.com/google/skills/tree/main) | 🟢 **Completed & Promoted** | Triage CrashLoopBackOff, OOMKilled, and image-pull failures. |
-| `gcp-iam-privilege-audit` | `gcp-iam-privilege-audit` | GCP IAM usage audit with least-privilege Terraform proposals. | [Google Skills](https://github.com/google/skills/tree/main) | 🟢 **Completed & Promoted** | Harden broad roles and service-account access. |
-| `adk-oauth-user-consent-flow` | `adk-oauth-user-consent-flow` | User-authorized OAuth 2.0 flows for ADK Workspace integrations. | [adk-samples](https://github.com/google/adk-samples/tree/main/skills) | 🟢 **Completed & Promoted** | Access user data with consented credentials. |
-| `adk-long-horizon-harness` | `adk-long-horizon-harness` | Headless ADK agents triggered by Pub/Sub or cron with context compaction. | [adk-samples](https://github.com/google/adk-samples/tree/main/skills) | 🟢 **Completed & Promoted** | Manage multi-day background workflows. |
 
 ---
 
