@@ -24,6 +24,10 @@ failure from an unavailable dependency or invalid test environment.
   stateful or externally connected interface.
 - Do not put production credentials, personal data, or destructive production
   endpoints in fixtures, commands, or reports.
+- Minimal tools: local repository reads, its existing test runner, Python 3.9+
+  for optional helpers, and only the sandbox services required by documented
+  interfaces. No wildcard production permissions; classify repository data
+  before copying fixtures (normally internal, potentially confidential).
 
 ## Workflow
 
@@ -45,7 +49,9 @@ implementation call ordering the oracle.
 
 Run `scripts/scaffold_suite.py --output <evaluation-dir>` to copy the initial
 matrix and report records from `assets/coverage_matrix_template.json` and
-`assets/evaluation_report_template.json`. Populate one matrix row for every
+`assets/evaluation_report_template.json`. Both assets are JSON objects: matrix
+`rows` carry unique IDs and the report `results` refer to those IDs; replace all
+placeholder values before execution. Populate one matrix row for every
 applicable component-feature pair across deployment, normal use, failure or
 recovery, and shutdown. Read `references/black_box_test_design.md` when
 selecting partitions, boundaries, decisions, and states.
@@ -53,6 +59,9 @@ selecting partitions, boundaries, decisions, and states.
 Include positive, negative, malformed-input, permission, dependency-failure,
 and repeated-run cases when the interface makes them relevant. Give each test
 its own namespace, ports, temp path, database/schema, and cleanup action.
+Validate fixture inputs against the documented public schema and bound paths,
+ports, and payload sizes before sending them to a target. Trace every test ID
+to a matrix row ID; mark unsupported phases as not applicable with a reason.
 Assert setup separately from product behavior so a missing runtime, denied
 credential, or unavailable service is reported as skipped or inconclusive,
 not as a product regression.
@@ -70,6 +79,9 @@ Make cleanup idempotent and run it on both pass and failure. Never exercise a
 production deployment merely to test failure or shutdown. If a required
 dependency cannot be isolated, write a reproducible mock, container, or
 approved sandbox fixture; otherwise skip the case with evidence of the block.
+Require explicit user confirmation before any irreversible operation on a
+shared or remote system; otherwise confine destructive cases to disposable
+local fixtures.
 
 ### 4. Add Empirical Performance Cases When Measurable
 
@@ -89,9 +101,11 @@ median interarrival interval, then report average and maximum jitter. Run:
 scripts/measure_samples.py --samples latency-ms.json --arrival-times arrival-ms.json --output metrics.json
 ```
 
-The helper retains raw samples and calculates nearest-rank percentiles. It marks
-tail percentiles below the documented sample adequacy as inconclusive rather
-than overstating a small sample.
+For transfers, run once per documented payload size with `--payload-bytes N`
+and positive millisecond transfer samples; compare sizes in the report. The
+helper retains raw samples and calculates nearest-rank percentiles. It marks
+P99 below 100 and P99.99 below 10,000 samples inconclusive rather than
+overstating a small sample.
 
 ### 5. Evaluate Agent Products by Outcomes
 
@@ -144,6 +158,10 @@ paths, and report completion and recovery separately.
   a result inconclusive if conditions cannot be controlled.
 - Destructive, costly, or remote operation: stop until a safe sandbox and
   explicit scope are provided.
+- Missing bundled reference or helper: record the missing path, use the
+  equivalent method described in this workflow and repository documentation,
+  and label any unverified calculation inconclusive. If a scaffold asset is
+  missing, create an equivalent matrix/report using the documented JSON fields.
 
 ## Reference Files
 

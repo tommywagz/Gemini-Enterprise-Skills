@@ -25,7 +25,7 @@
 Define the initial state, user objective, allowed tools, prohibited effects,
 turn/timeout budget, injected fault, expected final state, and scoring evidence.
 Use local fixtures or approved sandbox services. Permit multiple action paths
-when they reach the same safe final state. Capture actions for validity review,
+when they reach the same safe final state. Capture actions for validity review.
 
 Score four dimensions separately: completed outcome, valid tool actions,
 recovery after the controlled fault, and user-facing clarity. A tool action can

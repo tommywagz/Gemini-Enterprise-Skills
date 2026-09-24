@@ -23,6 +23,7 @@
   "results": [
     {
       "matrix_id": "L-DEPLOY-001",
+      "test_id": "test_deploy_001",
       "status": "planned",
       "evidence": [],
       "reason": null

@@ -16,7 +16,10 @@ def read_numbers(path: Path) -> list[float]:
         raise ValueError(f"{path} must contain a non-empty JSON array")
     if any(isinstance(value, bool) or not isinstance(value, (int, float)) for value in values):
         raise ValueError(f"{path} must contain only numbers")
-    return [float(value) for value in values]
+    numbers = [float(value) for value in values]
+    if any(not math.isfinite(value) for value in numbers):
+        raise ValueError(f"{path} must contain only finite numbers")
+    return numbers
 
 
 def nearest_rank(values: list[float], percentile: float) -> float:
@@ -29,10 +32,15 @@ def main() -> int:
     parser = argparse.ArgumentParser(description="Summarize latency and optional stream arrivals.")
     parser.add_argument("--samples", required=True, type=Path, help="JSON array of latency values")
     parser.add_argument("--arrival-times", type=Path, help="JSON array of monotonic arrival times")
+    parser.add_argument("--payload-bytes", type=int, help="Bytes transferred per sample; samples must be positive milliseconds")
     parser.add_argument("--output", required=True, type=Path)
     args = parser.parse_args()
 
     samples = read_numbers(args.samples)
+    if any(sample < 0 for sample in samples):
+        raise ValueError("latency samples must be non-negative")
+    if args.payload_bytes is not None and (args.payload_bytes <= 0 or any(sample <= 0 for sample in samples)):
+        raise ValueError("payload bytes and transfer latencies must be positive")
     result: dict[str, object] = {
         "percentile_method": "nearest-rank: sorted[ceil(p*n)-1], zero-based",
         "raw_samples": samples,
@@ -42,16 +50,25 @@ def main() -> int:
             "p90": nearest_rank(samples, 0.90),
             "p99": nearest_rank(samples, 0.99),
             "p99_99": nearest_rank(samples, 0.9999),
-            "tail_estimate": "inconclusive" if len(samples) < 100 else "reported",
+            "p99_status": "inconclusive" if len(samples) < 100 else "reported",
+            "p99_99_status": "inconclusive" if len(samples) < 10000 else "reported",
         },
     }
+    if args.payload_bytes is not None:
+        throughput = [args.payload_bytes * 1000 / sample for sample in samples]
+        result["transfer"] = {
+            "payload_bytes": args.payload_bytes,
+            "method": "payload bytes divided by each measured transfer latency in seconds",
+            "raw_bytes_per_second": throughput,
+            "median_bytes_per_second": median(throughput),
+        }
     if args.arrival_times:
         arrivals = read_numbers(args.arrival_times)
         if len(arrivals) < 2:
             raise ValueError("arrival times require at least two values")
         intervals = [later - earlier for earlier, later in zip(arrivals, arrivals[1:])]
-        if any(interval < 0 for interval in intervals):
-            raise ValueError("arrival times must be non-decreasing")
+        if any(interval <= 0 for interval in intervals):
+            raise ValueError("arrival times must be strictly increasing")
         baseline = median(intervals)
         jitter = [abs(interval - baseline) for interval in intervals]
         result["jitter"] = {
