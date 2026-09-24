@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "system_under_test": "replace-with-project-name",
+  "assumptions": [],
+  "unexercised_components": [],
+  "rows": [
+    {
+      "id": "L-DEPLOY-001",
+      "component": "replace-with-component",
+      "feature": "startup",
+      "lifecycle_phase": "deployment",
+      "test_design": ["state-transition"],
+      "case_type": "positive",
+      "preconditions": [],
+      "action": "Start using the documented public command.",
+      "observable_oracle": "Documented readiness signal is visible.",
+      "fixture_isolation": "Unique temporary path and port.",
+      "cleanup": "Stop process and remove temporary resources.",
+      "status": "planned"
+    }
+  ]
+}
