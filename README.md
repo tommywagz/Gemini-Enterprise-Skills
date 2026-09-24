@@ -41,6 +41,7 @@ The primary goal of this repository is to build a robust, scalable "garden" of p
 │   ├── agents-cli-conformance-tester/    # UCP/A2A local conformance and smoke testing.
 │   ├── agents-cli-scaffold-extension/    # Polyglot TypeScript/Hono + Python/ADK workspaces.
 │   ├── ap2-agent-payments/ # Cryptographic agent payments via SD-JWT mandates.
+│   ├── black-box-evaluation-suite-builder/ # Executable black-box integration, latency, and agent evaluation suites.
 │   ├── evaluate-skill/     # (Symlinked or copied) Skill package evaluation & scoring.
 │   ├── find-skill/         # (Symlinked or copied) Skill package discovery.
 │   ├── gcp-cost-optimizer/ # FinOps advisory scanner and Terraform cost optimization.
@@ -66,7 +67,8 @@ The primary goal of this repository is to build a robust, scalable "garden" of p
 │   ├── gcp_kubernetes_resource_triage.md # GKE pod CrashLoopBackOff/OOM debugging blueprint.
 │   ├── gcp_iam_privilege_audit.md        # Least-privilege IAM Recommender audit blueprint.
 │   ├── adk_oauth_user_consent_flow.md    # Google Workspace OAuth2 user consent blueprint.
-│   └── adk_long_horizon_harness.md       # Headless event-driven/cron compaction blueprint.
+│   ├── adk_long_horizon_harness.md       # Headless event-driven/cron compaction blueprint.
+│   └── black_box_evaluation_suite_builder.md # Black-box evaluation suite builder blueprint.
 │
 ├── jobs/                   # [Untracked/Symlinked] Real-time squad coordination directory.
 │   ├── README.md           # Contract and technical design of jobs-based orchestration.
@@ -115,6 +117,7 @@ The following table is the single catalog for every unique skill package under `
 | `gcp-iam-privilege-audit` | `gcp-iam-privilege-audit` | GCP IAM usage audit with least-privilege Terraform proposals. | [Google Skills](https://github.com/google/skills/tree/main) | 🟢 **Completed & Promoted** | Harden broad roles and service-account access. |
 | `adk-oauth-user-consent-flow` | `adk-oauth-user-consent-flow` | User-authorized OAuth 2.0 flows for ADK Workspace integrations. | [adk-samples](https://github.com/google/adk-samples/tree/main/skills) | 🟢 **Completed & Promoted** | Access user data with consented credentials. |
 | `adk-long-horizon-harness` | `adk-long-horizon-harness` | Headless ADK agents triggered by Pub/Sub or cron with context compaction. | [adk-samples](https://github.com/google/adk-samples/tree/main/skills) | 🟢 **Completed & Promoted** | Manage multi-day background workflows. |
+| `black-box-evaluation-suite-builder` | `black-box-evaluation-suite-builder` | Executable black-box suites for deployment, use, failure recovery, shutdown, latency, and agent capabilities. | [agents-cli](https://github.com/google/agents-cli/tree/main/skills) | 🟢 **Completed & Promoted** | Scaffold and execute boundary-oracle test and benchmark suites. |
 
 ---
 
