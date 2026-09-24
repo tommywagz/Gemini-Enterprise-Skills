@@ -115,18 +115,27 @@ formatting. Type-checkers (`mypy`, `tsc`) are never fixers — they run in
 Step 6 as verification only.
 
 - Step 5: Generate the two scripts
-Write both into the target's parent directory, executable, and **show the user
-the contents before running anything**.
+Write both **outside the host repository's working tree** — a scratch directory
+alongside the repo, or `.git/integrate-repo/` — executable, and **show the user
+the contents before running anything**. Never write them into the target or its
+parent: the artifacts would land in the diff under review, and on a repo that
+tracks everything they become uncommitted changes in the tree the fixers are
+about to rewrite.
 
 `remediate_compliance.sh` — the ordered fixes from Step 4. It must:
-- Take a checkpoint first: refuse to run on a dirty tree unless `--force`, and
-  create a `git stash` entry or a `pre-remediate/<timestamp>` branch so the
-  user can get back. State the exact undo command in the script's output.
+- Take a checkpoint first: refuse to run when **tracked** files are modified
+  unless `--force`, and create a `pre-remediate/<timestamp>` branch so the user
+  can get back. State the exact undo command in the script's output. Untracked
+  files must not block the run, but a checkpoint is a commit and cannot restore
+  one a fixer rewrites — warn and name any untracked file under the target.
 - Scope every command to the target path. Never invoke a repo-wide fixer —
   a 4,000-file reformat buries the 40 files under review.
 - Use `git mv` for renames, never `mv`, so history survives.
-- Run one gate per step, echoing the gate name, and stop on first failure
-  (`set -euo pipefail`) so a partial run is diagnosable.
+- Run one gate per step, echoing the gate name. Drive stages 1-4 with the
+  template's `fix` helper and stage 5 with `run`: a fixer exits non-zero
+  whenever unfixable violations remain — the normal case — and treating that as
+  fatal aborts the script before the formatter stage. Only genuinely fatal
+  steps (`git mv`, header injection) should stop the run.
 - Inject license headers idempotently — check for the marker before writing,
   or reruns stack duplicate headers.
 
