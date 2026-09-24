@@ -6,6 +6,7 @@
   "rows": [
     {
       "id": "L-DEPLOY-001",
+      "test_ids": ["test_deploy_001"],
       "component": "replace-with-component",
       "feature": "startup",
       "lifecycle_phase": "deployment",

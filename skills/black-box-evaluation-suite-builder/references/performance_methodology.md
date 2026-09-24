@@ -16,10 +16,11 @@ time. Identify uncontrolled load and any deviation from the baseline run.
 Use representative workloads and preserve the unrounded raw measurements. Make
 the percentile rule explicit: for sorted `n` samples, nearest-rank percentile
 `p` is the value at zero-based index `ceil(p * n) - 1`, bounded to the sample
-range. Report median and P90; report P99 and P99.99 only with adequate samples.
-A practical suite must label any tail estimate with fewer than 100 samples as
-inconclusive, and should record stronger project-specific adequacy rules when
-they exist.
+range. Report median and P90; label P99 inconclusive below 100 samples and
+P99.99 inconclusive below 10,000 samples (fewer than one expected observation
+in the respective tail). Record stronger project-specific adequacy rules when
+they exist. The helper assumes millisecond samples; it reports transfer
+throughput when `--payload-bytes` is provided, one measured transfer per sample.
 
 ## Workload Dimensions
 
