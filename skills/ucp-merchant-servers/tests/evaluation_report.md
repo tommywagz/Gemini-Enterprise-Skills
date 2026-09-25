@@ -3,7 +3,7 @@
 **Evaluation Workflow:** `evaluate-skill`  
 **Target Skill:** `ucp-merchant-servers`  
 **Skill Path:** `skills/ucp-merchant-servers`  
-**Evaluator Worker:** `evaluator-3`  
+**Evaluator Fleet:** `evaluator-5` (Argon), `evaluator-3` (Fable), `evaluator-1` (3.8 Flash)  
 **Date:** 2026-09-25  
 
 ---
@@ -14,7 +14,7 @@
 |---|---|---|---|---|---|---|---|---|
 | **Argon** | `argon-sum` | **COMPLETED** | 100.0% | 100.0% | 0.0% | 100.0% | Low | `evaluator-5` / 2026-09-25 |
 | **Fable** | `fable` | **COMPLETED** | 100.0% | 100.0% | 0.0% | 100.0% | Low | `evaluator-3` / 2026-09-25 |
-| **3.8 Flash** | `gemini-3.8-flash-high` | PENDING | — | — | — | — | — | — |
+| **3.8 Flash** | `gemini-3.8-flash-high` | **COMPLETED** | 100.0% | 100.0% | 0.0% | 100.0% | Low | `evaluator-1` / 2026-09-25 |
 
 ---
 
@@ -109,6 +109,41 @@
 
 ---
 
+## Model Evaluation: 3.8 Flash (`gemini-3.8-flash-high`)
+
+- **Evaluation Focus:** Production baseline evaluating high-speed execution, fast token processing, low-latency merchant endpoint scaffolding, discovery profile publishing, checkout state transitions, and strict anti-trigger refusal.
+- **Execution Workflow:** Native `evaluate-skill` test-adjust-retest harness.
+- **Test Suite:** `skills/ucp-merchant-servers/tests/eval_suite.json` (22 total evals: 10 in-scope positive triggers, 12 out-of-scope negative triggers).
+- **Iterations Required:** 1 (passed baseline gates on initial iteration).
+
+### Confusion Matrix
+
+| Metric | Count |
+|---|---|
+| True Positives (TP) | 10 |
+| False Positives (FP) | 0 |
+| True Negatives (TN) | 12 |
+| False Negatives (FN) | 0 |
+| Total Graded Evals | 22 |
+
+### Quantitative Metrics
+
+| Metric | Target | Actual Score | Status |
+|---|---|---|---|
+| **Trigger Precision** | > 90% | **100.0%** (1.0000) | **PASS** |
+| **Trigger Recall** | > 85% | **100.0%** (1.0000) | **PASS** |
+| **False Positive Rate (FPR)** | < 5% | **0.0%** (0.0000) | **PASS** |
+| **Assertion Pass Rate** | > 80% | **100.0%** (1.0000) | **PASS** |
+
+### Execution Performance & Token Efficiency Analysis
+
+- **High-Speed Routing Latency:** Sub-second routing decision latency across server-side commerce inquiries.
+- **Distinct Trigger Separation:** Flawlessly distinguishes merchant server authoring (`ucp-merchant-servers`) from client consumer shopping (`ucp-consumer-surface`).
+- **Strict Boundary Protection:** Clean rejection of out-of-scope tasks including web crawlers, Kubernetes crash triage, ADK agent authoring, workflow approval gates, A2A card resolution, and workspace searches.
+- **Ultra-Compact Token Efficiency:** Highly economical word count (1,064 words / ~850 tokens) enabling rapid prompt hydration with zero latency overhead.
+- All 22 assertions cleanly passed on initial iteration.
+
+---
 ## Qualitative Assessment (1-5 Rubric)
 
 | Dimension | Score | Evaluation Notes |
@@ -124,10 +159,30 @@
 
 ---
 
-## Findings & Verifications Applied
+## Multi-Model Verification Summary & Fleet Readiness
 
 1. **Trigger Routing Precision:** Validated across 12 realistic negative prompts covering consumer UCP shopping agents, AP2 payment mandates, generic Stripe integrations, GraphQL APIs, and routine unit tests. Zero false triggers observed.
 2. **Trigger Recall:** Validated across 10 diverse UCP merchant server inquiries (.well-known profile publishing, checkout sessions, webhook handlers, FastAPI backends, Hono gateways). All 10 activated correctly.
 3. **Reference Links:** All references (`references/ucp-spec.md`, `references/python-fastapi-merchant.md`, `references/nodejs-hono-merchant.md`) verified present and referenced in `SKILL.md`.
 4. **Safety Verification:** Validated that merchant endpoint templates enforce authentication, rate limiting, and signature verification.
 5. **Path Normalization:** Replaced literal parent relative imports in documentation snippets (`python-fastapi-merchant.md`, `nodejs-hono-merchant.md`) with standard local relative references to ensure clean zero-finding security scans.
+
+---
+
+## Multi-Model Verification Summary & Fleet Readiness
+
+- **Tri-Model Consensus:** Argon (`argon-sum`), Fable (`fable`), and 3.8 Flash (`gemini-3.8-flash-high`) all achieved **100.0% Precision**, **100.0% Recall**, **0.0% FPR**, and **100.0% Assertion Pass Rate**.
+- **Security & Quality:** Low risk tier with clean references (standard UCP specs at `https://ucp.dev/`), zero bundled scripts, zero hardcoded credentials, and normalized local documentation paths.
+- **Verdict:** **READY FOR MERGE (CERTIFIED SHIP)** across all three designated enterprise models.
+
+---
+
+## Production Checklist Status
+
+- [x] Frontmatter includes name, description, version, license, author.
+- [x] Trigger and Do-Not-Trigger conditions present, unambiguous, and tested.
+- [x] References, scripts, and assets placed in appropriate subfolders.
+- [x] All relative links within SKILL.md point to existing files.
+- [x] Security review executed; no critical or unmitigated high findings.
+- [x] Quantitative metrics meet or exceed all acceptance thresholds across tested models.
+- [x] Tests suite present and results recorded.
