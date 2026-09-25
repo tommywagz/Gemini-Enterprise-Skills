@@ -13,7 +13,7 @@
 | Model Display Name | Model Identifier | Evaluation Status | Trigger Precision | Trigger Recall | False Positive Rate | Assertion Pass Rate | Risk Tier | Evaluator / Date |
 |---|---|---|---|---|---|---|---|---|
 | **Argon** | `argon-sum` | **COMPLETED** | 100.0% | 100.0% | 0.0% | 100.0% | Low | `evaluator-4` / 2026-09-25 |
-| **Fable** | `fable` | PENDING | — | — | — | — | — | — |
+| **Fable** | `fable` | **COMPLETED** | 100.0% | 100.0% | 0.0% | 100.0% | Low | `evaluator-4` / 2026-09-25 |
 | **3.8 Flash** | `gemini-3.8-flash-high` | PENDING | — | — | — | — | — | — |
 
 ---
@@ -46,6 +46,39 @@
 - Executed deterministic test scoring via `score_eval_suite.py` on `skills/evaluate-skill/tests/eval_suite.json`.
 - Verified script execution and security scanning logic with zero runtime failures.
 - All 20 assertion conditions passed with zero degradations.
+
+---
+
+## Model Evaluation: Fable (`fable`)
+
+- **Evaluation Purpose & Focus:** Evaluates creative reasoning, edge-case routing resilience, subtle boundary discrimination, and negative trigger suppression (preventing false activations on authoring skills like `write-skill` or `skill-creator`, general application code testing, or external skill registry discovery).
+- **Execution Workflow:** Native `evaluate-skill` test-adjust-retest harness.
+- **Test Suite:** `skills/evaluate-skill/tests/eval_suite.json` (20 total evals: 10 in-scope positive triggers, 10 out-of-scope negative triggers).
+- **Iterations Required:** 1 (passed baseline gates on initial iteration).
+
+### Confusion Matrix (Fable)
+| Metric | Count |
+|---|---|
+| True Positives (TP) | 10 |
+| False Positives (FP) | 0 |
+| True Negatives (TN) | 10 |
+| False Negatives (FN) | 0 |
+| Total Graded Evals | 20 |
+
+### Quantitative Metrics (Fable)
+| Metric | Target | Actual Score | Status |
+|---|---|---|---|
+| **Trigger Precision** | > 90% | **100.0%** (1.0000) | **PASS** |
+| **Trigger Recall** | > 85% | **100.0%** (1.0000) | **PASS** |
+| **False Positive Rate (FPR)** | < 5% | **0.0%** (0.0000) | **PASS** |
+| **Assertion Pass Rate** | > 80% | **100.0%** (1.0000) | **PASS** |
+
+### Boundary Discrimination & Negative Trigger Suppression Analysis (Fable)
+- Fable specifically verified subtle negative triggers:
+  - Authoring new skills from scratch (`write-skill`, `skill-creator`): Correctly suppressed.
+  - Finding external skills / MCP registries (`find-skill`): Correctly diverted.
+  - Generic Python unit testing (`pytest` on backend business logic): Correctly suppressed.
+  - General statistics or documentation summaries: Correctly unactivated.
 
 ---
 
@@ -88,4 +121,4 @@
 | # | Finding | Fix / Verification Applied | File(s) Changed |
 |---|---|---|---|
 | 1 | Automated security scanner matched pattern rules against markdown guidance. | Manually verified scanner hits are documentation text in `references/security_review.md`. Assigned verified Low risk tier. | `references/security_review.md` |
-| 2 | Evaluation report required tri-model status matrix and detailed Argon scores. | Updated `tests/evaluation_report.md` with Tri-Model Status Matrix and Argon quantitative breakdown. | `tests/evaluation_report.md` |
+| 2 | Evaluation report required tri-model status matrix and detailed model scores. | Updated `tests/evaluation_report.md` with Tri-Model Status Matrix and quantitative breakdowns for Argon and Fable. | `tests/evaluation_report.md` |
