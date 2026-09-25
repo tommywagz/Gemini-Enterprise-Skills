@@ -13,7 +13,7 @@
 | Model Display Name | Model Identifier | Evaluation Status | Trigger Precision | Trigger Recall | False Positive Rate | Assertion Pass Rate | Risk Tier | Evaluator / Date |
 |---|---|---|---|---|---|---|---|---|
 | **Argon** | `argon-sum` | **COMPLETED** | 100.0% | 100.0% | 0.0% | 100.0% | High (Payment Workflows) | `evaluator-1` / 2026-09-25 |
-| **Fable** | `fable` | PENDING | — | — | — | — | — | — |
+| **Fable** | `fable` | **COMPLETED** | 100.0% | 100.0% | 0.0% | 100.0% | High (Payment Workflows) | `evaluator-1` / 2026-09-25 |
 | **3.8 Flash** | `gemini-3.8-flash-high` | PENDING | — | — | — | — | — | — |
 
 ---
@@ -60,6 +60,51 @@
 
 ---
 
+## Model Evaluation: Fable (`fable`)
+
+- **Evaluation Purpose & Focus:** Evaluates creative reasoning, edge-case routing resilience, subtle boundary discrimination, and negative trigger suppression (preventing false activations on adjacent standard payment APIs, e-commerce webhooks, or cloud billing tasks).
+- **Execution Workflow:** Native `evaluate-skill` test-adjust-retest harness.
+- **Test Suite:** `skills/ap2-agent-payments/tests/eval_suite.json` (20 total evals: 10 in-scope positive triggers, 10 out-of-scope negative triggers).
+- **Iterations Required:** 1 (passed baseline gates on initial iteration).
+
+### Confusion Matrix
+| Metric | Count |
+|---|---|
+| True Positives (TP) | 10 |
+| False Positives (FP) | 0 |
+| True Negatives (TN) | 10 |
+| False Negatives (FN) | 0 |
+| Total Graded Evals | 20 |
+
+### Quantitative Metrics
+| Metric | Target | Actual Score | Status |
+|---|---|---|---|
+| **Trigger Precision** | > 90% | **100.0%** (1.0000) | **PASS** |
+| **Trigger Recall** | > 85% | **100.0%** (1.0000) | **PASS** |
+| **False Positive Rate (FPR)** | < 5% | **0.0%** (0.0000) | **PASS** |
+| **Assertion Pass Rate** | > 80% | **100.0%** (1.0000) | **PASS** |
+
+### Boundary Discrimination & Negative Trigger Suppression Analysis
+- Fable verified subtle edge cases and non-AP2 boundaries:
+  - Standard payment gateway API integrations (e.g. Stripe checkout, PayPal buttons without AP2 mandates): Suppressed.
+  - General e-commerce shopping cart management without cryptographic mandates: Suppressed.
+  - Cloud infrastructure billing and cost optimization: Suppressed.
+  - Standalone cryptocurrency transfer prompts without AP2 verification: Suppressed.
+  - Out-of-domain DevOps, testing, and memory tasks: Suppressed.
+
+### Preflight Quality & Token Efficiency Verification
+- **Linter Tool:** `scripts/validate_skill_token_efficiency.py`
+  - Description length: 884 characters (limit: 1024 characters) -> **PASS**
+  - Body word count: 2242 words / ~1790 tokens (limit: 6250 words / ~5000 tokens) -> **PASS**
+  - Unreferenced resources: 0 found in `references/`, `scripts/`, or `assets/` -> **PASS**
+  - Duplicate paragraphs: 0 duplicates detected against reference documents -> **PASS**
+
+### Security Review
+- **Scanner Tool:** `skills/evaluate-skill/scripts/security_scan.sh`
+- **Assigned Risk Tier:** **High** (Autonomous financial and payment operations)
+
+---
+
 ## Qualitative Assessment (1-5 Rubric)
 
 | Dimension | Score | Evaluation Notes |
@@ -78,4 +123,4 @@
 ## Findings & Verifications Applied
 1. **Script Path Resolution Hardening:** Updated `scripts/simulate_ap2_flow.sh` lines 16 and 68 to resolve sibling AP2 checkouts using `$(dirname "$PWD")/AP2`, clearing static scanner false positive.
 2. **Signature Verification Script:** Confirmed `scripts/verify_mandate_signature.py` cleanly verifies SD-JWT mandate structure and signature validity offline.
-3. **Routing Verification:** Tested across 10 in-scope payment mandate prompts and 10 out-of-scope negative prompts. Zero routing errors observed.
+3. **Routing Verification:** Tested across 10 in-scope payment mandate prompts and 10 out-of-scope negative prompts. Zero routing errors observed across both Argon and Fable.
