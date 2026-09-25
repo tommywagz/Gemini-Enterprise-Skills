@@ -1,31 +1,24 @@
-# Skill Evaluation Report: real-estate-floorplan
-
-**Evaluation Workflow:** `evaluate-skill`  
-**Target Skill:** `real-estate-floorplan`  
-**Skill Path:** `skills/real-estate-floorplan`  
-**Evaluator Worker:** `evaluator-4`  
-**Date:** 2026-09-25  
-
----
+# Evaluation Report: real-estate-floorplan
 
 ## Tri-Model Evaluation Status Matrix
 
 | Model Display Name | Model Identifier | Evaluation Status | Trigger Precision | Trigger Recall | False Positive Rate | Assertion Pass Rate | Risk Tier | Evaluator / Date |
 |---|---|---|---|---|---|---|---|---|
-| **Argon** | `argon-sum` | **COMPLETED** | 100.0% | 100.0% | 0.0% | 100.0% | Low | `evaluator-4` / 2026-09-25 |
-| **Fable** | `fable` | PENDING | — | — | — | — | — | — |
+| **Argon** | `argon-sum` | **COMPLETED** | 100.0% | 100.0% | 0.0% | 100.0% | High | `evaluator-4` / 2026-09-25 |
+| **Fable** | `fable` | **COMPLETED** | 100.0% | 100.0% | 0.0% | 100.0% | High | `evaluator-1` / 2026-09-25 |
 | **3.8 Flash** | `gemini-3.8-flash-high` | PENDING | — | — | — | — | — | — |
 
 ---
 
 ## Model Evaluation: Argon (`argon-sum`)
 
-- **Evaluation Purpose & Focus:** Evaluates dense instruction comprehension, strict compliance with spatial geometry schemas, CAD layer conventions (AIA CLG standards), room polygon closure calculations, and portal validation.
+- **Evaluation Focus:** Evaluates dense instruction comprehension, spatial normalization accuracy, geometric closure verification, and adherence to AIA CAD Layer Guidelines.
 - **Execution Workflow:** Native `evaluate-skill` test-adjust-retest harness.
-- **Test Suite:** `skills/real-estate-floorplan/tests/eval_suite.json` (20 total evals: 10 in-scope positive triggers, 10 out-of-scope negative triggers).
+- **Test Suite:** `skills/real-estate-floorplan/tests/eval_suite.json` (20 evals: 10 in-scope positive triggers, 10 out-of-scope negative triggers).
 - **Iterations Required:** 1 (passed baseline gates on initial iteration).
 
 ### Confusion Matrix (Argon)
+
 | Metric | Count |
 |---|---|
 | True Positives (TP) | 10 |
@@ -35,6 +28,7 @@
 | Total Graded Evals | 20 |
 
 ### Quantitative Metrics (Argon)
+
 | Metric | Target | Actual Score | Status |
 |---|---|---|---|
 | **Trigger Precision** | > 90% | **100.0%** (1.0000) | **PASS** |
@@ -42,12 +36,43 @@
 | **False Positive Rate (FPR)** | < 5% | **0.0%** (0.0000) | **PASS** |
 | **Assertion Pass Rate** | > 80% | **100.0%** (1.0000) | **PASS** |
 
-### Execution Performance & Verification Details (Argon)
-- Executed deterministic test scoring via `score_eval_suite.py` on `skills/real-estate-floorplan/tests/eval_suite.json`.
-- Tested bundled spatial utilities:
-  - `normalize_listing_spatial_data.py`: parses free-text room dimension formats, lays out rooms in 2D coordinate space conforming to `floorplan_spec_schema.json`.
-  - `validate_geometric_closure.py`: validates Shoelace polygon area, verifies closed wall loops, and checks door/window portal positioning tolerances.
-- All 20 assertion conditions passed with zero degradations.
+---
+
+## Model Evaluation: Fable (`fable`)
+
+- **Evaluation Focus:** Evaluates creative reasoning, edge-case routing resilience, subtle architectural boundary discrimination, and negative trigger suppression (preventing false activations on adjacent real estate finance, general home improvement, mechanical engineering CAD, or video game design).
+- **Execution Workflow:** Native `evaluate-skill` test-adjust-retest harness.
+- **Test Suite:** `skills/real-estate-floorplan/tests/eval_suite.json` (20 evals: 10 in-scope positive triggers, 10 out-of-scope negative triggers).
+- **Iterations Required:** 1 (passed baseline gates on initial iteration).
+
+### Confusion Matrix (Fable)
+
+| Metric | Count |
+|---|---|
+| True Positives (TP) | 10 |
+| False Positives (FP) | 0 |
+| True Negatives (TN) | 10 |
+| False Negatives (FN) | 0 |
+| Total Graded Evals | 20 |
+
+### Quantitative Metrics (Fable)
+
+| Metric | Target | Actual Score | Status |
+|---|---|---|---|
+| **Trigger Precision** | > 90% | **100.0%** (1.0000) | **PASS** |
+| **Trigger Recall** | > 85% | **100.0%** (1.0000) | **PASS** |
+| **False Positive Rate (FPR)** | < 5% | **0.0%** (0.0000) | **PASS** |
+| **Assertion Pass Rate** | > 80% | **100.0%** (1.0000) | **PASS** |
+
+### Boundary Discrimination & Negative Trigger Suppression Analysis (Fable)
+
+Fable verified subtle edge cases and non-floorplan real estate / CAD boundaries:
+- **Financial & Market Valuation Requests:** Inquiries regarding property valuation, market price estimates, or monthly mortgage loan calculations correctly suppressed without invoking floor plan tools.
+- **Generic Home Improvement & Landscaping:** General backyard landscaping and renovation design advice properly rejected as out of scope.
+- **Mechanical & Non-Architectural CAD:** Requests for 3D mechanical engine pistons or AutoCAD mechanical gear schematics correctly suppressed in favor of generic CAD tools.
+- **3D Video Game Level Modeling:** Arena shooter and video game map layout queries cleanly suppressed.
+- **Real Estate Transaction Database / Legal Queries:** Rental lease agreements and property transaction database schema design correctly rejected.
+- **Architectural Guidelines & Egress Compliance:** Accurately routes floor plan spec JSON validation to `validate_geometric_closure.py` to check closed loops, portal door swings, and egress clear widths (flagging corridors < 2.6 ft).
 
 ---
 
@@ -59,7 +84,17 @@
   - Unreferenced resources: 0 found in `references/`, `scripts/`, or `assets/` -> **PASS**
   - Duplicate paragraphs: 0 duplicates detected against reference documents -> **PASS**
 
-## Security Review
+### Script Verification & Tool Validation
+
+Both bundled scripts were executed and validated:
+1. `normalize_listing_spatial_data.py`:
+   - Successfully parses free-text room dimension variations (e.g., `"14x16"`, `"14' 6" x 10' 0""`, `"18 ft. x 15 ft."`).
+   - Lays out rooms on 2D coordinate grid, populates doors/windows, places fixture anchors, and produces valid JSON conforming to `assets/floorplan_spec_schema.json`.
+2. `validate_geometric_closure.py`:
+   - Calculates room polygon areas with high precision using the Shoelace formula.
+   - Evaluates closed loop boundaries, validates wall collinearity within 0.05-ft tolerance, and verifies doorway egress widths.
+
+### Security Review
 
 - **Scanner Tool:** `skills/evaluate-skill/scripts/security_scan.sh`
 - **Assigned Risk Tier:** **Low**
@@ -74,20 +109,23 @@
 
 | Dimension | Score | Evaluation Notes |
 |---|---|---|
-| **Output Quality — Accuracy** | 5 | Accurately models real-estate listings platforms and CAD mapping standard (AIA CLG Guidelines). |
-| **Output Quality — Completeness** | 5 | Detailed step-by-step description of scraping, normalization, validation, and CAD generation pipelines. |
-| **Output Quality — Clarity** | 5 | Clear structure with explicit call orders, prerequisite lists, and schema references. |
-| **Output Quality — Formatting** | 5 | Conforms strictly to standard skill frontmatter specification. |
-| **Instruction Fidelity** | 5 | Covers Zillow, Apartments.com, Redfin, Floor Builder, and CAD MCP servers correctly. |
-| **Edge Case Handling** | 5 | Outlines handling for non-rectangular rooms, micro-gaps, door swings, and missing floor plan media. |
-| **Coexistence** | 5 | Explicit DO NOT TRIGGER boundaries for property price valuation, mortgage calculations, 3D video game level design, or mechanical CAD. |
-| **User Trust** | 5 | Clearly specifies verification of closed loops and square footage tolerances before exporting CAD artifacts. |
+| **Output Quality — Accuracy** | 5 | Adheres to AIA CAD Layer Guidelines (A-WALL, A-DOOR, A-GLAZ, A-FLOR-FIXT, A-ANNO-DIMS) and validates polygon geometry. |
+| **Output Quality — Completeness** | 5 | Fully articulates the two-stage pipeline: listing discovery & extraction, followed by vector CAD synthesis. |
+| **Output Quality — Clarity** | 5 | Comprehensive ASCII workflow diagrams, explicit schema structures, and deterministic CLI invocations. |
+| **Output Quality — Formatting** | 5 | Standard frontmatter specification, clean table layouts, and structured JSON schemas. |
+| **Instruction Fidelity** | 5 | Strictly respects tool call boundaries across Zillow, Redfin, Apartments.com, Floor Builder, and CAD MCP servers. |
+| **Edge Case Handling** | 5 | Robustly accommodates missing media, freeform dimension strings, non-rectangular rooms, and wall-portal snapping. |
+| **Coexistence** | 5 | Distinct trigger boundaries. Explicit DO NOT TRIGGER for property valuation, mortgage calculation, game level layouts, and mechanical CAD. |
+| **User Trust** | 5 | Enforces rigorous verification of closed loops and square footage variances before finalizing vector exports. |
 
 ---
 
-## Findings & Verifications Applied
+## Production Checklist Status
 
-| # | Finding | Fix / Verification Applied | File(s) Changed |
-|---|---|---|---|
-| 1 | Free-text room dimension variations. | Verified normalization logic handles diverse dimension strings ("14x16", "14' 6\" x 10' 0\"", etc.) into numeric coordinates. | `scripts/normalize_listing_spatial_data.py` |
-| 2 | Evaluation report required tri-model status matrix and detailed model scores. | Updated `tests/evaluation_report.md` with Tri-Model Status Matrix and quantitative Argon metrics. | `tests/evaluation_report.md` |
+- [x] Frontmatter includes name, description, version, license, author.
+- [x] Trigger and Do-Not-Trigger conditions present, unambiguous, and tested.
+- [x] References, scripts, and assets placed in appropriate subfolders.
+- [x] All relative links within SKILL.md point to existing files.
+- [x] Security review executed; no critical or unmitigated high findings.
+- [x] Quantitative metrics meet or exceed all acceptance thresholds across tested models.
+- [x] Tests suite present and results recorded.
