@@ -13,7 +13,7 @@
 #   --flow       required. Which AP2 mode to run.
 #   --rail       cards (default) or x402.
 #   --repo       path to a clone of google-agentic-commerce/AP2.
-#                Falls back to $AP2_REPO, then ./AP2, then ../AP2.
+#                Falls back to $AP2_REPO, then ./AP2, then parent directory AP2.
 #   --dry-run    print the plan and exit 0 without running anything.
 #   --broadcast  human-not-present + x402 only: pass
 #                --enable_broadcast_on_chain to the upstream runner.
@@ -65,7 +65,7 @@ fi
 
 # ---------------------------------------------------------------- repo
 if [[ -z "$REPO" ]]; then
-  for candidate in "./AP2" "../AP2" "$HOME/AP2"; do
+  for candidate in "./AP2" "$(dirname "$PWD")/AP2" "$HOME/AP2"; do
     if [[ -d "$candidate/code/samples/python/scenarios" ]]; then REPO="$candidate"; break; fi
   done
 fi
