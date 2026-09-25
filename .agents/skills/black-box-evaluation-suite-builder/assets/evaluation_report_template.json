@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "suite": "replace-with-suite-name",
+  "run": {
+    "started_at": null,
+    "commands": [],
+    "environment": {
+      "hardware": null,
+      "software_versions": {},
+      "configuration": {},
+      "workload": null,
+      "warmup": null,
+      "sample_count": null,
+      "measurement_method": null
+    }
+  },
+  "summary": {
+    "pass": 0,
+    "fail": 0,
+    "skipped": 0,
+    "inconclusive": 0
+  },
+  "results": [
+    {
+      "matrix_id": "L-DEPLOY-001",
+      "test_id": "test_deploy_001",
+      "status": "planned",
+      "evidence": [],
+      "reason": null
+    }
+  ],
+  "performance": {
+    "baseline_or_requirement": null,
+    "percentile_method": "nearest-rank: ceil(p*n)-1",
+    "raw_samples_path": null,
+    "measurements": []
+  },
+  "untested": []
+}
