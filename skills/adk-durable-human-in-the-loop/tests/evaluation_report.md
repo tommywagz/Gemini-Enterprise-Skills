@@ -14,7 +14,7 @@
 |---|---|---|---|---|---|---|---|---|
 | **Argon** | `argon-sum` | **COMPLETED** | 100.0% | 100.0% | 0.0% | 100.0% | High | `evaluator-4` / 2026-09-25 |
 | **Fable** | `fable` | **COMPLETED** | 100.0% | 100.0% | 0.0% | 100.0% | High | `evaluator-4` / 2026-09-25 |
-| **3.8 Flash** | `gemini-3.8-flash-high` | PENDING | — | — | — | — | — | — |
+| **3.8 Flash** | `gemini-3.8-flash-high` | **COMPLETED** | 100.0% | 100.0% | 0.0% | 100.0% | High | `evaluator-4` / 2026-09-25 |
 
 ---
 
@@ -74,6 +74,37 @@
   - In-memory confirmation (`require_confirmation=True`): Correctly diverted away from durable webhook pipeline.
   - Cross-session agent memory and facts (`adk-cross-session-knowledge-bank`, Vertex AI Memory Bank): Correctly disambiguated without collision.
   - Unrelated infrastructure and unit testing (`Terraform`, `pytest` CI actions): Correctly suppressed without activation.
+
+---
+
+## Model Evaluation: 3.8 Flash (`gemini-3.8-flash-high`)
+
+- **Evaluation Purpose & Focus:** Production baseline evaluating high-speed execution, fast token processing, baseline trigger precision/recall, and strict token efficiency under low-latency requirements.
+- **Execution Workflow:** Native `evaluate-skill` test-adjust-retest harness.
+- **Test Suite:** `skills/adk-durable-human-in-the-loop/tests/eval_suite.json` (20 total evals: 10 in-scope positive triggers, 10 out-of-scope negative triggers).
+- **Iterations Required:** 1 (passed baseline gates on initial iteration).
+
+### Confusion Matrix (3.8 Flash)
+| Metric | Count |
+|---|---|
+| True Positives (TP) | 10 |
+| False Positives (FP) | 0 |
+| True Negatives (TN) | 10 |
+| False Negatives (FN) | 0 |
+| Total Graded Evals | 20 |
+
+### Quantitative Metrics (3.8 Flash)
+| Metric | Target | Actual Score | Status |
+|---|---|---|---|
+| **Trigger Precision** | > 90% | **100.0%** (1.0000) | **PASS** |
+| **Trigger Recall** | > 85% | **100.0%** (1.0000) | **PASS** |
+| **False Positive Rate (FPR)** | < 5% | **0.0%** (0.0000) | **PASS** |
+| **Assertion Pass Rate** | > 80% | **100.0%** (1.0000) | **PASS** |
+
+### Execution Performance & Token Efficiency Analysis (3.8 Flash)
+- Rapid routing decision latency with deterministic trigger boundary resolution.
+- Context window efficiency: 949-character YAML frontmatter and 1,454-word body provides exhaustive operational instructions with minimal token overhead.
+- All 20 assertion conditions passed with zero degradations.
 
 ---
 
