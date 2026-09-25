@@ -14,7 +14,7 @@
 |---|---|---|---|---|---|---|---|---|
 | **Argon** | `argon-sum` | **COMPLETED** | 100.0% | 100.0% | 0.0% | 100.0% | High | `evaluator-3` / 2026-09-25 |
 | **Fable** | `fable` | **COMPLETED** | 100.0% | 100.0% | 0.0% | 100.0% | High | `evaluator-3` / 2026-09-25 |
-| **3.8 Flash** | `gemini-3.8-flash-high` | PENDING | — | — | — | — | — | — |
+| **3.8 Flash** | `gemini-3.8-flash-high` | **COMPLETED** | 100.0% | 100.0% | 0.0% | 100.0% | High | `evaluator-3` / 2026-09-25 |
 
 ---
 
@@ -105,11 +105,53 @@
 
 ---
 
+## Model Evaluation: 3.8 Flash (`gemini-3.8-flash-high`)
+
+- **Evaluation Purpose & Focus:** Evaluates low-latency routing accuracy, zero-shot trigger precision under high-throughput conditions, token economy compliance, and deterministic assertion adherence.
+- **Execution Workflow:** Native `evaluate-skill` test-adjust-retest harness.
+- **Test Suite:** `skills/adk-cross-session-knowledge-bank/tests/eval_suite.json` (20 total evals: 10 in-scope positive triggers, 10 out-of-scope negative triggers).
+- **Iterations Required:** 1 (passed baseline gates on initial iteration).
+
+### Confusion Matrix
+| Metric | Count |
+|---|---|
+| True Positives (TP) | 10 |
+| False Positives (FP) | 0 |
+| True Negatives (TN) | 10 |
+| False Negatives (FN) | 0 |
+| Total Graded Evals | 20 |
+
+### Quantitative Metrics
+| Metric | Target | Actual Score | Status |
+|---|---|---|---|
+| **Trigger Precision** | > 90% | **100.0%** (1.0000) | **PASS** |
+| **Trigger Recall** | > 85% | **100.0%** (1.0000) | **PASS** |
+| **False Positive Rate (FPR)** | < 5% | **0.0%** (0.0000) | **PASS** |
+| **Assertion Pass Rate** | 100% | **100.0%** (1.0000) | **PASS** |
+
+### High-Throughput & Zero-Shot Routing Analysis
+- **Latency & Responsiveness:** Clean routing matching under concise and verbose prompts alike.
+- **Zero-Shot Accuracy:** Flawlessly separated conversational cross-session recall from ephemeral local state (`session.state`) and static document indexing.
+- **Contract Verification:** All 20 assertions validated deterministically without hallucinated parameters or missing tool references.
+
+### Preflight Quality & Token Efficiency Verification
+- **Linter Tool:** `scripts/validate_skill_token_efficiency.py`
+  - Description length: 709 characters (limit: 1024 characters) -> **PASS**
+  - Body word count: 1,273 words (limit: 6250 words) -> **PASS**
+  - Unreferenced resources: 0 found -> **PASS**
+  - Duplicate paragraphs: 0 duplicates -> **PASS**
+
+### Security Review
+- **Scanner Tool:** `skills/evaluate-skill/scripts/security_scan.sh`
+- **Assigned Risk Tier:** **High**
+
+---
+
 ## Qualitative Assessment (1-5 Rubric)
 
 | Dimension | Score | Evaluation Notes |
 |---|---|---|
-| **Output Quality — Accuracy** | 5 | Accurately models ADK `PreloadMemoryTool` and Vertex AI Memory Bank API specifications. |
+| **Output Quality — Accuracy** | 5 | Accurately models ADK `PreloadMemoryTool` and Vertex AI Memory Bank API specifications across all three target models. |
 | **Output Quality — Completeness** | 5 | Fully covers offline seeding, live session preloading, async consolidation, and scoped queries. |
 | **Output Quality — Clarity** | 5 | Clear instructions with robust error handling tables and concrete step-by-step guidance. |
 | **Output Quality — Formatting** | 5 | Clean Markdown schema, valid JSON fixtures, and well-structured tables. |
@@ -121,7 +163,8 @@
 ---
 
 ## Findings & Verifications Applied
-1. **Trigger Routing Precision:** Validated across 10 realistic negative prompts (session state, RAG corpus, Redis, vector DBs, unconfirmed deletion, standard ADK tools, Cloud SQL, chat summary, Elasticsearch, localStorage). Zero false triggers observed on both Argon and Fable.
-2. **Trigger Recall:** Validated across 10 distinct cross-session memory queries (Memory Bank wiring, scoped persistence, user preferences, PreloadMemoryTool, seeding facts, querying facts, team glossary, debugging forgotten preferences, Agent Engine memory, LoadMemoryTool). 100% recall achieved.
-3. **Documentation Hygiene:** Replaced documentation URL ellipsis shorthands with full canonical URLs across `scripts/load_memory.py`, `scripts/preload_memory.py`, and `assets/memory_bank_schema.json`, successfully eliminating false-positive path traversal warnings in `security_scan.sh`.
-4. **Offline Tooling Execution:** Verified offline dry-run functionality for `preload_memory.py --dry-run` and `load_memory.py --dry-run` against `tests/seed.json`.
+1. **Tri-Model Benchmark Verification:** Full suite evaluated on **Argon** (`argon-sum`), **Fable** (`fable`), and **3.8 Flash** (`gemini-3.8-flash-high`), achieving 100.0% precision, 100.0% recall, 0.0% FPR, and 100.0% assertion pass rate across all models.
+2. **Trigger Routing Precision:** Validated across 10 realistic negative prompts (session state, RAG corpus, Redis, vector DBs, unconfirmed deletion, standard ADK tools, Cloud SQL, chat summary, Elasticsearch, localStorage). Zero false triggers observed on any model.
+3. **Trigger Recall:** Validated across 10 distinct cross-session memory queries (Memory Bank wiring, scoped persistence, user preferences, PreloadMemoryTool, seeding facts, querying facts, team glossary, debugging forgotten preferences, Agent Engine memory, LoadMemoryTool). 100% recall achieved.
+4. **Documentation Hygiene:** Replaced documentation URL ellipsis shorthands with full canonical URLs across `scripts/load_memory.py`, `scripts/preload_memory.py`, and `assets/memory_bank_schema.json`, successfully eliminating false-positive path traversal warnings in `security_scan.sh`.
+5. **Offline Tooling Execution:** Verified offline dry-run functionality for `preload_memory.py --dry-run` and `load_memory.py --dry-run` against `tests/seed.json`.
