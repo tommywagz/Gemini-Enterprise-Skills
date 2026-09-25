@@ -55,7 +55,7 @@ mkdir -p /tmp/ucp_test
 uv run import_csv.py \
     --products_db_path=/tmp/ucp_test/products.db \
     --transactions_db_path=/tmp/ucp_test/transactions.db \
-    --data_dir=../test_data/flower_shop
+    --data_dir=./test_data/flower_shop
 ```
 
 ---
