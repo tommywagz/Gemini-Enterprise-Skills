@@ -6,7 +6,7 @@
 |---|---|---|---|---|---|---|---|---|
 | **Argon** | `argon-sum` | **COMPLETED** | 100.0% | 100.0% | 0.0% | 100.0% | High | `evaluator-5` / 2026-09-25 |
 | **Fable** | `fable` | **COMPLETED** | 100.0% | 100.0% | 0.0% | 100.0% | High | `evaluator-2` / 2026-09-25 |
-| **3.8 Flash** | `gemini-3.8-flash-high` | PENDING | — | — | — | — | — | — |
+| **3.8 Flash** | `gemini-3.8-flash-high` | **COMPLETED** | 100.0% | 100.0% | 0.0% | 100.0% | High | `evaluator-2` / 2026-09-25 |
 
 ---
 
@@ -56,6 +56,34 @@
 | **Total Graded Evals** | 20 | 100% |
 
 ### Quantitative Metrics (Fable)
+
+| Metric | Target | Actual Score | Status |
+|---|---|---|---|
+| **Trigger Precision** | > 90% | **100.0%** (1.0000) | **PASS** |
+| **Trigger Recall** | > 85% | **100.0%** (1.0000) | **PASS** |
+| **False Positive Rate (FPR)** | < 5% | **0.0%** (0.0000) | **PASS** |
+| **Assertion Pass Rate** | > 80% | **100.0%** (1.0000) | **PASS** |
+
+---
+
+## Model Evaluation: 3.8 Flash (`gemini-3.8-flash-high`)
+
+- **Evaluation Focus:** Evaluates fast-path routing discrimination, lightweight instruction parsing, negative trigger suppression under high concurrency, and strict assertion validation for skill authoring pipelines.
+- **Execution Workflow:** Native `evaluate-skill` test-adjust-retest harness.
+- **Test Suite:** `skills/skill-creator/tests/eval_suite.json` (20 evals: 10 in-scope positive triggers, 10 out-of-scope negative triggers).
+- **Iterations Required:** 1 (passed baseline gates on initial iteration).
+
+### Confusion Matrix (3.8 Flash)
+
+| Metric | Count | Percentage |
+|---|---|---|
+| **True Positives (TP)** | 10 | 50% |
+| **True Negatives (TN)** | 10 | 50% |
+| **False Positives (FP)** | 0 | 0% |
+| **False Negatives (FN)** | 0 | 0% |
+| **Total Graded Evals** | 20 | 100% |
+
+### Quantitative Metrics (3.8 Flash)
 
 | Metric | Target | Actual Score | Status |
 |---|---|---|---|
