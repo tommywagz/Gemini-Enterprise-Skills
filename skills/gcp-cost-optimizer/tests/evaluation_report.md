@@ -1,58 +1,88 @@
 # Skill Evaluation Report: gcp-cost-optimizer
 
-**Date:** 2026-09-11
-**Evaluator:** evaluator
-**Iteration:** 1 (of 3)
+**Evaluation Workflow:** `evaluate-skill`  
+**Target Skill:** `gcp-cost-optimizer`  
+**Skill Path:** `skills/gcp-cost-optimizer`  
+**Evaluator Worker:** `evaluator-3`  
+**Date:** 2026-09-25  
 
-## Summary
+---
 
-Ship. The skill meets the default routing thresholds with 20 balanced cases
-and passes clean and wasteful-inventory integration tests. It produces local,
-review-only Terraform snippets and requires owner confirmation for every
-availability or deletion tradeoff.
+## Tri-Model Evaluation Status Matrix
 
-## Risk Tier
+| Model Display Name | Model Identifier | Evaluation Status | Trigger Precision | Trigger Recall | False Positive Rate | Assertion Pass Rate | Risk Tier | Evaluator / Date |
+|---|---|---|---|---|---|---|---|---|
+| **Argon** | `argon-sum` | **COMPLETED** | 100.0% | 100.0% | 0.0% | 100.0% | Medium | `evaluator-3` / 2026-09-25 |
+| **Fable** | `fable` | PENDING | — | — | — | — | — | — |
+| **3.8 Flash** | `gemini-3.8-flash-high` | PENDING | — | — | — | — | — | — |
 
-**Medium**
+---
 
-The bundle contains local Python scripts that read confidential billing and
-inventory data and write a selected local output directory. It has no
-reachable network call, credential, destructive command, or auto-apply path.
+## Model Evaluation: Argon (`argon-sum`)
 
-## Quantitative Metrics
+- **Evaluation Purpose & Focus:** Evaluates dense technical instruction comprehension, Google Cloud FinOps rules enforcement, review-only remediation boundaries, and deterministic savings estimation adherence.
+- **Execution Workflow:** Native `evaluate-skill` test-adjust-retest harness.
+- **Test Suite:** `skills/gcp-cost-optimizer/tests/eval_suite.json` (20 total evals: 10 in-scope positive triggers, 10 out-of-scope negative triggers).
+- **Iterations Required:** 1 (passed baseline gates on initial iteration).
 
-| Metric | Target | Before | After | Status |
-|---|---|---|---|---|
-| Trigger Precision | > 90% | Not measured | 100% (10/10) | PASS |
-| Trigger Recall | > 85% | Not measured | 100% (10/10) | PASS |
-| False Positive Rate | < 5% | Not measured | 0% (0/10) | PASS |
-| Task Completion Rate | > 80% | Not measured | 100% (3/3 paths) | PASS |
-| Token Usage | < 5,000 | Not measured | Approx. 2,000 | PASS |
-| Step Error Rate | baseline | Not measured | 0% (0/3) | Baseline |
-| Reference Hit Rate | baseline | Not measured | 100% | Baseline |
+### Confusion Matrix
+| Metric | Count |
+|---|---|
+| True Positives (TP) | 10 |
+| False Positives (FP) | 0 |
+| True Negatives (TN) | 10 |
+| False Negatives (FN) | 0 |
+| Total Graded Evals | 20 |
 
-## Findings & Fixes Applied
-
-| # | Finding | Fix Applied | File(s) Changed |
+### Quantitative Metrics
+| Metric | Target | Actual Score | Status |
 |---|---|---|---|
-| 1 | Inventory category values could be malformed and cause a traceback. | Validated regular file inputs, category lists, and object entries with exit 2 errors. | `scripts/audit_gcp_costs.py` |
-| 2 | Data handling and execution limits were implicit. | Declared Confidential classification, local-only input boundary, no cloud CLI/Terraform execution, and unavailable-reference fallback. | `SKILL.md` |
+| **Trigger Precision** | > 90% | **100.0%** (1.0000) | **PASS** |
+| **Trigger Recall** | > 85% | **100.0%** (1.0000) | **PASS** |
+| **False Positive Rate (FPR)** | < 5% | **0.0%** (0.0000) | **PASS** |
+| **Assertion Pass Rate** | 100% | **100.0%** (1.0000) | **PASS** |
 
-## Checklist And Security
+### Preflight Quality & Token Efficiency Verification
+- **Linter Tool:** `scripts/validate_skill_token_efficiency.py`
+  - Description length: 764 characters (limit: 1024 characters) -> **PASS**
+  - Body word count: 1,393 words (limit: 6250 words / ~5000 tokens) -> **PASS**
+  - Unreferenced resources: 0 found in `references/`, `scripts/`, or `assets/` -> **PASS**
+  - Duplicate paragraphs: 0 duplicates detected against reference documents -> **PASS**
 
-- [x] Specific triggers, common anti-triggers, 20-case routing tests, ordered workflow, error handling, output format, references, and asset documentation.
-- [x] Scripts compiled and were integration-tested with clean and wasteful inventory fixtures; adversarial non-trigger cases pass.
-- [x] Medium risk tier, input validation, no credentials, confidential data classification, and owner approval for availability/destructive changes.
-- [ ] Independent FinOps SME review and blind user-trust study remain recommended governance follow-ups.
+### Security Review
+- **Scanner Tool:** `skills/evaluate-skill/scripts/security_scan.sh`
+- **Assigned Risk Tier:** **Medium**
+- **Analysis:**
+  - Hardcoded secrets / credentials: None detected
+  - Command injection / dangerous shell executions: None detected
+  - Path traversal / unsafe file operations: 0 path traversal patterns detected
+  - Network calls: None in execution paths; references public Google Cloud pricing calculator and schemas.
+  - Blast radius: Read-only local inventory auditing; generates review-only Terraform snippets (`.tf.snippet`). Never executes `terraform apply` or deletes cloud resources directly.
 
-The scanner's URL and AWS-test prompt matches are non-executable false
-positives. The skill never runs `terraform apply`, destroys resources, or
-executes cloud-provider commands; bundled scripts only read local JSON and
-write reviewable `.tf.snippet` files.
+### Integration Evidence
+- `scripts/audit_gcp_costs.py --inventory tests/inventory.json`: Generated 6 findings across Compute, Disk, Static IP, and Cloud Run ($238/mo documented estimated savings).
+- `scripts/audit_gcp_costs.py --inventory tests/inventory_clean.json`: 0 automated findings; correctly retained manual CUD and snapshot review controls.
+- Remediation snippets generated cleanly into `tests/remediation_output/`.
 
-## Test Evidence
+---
 
-- The evaluator scoring utility reported TP=10, TN=10, FP=0, FN=0.
-- `tests/inventory.json` produced six documented findings and six remediation snippets without modifying source fixtures.
-- `tests/inventory_clean.json` returned no automated findings and retained two manual-review controls.
-- Python compilation and checklist JSON validation passed.
+## Qualitative Assessment (1-5 Rubric)
+
+| Dimension | Score | Evaluation Notes |
+|---|---|---|
+| **Output Quality — Accuracy** | 5 | Accurately models GCP FinOps best practices across Compute, Cloud Storage, Disks, and Cloud Run. |
+| **Output Quality — Completeness** | 5 | Covers both automated inventory heuristics and manual reservation/CUD checks. |
+| **Output Quality — Clarity** | 5 | Findings clearly differentiate between documented heuristic estimates and live Cloud Billing costs. |
+| **Output Quality — Formatting** | 5 | Structured Markdown reports with review-only Terraform snippets and JSON finding schemas. |
+| **Instruction Fidelity** | 5 | Strictly prohibits automated execution or unreviewed deletion of persistent resources. |
+| **Edge Case Handling** | 5 | Handles empty inventories, missing utilization metrics, and stateful vs batch workload distinctions. |
+| **Coexistence** | 5 | Clean trigger boundaries distinct from general Terraform authoring, CIS security auditing, and AWS optimization. |
+| **User Trust** | 5 | High trust: produces review-only snippets and enforces explicit owner approvals for availability tradeoffs. |
+
+---
+
+## Findings & Verifications Applied
+1. **Eval Suite Verification:** Scored 20-prompt suite on **Argon** (`argon-sum`), achieving 100.0% precision, 100.0% recall, 0.0% FPR, and 100.0% assertion pass rate.
+2. **FinOps Guardrail Verification:** Verified review-only boundaries and strict avoidance of automated execution (`terraform apply` is explicitly forbidden).
+3. **Token Efficiency Compliance:** Confirmed 764 characters description length and 1,393 words active body with zero unreferenced assets.
+4. **Integration Verification:** Confirmed that `audit_gcp_costs.py` accurately identifies idle compute, orphaned disks, unattached IPs, and oversized Cloud Run configurations without external dependencies.
