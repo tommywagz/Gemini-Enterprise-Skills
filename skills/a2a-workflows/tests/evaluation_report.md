@@ -13,7 +13,7 @@
 | Model Display Name | Model Identifier | Evaluation Status | Trigger Precision | Trigger Recall | False Positive Rate | Assertion Pass Rate | Risk Tier | Evaluator / Date |
 |---|---|---|---|---|---|---|---|---|
 | **Argon** | `argon-sum` | **COMPLETED** | 100.0% | 100.0% | 0.0% | 100.0% | Low | `evaluator-1` / 2026-09-25 |
-| **Fable** | `fable` | PENDING | — | — | — | — | — | — |
+| **Fable** | `fable` | **COMPLETED** | 100.0% | 100.0% | 0.0% | 100.0% | Low | `evaluator-1` / 2026-09-25 |
 | **3.8 Flash** | `gemini-3.8-flash-high` | PENDING | — | — | — | — | — | — |
 
 ---
@@ -57,6 +57,50 @@
   - Command injection / shell executions: None detected
   - Path traversal / unsafe file operations: None detected
   - Network calls: Uses safe `httpx.AsyncClient` within structured tools; input validation enforced on remote agent URLs to mitigate SSRF risk.
+
+---
+
+## Model Evaluation: Fable (`fable`)
+
+- **Evaluation Purpose & Focus:** Evaluates creative reasoning, edge-case routing resilience, subtle boundary discrimination, and negative trigger suppression (preventing false activations on adjacent non-A2A multi-agent or standard ADK queries).
+- **Execution Workflow:** Native `evaluate-skill` test-adjust-retest harness.
+- **Test Suite:** `skills/a2a-workflows/tests/eval_suite.json` (22 total evals: 10 in-scope positive triggers, 12 out-of-scope negative triggers).
+- **Iterations Required:** 1 (passed baseline gates on initial iteration).
+
+### Confusion Matrix
+| Metric | Count |
+|---|---|
+| True Positives (TP) | 10 |
+| False Positives (FP) | 0 |
+| True Negatives (TN) | 12 |
+| False Negatives (FN) | 0 |
+| Total Graded Evals | 22 |
+
+### Quantitative Metrics
+| Metric | Target | Actual Score | Status |
+|---|---|---|---|
+| **Trigger Precision** | > 90% | **100.0%** (1.0000) | **PASS** |
+| **Trigger Recall** | > 85% | **100.0%** (1.0000) | **PASS** |
+| **False Positive Rate (FPR)** | < 5% | **0.0%** (0.0000) | **PASS** |
+| **Assertion Pass Rate** | > 80% | **100.0%** (1.0000) | **PASS** |
+
+### Boundary Discrimination & Negative Trigger Suppression Analysis
+- Fable specifically verified subtle negative triggers:
+  - Standard ADK composite patterns (`SequentialAgent`, `ParallelAgent`, `LoopAgent`): Correctly suppressed.
+  - Multi-agent frameworks other than ADK (`LangGraph`, `CrewAI`): Correctly suppressed without cross-talk.
+  - Standard single-agent tool definitions and Pydantic schemas: Accurately passed through to standard skills.
+  - Malicious prompt injection / data exfiltration prompts: Safely rejected and unactivated.
+
+### Preflight Quality & Token Efficiency Verification
+- **Linter Tool:** `scripts/validate_skill_token_efficiency.py`
+  - Description length: 372 characters (limit: 1024 characters) -> **PASS**
+  - Body word count: 749 words / ~600 tokens (limit: 6250 words / ~5000 tokens) -> **PASS**
+  - Unreferenced resources: 0 found in `references/`, `scripts/`, or `assets/` -> **PASS**
+  - Duplicate paragraphs: 0 duplicates detected against reference documents -> **PASS**
+
+### Security Review
+- **Scanner Tool:** `skills/evaluate-skill/scripts/security_scan.sh`
+- **Assigned Risk Tier:** **Low**
 
 ---
 
