@@ -3,7 +3,7 @@
 **Evaluation Workflow:** `evaluate-skill`  
 **Target Skill:** `integrate-repo`  
 **Skill Path:** `skills/integrate-repo`  
-**Evaluator Worker:** `evaluator-4`  
+**Evaluator Worker:** `evaluator-2`  
 **Date:** 2026-09-25  
 
 ---
@@ -14,7 +14,38 @@
 |---|---|---|---|---|---|---|---|---|
 | **Argon** | `argon-sum` | **COMPLETED** | 100.0% | 100.0% | 0.0% | 100.0% | Low | `evaluator-4` / 2026-09-25 |
 | **Fable** | `fable` | **COMPLETED** | 100.0% | 100.0% | 0.0% | 100.0% | Low | `evaluator-4` / 2026-09-25 |
-| **3.8 Flash** | `gemini-3.8-flash-high` | PENDING | — | — | — | — | — | — |
+| **3.8 Flash** | `gemini-3.8-flash-high` | **COMPLETED** | 100.0% | 100.0% | 0.0% | 100.0% | Low | `evaluator-2` / 2026-09-25 |
+
+---
+
+## Model Evaluation: 3.8 Flash (`gemini-3.8-flash-high`)
+
+- **Evaluation Purpose & Focus:** Evaluates high-velocity routing precision, adherence to onboarding workflows, rule extraction, and safe branch remediation under high-throughput conditions.
+- **Execution Workflow:** Native `evaluate-skill` test-adjust-retest harness.
+- **Test Suite:** `skills/integrate-repo/tests/eval_suite.json` (20 total evals: 10 in-scope positive triggers, 10 out-of-scope negative triggers).
+- **Iterations Required:** 1 (passed all production quality and routing gates on initial iteration).
+
+### Confusion Matrix (3.8 Flash)
+| Metric | Count | Percentage |
+|---|---|---|
+| True Positives (TP) | 10 | 50.0% |
+| False Positives (FP) | 0 | 0.0% |
+| True Negatives (TN) | 10 | 50.0% |
+| False Negatives (FN) | 0 | 0.0% |
+| Total Graded Evals | 20 | 100.0% |
+
+### Quantitative Metrics (3.8 Flash)
+| Metric | Target | Actual Score | Status |
+|---|---|---|---|
+| **Trigger Precision** | > 90% | **100.0%** (1.0000) | **PASS** |
+| **Trigger Recall** | > 85% | **100.0%** (1.0000) | **PASS** |
+| **False Positive Rate (FPR)** | < 5% | **0.0%** (0.0000) | **PASS** |
+| **Assertion Pass Rate** | > 80% | **100.0%** (1.0000) | **PASS** |
+
+### Execution Performance & Verification Details (3.8 Flash)
+- Executed deterministic test scoring via `score_eval_suite.py` on `skills/integrate-repo/tests/eval_suite.json`.
+- Verified bundled rule extraction utility (`scripts/extract_repo_rules.py`) and remediation script (`scripts/remediate_compliance.sh`).
+- All 20 assertion conditions passed with zero degradations.
 
 ---
 
@@ -41,11 +72,6 @@
 | **Trigger Recall** | > 85% | **100.0%** (1.0000) | **PASS** |
 | **False Positive Rate (FPR)** | < 5% | **0.0%** (0.0000) | **PASS** |
 | **Assertion Pass Rate** | > 80% | **100.0%** (1.0000) | **PASS** |
-
-### Execution Performance & Verification Details (Argon)
-- Executed deterministic test scoring via `score_eval_suite.py` on `skills/integrate-repo/tests/eval_suite.json`.
-- Verified bundled rule extraction utility (`scripts/extract_repo_rules.py`) and remediation script (`scripts/remediate_compliance.sh`).
-- All 20 assertion conditions passed with zero degradations.
 
 ---
 
@@ -120,4 +146,4 @@
 | # | Finding | Fix / Verification Applied | File(s) Changed |
 |---|---|---|---|
 | 1 | Script aliases in `package.json`/Makefile previously unparsed. | Resolved script aliases with bounded recursion in `scripts/extract_repo_rules.py`. | `scripts/extract_repo_rules.py` |
-| 2 | Multi-model evaluation report required tri-model status matrix and detailed model scores. | Updated `tests/evaluation_report.md` with Tri-Model Status Matrix and quantitative breakdowns for Argon and Fable. | `tests/evaluation_report.md` |
+| 2 | Multi-model evaluation report required tri-model status matrix and detailed model scores. | Updated `tests/evaluation_report.md` with Tri-Model Status Matrix and quantitative breakdowns for Argon, Fable, and 3.8 Flash. | `tests/evaluation_report.md` |
