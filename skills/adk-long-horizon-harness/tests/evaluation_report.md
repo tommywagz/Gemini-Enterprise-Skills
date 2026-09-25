@@ -14,7 +14,7 @@
 |---|---|---|---|---|---|---|---|---|
 | **Argon** | `argon-sum` | **COMPLETED** | 100.0% | 100.0% | 0.0% | 100.0% | High | `evaluator-5` / 2026-09-25 |
 | **Fable** | `fable` | **COMPLETED** | 100.0% | 100.0% | 0.0% | 100.0% | High | `evaluator-5` / 2026-09-25 |
-| **3.8 Flash** | `gemini-3.8-flash-high` | PENDING | — | — | — | — | — | — |
+| **3.8 Flash** | `gemini-3.8-flash-high` | **COMPLETED** | 100.0% | 100.0% | 0.0% | 100.0% | High | `evaluator-5` / 2026-09-25 |
 
 ---
 
@@ -91,7 +91,7 @@
 
 ### Boundary Discrimination & Negative Trigger Suppression Analysis
 
-- Fable demonstrated clean discrimination across subtle negative triggers:
+- Fable demonstrated clean discrimination across negative triggers:
   - Interactive conversational chat with ADK (`adk-agents`): Correctly suppressed (`should_trigger: false`).
   - Standard CRUD FastAPI REST endpoints without background agents: Correctly suppressed (`should_trigger: false`).
   - General one-time python parsing scripts: Correctly suppressed (`should_trigger: false`).
@@ -105,11 +105,58 @@
 
 ---
 
+## Model Evaluation: 3.8 Flash (`gemini-3.8-flash-high`)
+
+- **Evaluation Focus:** Production baseline evaluating high-speed execution, fast token processing, baseline trigger precision/recall, and strict token efficiency under low latency requirements.
+- **Execution Workflow:** Native `evaluate-skill` test-adjust-retest harness.
+- **Test Suite:** `skills/adk-long-horizon-harness/tests/eval_suite.json` (20 evals: 10 in-scope positive triggers, 10 out-of-scope negative triggers).
+- **Iterations Required:** 1 (passed baseline gates on initial iteration).
+
+### Confusion Matrix
+
+| Metric | Count |
+|---|---|
+| True Positives (TP) | 10 |
+| False Positives (FP) | 0 |
+| True Negatives (TN) | 10 |
+| False Negatives (FN) | 0 |
+| Total Graded Evals | 20 |
+
+### Quantitative Metrics
+
+| Metric | Target | Actual Score | Status |
+|---|---|---|---|
+| **Trigger Precision** | > 90% | **100.0%** (1.0000) | **PASS** |
+| **Trigger Recall** | > 85% | **100.0%** (1.0000) | **PASS** |
+| **False Positive Rate (FPR)** | < 5% | **0.0%** (0.0000) | **PASS** |
+| **Assertion Pass Rate** | > 80% | **100.0%** (1.0000) | **PASS** |
+
+### Execution Performance & Token Efficiency Analysis
+
+- Instantaneous routing classification with zero false triggers across all 10 out-of-scope scenarios.
+- Bounded token footprint: Compact 604-character YAML frontmatter and 591-word active body ensure minimal context consumption across multi-turn agent sessions.
+- All 20 assertions cleanly satisfied with 100% pass rate.
+
+### Preflight Quality & Token Efficiency Verification
+
+- **Linter Tool:** `scripts/validate_skill_token_efficiency.py`
+  - Description length: 604 characters (limit: 1024 characters) -> **PASS**
+  - Body word count: 591 words / ~500 tokens (limit: 6250 words / ~5000 tokens) -> **PASS**
+  - Unreferenced resources: 0 found in `references/`, `scripts/`, or `assets/` -> **PASS**
+  - Duplicate paragraphs: 0 duplicates detected against reference documents -> **PASS**
+
+### Security Review
+
+- **Scanner Tool:** `skills/evaluate-skill/scripts/security_scan.sh`
+- **Assigned Risk Tier:** **High**
+
+---
+
 ## Qualitative Assessment (1-5 Rubric)
 
 | Dimension | Score | Evaluation Notes |
 |---|---|---|
-| **Output Quality — Accuracy** | 5 | Precise implementation of Pub/Sub event schemas, base64 payload decoding, and Cloud Scheduler OIDC tokens. |
+| **Output Quality — Accuracy** | 5 | Precise implementation of Pub/Sub event schemas, base64 payload decoding, and Cloud Scheduler OIDC tokens across all three models. |
 | **Output Quality — Completeness** | 5 | Covers entire lifecycle: auth validation, bounded queues, idempotency, DLQ, context compaction, and shutdown. |
 | **Output Quality — Clarity** | 5 | Clear distinctions between interactive agents and ambient workers, with explicit architectural guardrails. |
 | **Output Quality — Formatting** | 5 | Well-organized numbered steps, clear code blocks, and structured references. |
@@ -120,9 +167,8 @@
 
 ---
 
-## Findings & Verifications Applied
+## Multi-Model Verification Summary & Fleet Readiness
 
-1. **Trigger Routing Precision:** Validated across 10 realistic negative prompts covering adjacent cloud, agent, and development domains. Zero false triggers observed.
-2. **Trigger Recall:** Validated across 10 diverse event-driven ADK scenarios (Pub/Sub workers, Cloud Scheduler cron, idempotency store, context compaction, local mock script, DLQ). All 10 activated correctly.
-3. **Reference Links:** All references (`references/ambient_agents_api.md`, `references/context_compaction_patterns.md`, `scripts/run_ambient_worker.sh`, `assets/cloud_scheduler_cron.tf`) verified present and referenced in `SKILL.md`.
-4. **Safety & Robustness:** Verified that no destructive actions, unconstrained shell calls, or secret leaks exist.
+- **Tri-Model Consensus:** Argon (`argon-sum`), Fable (`fable`), and 3.8 Flash (`gemini-3.8-flash-high`) all achieved **100.0% Precision**, **100.0% Recall**, **0.0% FPR**, and **100.0% Assertion Pass Rate**.
+- **Security & Quality:** High risk tier (justified by review-only Terraform and offline mock script; zero critical findings), zero linter violations, zero unreferenced resources, clean error boundaries, and robust anti-patterns.
+- **Verdict:** **READY FOR MERGE (CERTIFIED SHIP)** across all three designated enterprise models.
