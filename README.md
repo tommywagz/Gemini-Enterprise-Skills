@@ -56,18 +56,17 @@ Instead of relying on a single monolith, the repository coordinates an automated
 
 To bypass the latency of committing and merging git changes just to communicate, the agents collaborate in real-time through the shared `/jobs` directory (which is symlinked into every agent's worktree and listed in `.gitignore` to prevent conflicts).
 
-### The Squad Roles
-1. **Orchestrator** (`.agents/orchestrator.md`): Runs on `main`. Manages the master backlog, dispatches tasks to worker inboxes, monitors status, performs verification checks, and merges successfully validated worker branches into `main` using a clean `--no-ff` merge protocol.
-2. **Finder** (`.agents/finder.md`): Locates existing agent skills matching the target specifications. It executes the `find-skill` meta-skill to search registry sources.
-3. **Creator** (`.agents/creator.md`): Takes source specifications and designs a compliant agent skill from scratch using the `write-skill` meta-skill.
-4. **Evaluator** (`.agents/evaluator.md`): Picks up drafts from `drafts/`, runs comprehensive evaluation suites, scores them, and refines them up to 3 times. Successful skills are promoted into `skills/`.
+### The Fleet Roles
+1. **Orchestrator-Evaluator** (`.agents/orchestrator-evaluator.md`): Runs on `main` in the repository root. Manages the master backlog (`jobs/backlog.json`), dispatches multi-model evaluation tasks (Argon, Fable, 3.8 Flash) to worker inboxes, monitors status, performs verification checks, and merges successfully validated worker branches into `main` using a clean `--no-ff` merge protocol.
+2. **Evaluator Workers 1–6** (`.agents/worker-evaluator-1.md` through `.agents/worker-evaluator-6.md`): Run in isolated Git worktrees (`skills-worker-evaluator-{1..6}`) on separate branches (`agent-*-evaluator-{1..6}`). Execute the `evaluate-skill` test-adjust-retest workflow across designated models, scoring trigger precision, recall, false-positive rate, and assertion pass rates.
 
-### Configuration (`opencode.json`)
-The squad is configured to use specialized, state-of-the-art LLMs mapped to specific system prompts:
-- **Orchestrator**: `vertex/gemini-3.6-flash`
-- **Finder**: `vertex/gemini-3.5-flash`
-- **Creator**: `anthropic/claude-opus-5`
-- **Evaluator**: `openai/o3`
+*(Note: Legacy skill-creation agents `orchestrator`, `finder`, `creator`, and `evaluator` are archived in `.agents/archive/`.)*
+
+### Configuration (`jetski.json` / `opencode.json`)
+The evaluation fleet is configured in `jetski.json` (and mirrored in `opencode.json`) using Google Vertex AI models mapped to each agent prompt:
+- **`orchestrator-evaluator`**: `gemini-3.8-flash-high` (`.agents/orchestrator-evaluator.md`, `worktree: false`)
+- **`evaluator-1` through `evaluator-6`**: `gemini-3.8-flash-high` (`.agents/worker-evaluator-{1..6}.md`, `worktree: true`)
+
 
 ---
 
