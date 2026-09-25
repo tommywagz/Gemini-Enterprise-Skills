@@ -78,7 +78,7 @@ Hono uses Zod middleware for robust, schema-compliant JSON body parsing:
 ```typescript
 import { Hono } from 'hono';
 import { zValidator } from '@hono/zod-validator';
-import { checkoutCreateSchema } from '../models/schemas';
+import { checkoutCreateSchema } from './models/schemas';
 
 const app = new Hono();
 
