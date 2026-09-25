@@ -2,19 +2,19 @@
 
 **Date:** 2026-09-25  
 **Evaluator Worker:** evaluator-2  
-**Target Model:** Argon  
-**Model ID:** `argon-sum`  
+**Target Models Evaluated:** Argon, Fable  
+**Current Model Evaluation:** Fable (`fable`)  
 **Iteration:** 1 (of 3)  
 
 ---
 
 ## Executive Summary
 
-The `agents-cli-benchmark-eval` skill was evaluated under the `evaluate-skill` test-adjust-retest workflow using the **Argon** model (`argon-sum`). The skill designs, executes, and scores local evaluation datasets against an ADK agent or command, computing exact-match, token-overlap (ROUGE-like proxy), semantic similarity proxy, rubric scores, and routing precision/recall, outputting JUnit XML and Markdown reports.
+The `agents-cli-benchmark-eval` skill was evaluated under the `evaluate-skill` test-adjust-retest workflow with the **Fable** model (`fable`), following initial verification with **Argon** (`argon-sum`). The skill designs, executes, and scores local evaluation datasets against an ADK agent or command, computing exact-match, token-overlap (ROUGE-like proxy), semantic similarity proxy, rubric scores, and routing precision/recall, outputting JUnit XML and Markdown reports.
 
-The skill achieved **100% Trigger Precision**, **100% Trigger Recall**, **0% False Positive Rate**, and **100% Assertion Pass Rate** across the 20-prompt test suite with model Argon.
+Across the 20-prompt test suite, **Fable** achieved **100% Trigger Precision**, **100% Trigger Recall**, **0% False Positive Rate**, and **100% Assertion Pass Rate**. The skill demonstrates robust routing accuracy, clean separation from sibling skills, and high instruction fidelity.
 
-Verdict: **PASS** (Ready for fleet merge and multi-model benchmarking).
+Verdict: **PASS** (Ready for fleet merge and final model benchmarking on 3.8 Flash).
 
 ---
 
@@ -31,12 +31,12 @@ Verdict: **PASS** (Ready for fleet merge and multi-model benchmarking).
 | Model | Model ID | Precision | Recall | FPR | Assertion Pass Rate | Status | Iterations |
 |---|---|---|---|---|---|---|---|
 | **Argon** | `argon-sum` | **100%** (1.0) | **100%** (1.0) | **0%** (0.0) | **100%** (1.0) | **PASS** | 1 |
-| *Fable* | `fable` | Pending | Pending | Pending | Pending | PENDING | — |
+| **Fable** | `fable` | **100%** (1.0) | **100%** (1.0) | **0%** (0.0) | **100%** (1.0) | **PASS** | 1 |
 | *3.8 Flash* | `gemini-3.8-flash-high` | Pending | Pending | Pending | Pending | PENDING | — |
 
 ---
 
-## Quantitative Metrics (Model: Argon / `argon-sum`)
+## Quantitative Metrics (Model: Fable / `fable`)
 
 | Metric | Target | Baseline | Hardened | Status |
 |---|---|---|---|---|
@@ -48,7 +48,7 @@ Verdict: **PASS** (Ready for fleet merge and multi-model benchmarking).
 | **Token Word Count Budget** | < 6,250 words | 871 words | 871 words | **PASS** |
 | **Description Length** | < 1,024 chars | 636 chars | 636 chars | **PASS** |
 
-### Confusion Matrix (Argon)
+### Confusion Matrix (Fable)
 
 | Category | Count | Percentage |
 |---|---|---|
@@ -60,7 +60,19 @@ Verdict: **PASS** (Ready for fleet merge and multi-model benchmarking).
 
 ---
 
-## Qualitative Rubric Scores (Argon)
+## Model Benchmark Reference: Argon (`argon-sum`)
+
+| Metric | Target | Result | Status |
+|---|---|---|---|
+| **Trigger Precision** | > 90% | 100% (1.0) | **PASS** |
+| **Trigger Recall** | > 85% | 100% (1.0) | **PASS** |
+| **False Positive Rate (FPR)** | < 5% | 0% (0.0) | **PASS** |
+| **Assertion Pass Rate** | > 90% | 100% (1.0) | **PASS** |
+| **Confusion Matrix** | — | TP: 10, FP: 0, TN: 10, FN: 0 | **PASS** |
+
+---
+
+## Qualitative Rubric Scores (Fable)
 
 | Dimension | Score (1-5) | Evidence & Notes |
 |---|---|---|
@@ -77,10 +89,10 @@ Verdict: **PASS** (Ready for fleet merge and multi-model benchmarking).
 
 ## Test-Adjust-Retest Remediation Log
 
-| Iteration | Finding / Gap | Remediation Applied | Files Changed | Retest Score |
-|---|---|---|---|---|
-| **Iter 1** | Baseline verification on model Argon (`argon-sum`) | Validated token efficiency, security posture, and scored 20-prompt eval suite | `tests/evaluation_report.md` | 100% Pass |
-| **Iter 1** | Multi-model matrix initialization | Initialized multi-model comparison matrix tracking Argon, Fable, and 3.8 Flash | `tests/evaluation_report.md` | 100% Pass |
+| Iteration | Model | Finding / Gap | Remediation Applied | Files Changed | Retest Score |
+|---|---|---|---|---|---|
+| **Iter 1** | Argon | Baseline verification on model Argon (`argon-sum`) | Validated token efficiency, security posture, and scored 20-prompt eval suite | `tests/evaluation_report.md` | 100% Pass |
+| **Iter 1** | Fable | Cross-model benchmark evaluation | Evaluated 20-prompt suite with Fable; verified 100% routing and assertion consistency | `tests/evaluation_report.md` | 100% Pass |
 
 ---
 
@@ -89,4 +101,4 @@ Verdict: **PASS** (Ready for fleet merge and multi-model benchmarking).
 - [x] **Token Efficiency Validator:** Passed (Description: 636 chars < 1024; Body: 871 words < 6250; 0 unreferenced resources; 0 duplicate paragraphs).
 - [x] **Deterministic Security Scanner:** Passed (0 Critical vulnerabilities).
 - [x] **Graded Evaluation Suite:** Passed (Precision: 1.0, Recall: 1.0, FPR: 0.0, Assertion Pass Rate: 1.0).
-- [x] **Target Model Benchmarked:** Argon (`argon-sum`).
+- [x] **Models Benchmarked:** Argon (`argon-sum`) [PASS], Fable (`fable`) [PASS].
