@@ -1,19 +1,11 @@
-# Skill Evaluation Report: skill-creator
-
-**Evaluation Workflow:** `evaluate-skill`  
-**Target Skill:** `skill-creator`  
-**Skill Path:** `skills/skill-creator`  
-**Evaluator Worker:** `evaluator-5`  
-**Date:** 2026-09-25  
-
----
+# Evaluation Report: skill-creator
 
 ## Tri-Model Evaluation Status Matrix
 
 | Model Display Name | Model Identifier | Evaluation Status | Trigger Precision | Trigger Recall | False Positive Rate | Assertion Pass Rate | Risk Tier | Evaluator / Date |
 |---|---|---|---|---|---|---|---|---|
 | **Argon** | `argon-sum` | **COMPLETED** | 100.0% | 100.0% | 0.0% | 100.0% | High | `evaluator-5` / 2026-09-25 |
-| **Fable** | `fable` | PENDING | — | — | — | — | — | — |
+| **Fable** | `fable` | **COMPLETED** | 100.0% | 100.0% | 0.0% | 100.0% | High | `evaluator-2` / 2026-09-25 |
 | **3.8 Flash** | `gemini-3.8-flash-high` | PENDING | — | — | — | — | — | — |
 
 ---
@@ -25,7 +17,7 @@
 - **Test Suite:** `skills/skill-creator/tests/eval_suite.json` (20 evals: 10 in-scope positive triggers, 10 out-of-scope negative triggers).
 - **Iterations Required:** 1 (passed baseline gates on initial iteration).
 
-### Confusion Matrix
+### Confusion Matrix (Argon)
 
 | Metric | Count |
 |---|---|
@@ -35,7 +27,7 @@
 | False Negatives (FN) | 0 |
 | Total Graded Evals | 20 |
 
-### Quantitative Metrics
+### Quantitative Metrics (Argon)
 
 | Metric | Target | Actual Score | Status |
 |---|---|---|---|
@@ -44,7 +36,37 @@
 | **False Positive Rate (FPR)** | < 5% | **0.0%** (0.0000) | **PASS** |
 | **Assertion Pass Rate** | > 80% | **100.0%** (1.0000) | **PASS** |
 
-### Preflight Quality & Token Efficiency Verification
+---
+
+## Model Evaluation: Fable (`fable`)
+
+- **Evaluation Focus:** Evaluates creative boundary discrimination, edge-case routing resilience, negative trigger suppression, and nuanced separation between skill creation and general coding/testing tasks.
+- **Execution Workflow:** Native `evaluate-skill` test-adjust-retest harness.
+- **Test Suite:** `skills/skill-creator/tests/eval_suite.json` (20 evals: 10 in-scope positive triggers, 10 out-of-scope negative triggers).
+- **Iterations Required:** 1 (passed baseline gates on initial iteration).
+
+### Confusion Matrix (Fable)
+
+| Metric | Count | Percentage |
+|---|---|---|
+| **True Positives (TP)** | 10 | 50% |
+| **True Negatives (TN)** | 10 | 50% |
+| **False Positives (FP)** | 0 | 0% |
+| **False Negatives (FN)** | 0 | 0% |
+| **Total Graded Evals** | 20 | 100% |
+
+### Quantitative Metrics (Fable)
+
+| Metric | Target | Actual Score | Status |
+|---|---|---|---|
+| **Trigger Precision** | > 90% | **100.0%** (1.0000) | **PASS** |
+| **Trigger Recall** | > 85% | **100.0%** (1.0000) | **PASS** |
+| **False Positive Rate (FPR)** | < 5% | **0.0%** (0.0000) | **PASS** |
+| **Assertion Pass Rate** | > 80% | **100.0%** (1.0000) | **PASS** |
+
+---
+
+## Preflight Quality & Token Efficiency Verification
 
 - **Linter Tool:** `scripts/validate_skill_token_efficiency.py`
   - Description length: 607 characters (limit: 1024 characters) -> **PASS**
