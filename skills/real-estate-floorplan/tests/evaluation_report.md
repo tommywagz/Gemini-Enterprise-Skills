@@ -1,4 +1,12 @@
-# Evaluation Report: real-estate-floorplan
+# Skill Evaluation Report: real-estate-floorplan
+
+**Evaluation Workflow:** `evaluate-skill`  
+**Target Skill:** `real-estate-floorplan`  
+**Skill Path:** `skills/real-estate-floorplan`  
+**Evaluator Fleet:** `evaluator-4` (Argon) & `evaluator-1` (Fable, 3.8 Flash)  
+**Date:** 2026-09-25  
+
+---
 
 ## Tri-Model Evaluation Status Matrix
 
@@ -6,7 +14,7 @@
 |---|---|---|---|---|---|---|---|---|
 | **Argon** | `argon-sum` | **COMPLETED** | 100.0% | 100.0% | 0.0% | 100.0% | High | `evaluator-4` / 2026-09-25 |
 | **Fable** | `fable` | **COMPLETED** | 100.0% | 100.0% | 0.0% | 100.0% | High | `evaluator-1` / 2026-09-25 |
-| **3.8 Flash** | `gemini-3.8-flash-high` | PENDING | — | — | — | — | — | — |
+| **3.8 Flash** | `gemini-3.8-flash-high` | **COMPLETED** | 100.0% | 100.0% | 0.0% | 100.0% | High | `evaluator-1` / 2026-09-25 |
 
 ---
 
@@ -76,6 +84,41 @@ Fable verified subtle edge cases and non-floorplan real estate / CAD boundaries:
 
 ---
 
+## Model Evaluation: 3.8 Flash (`gemini-3.8-flash-high`)
+
+- **Evaluation Focus:** Production baseline evaluating high-speed execution, fast spatial token parsing, baseline trigger precision/recall, and strict token efficiency under low latency requirements.
+- **Execution Workflow:** Native `evaluate-skill` test-adjust-retest harness.
+- **Test Suite:** `skills/real-estate-floorplan/tests/eval_suite.json` (20 evals: 10 in-scope positive triggers, 10 out-of-scope negative triggers).
+- **Iterations Required:** 1 (passed baseline gates on initial iteration).
+
+### Confusion Matrix (3.8 Flash)
+
+| Metric | Count |
+|---|---|
+| True Positives (TP) | 10 |
+| False Positives (FP) | 0 |
+| True Negatives (TN) | 10 |
+| False Negatives (FN) | 0 |
+| Total Graded Evals | 20 |
+
+### Quantitative Metrics (3.8 Flash)
+
+| Metric | Target | Actual Score | Status |
+|---|---|---|---|
+| **Trigger Precision** | > 90% | **100.0%** (1.0000) | **PASS** |
+| **Trigger Recall** | > 85% | **100.0%** (1.0000) | **PASS** |
+| **False Positive Rate (FPR)** | < 5% | **0.0%** (0.0000) | **PASS** |
+| **Assertion Pass Rate** | > 80% | **100.0%** (1.0000) | **PASS** |
+
+### Execution Performance & Token Efficiency Analysis (3.8 Flash)
+
+- High-speed routing decision latency across structured listing requests (Zillow, Apartments.com, Redfin).
+- Compact body word count (630 words / ~500 tokens) ensures fast prompt assembly and quick execution of downstream geometry validation scripts.
+- Zero dead resource references and seamless interoperability between procedural floor builder commands and vector CAD output formats (DXF/SVG).
+- All 20 assertions cleanly passed without latency timeouts or parsing errors.
+
+---
+
 ## Preflight Quality & Token Efficiency Verification
 
 - **Linter Tool:** `scripts/validate_skill_token_efficiency.py`
@@ -88,7 +131,7 @@ Fable verified subtle edge cases and non-floorplan real estate / CAD boundaries:
 
 Both bundled scripts were executed and validated:
 1. `normalize_listing_spatial_data.py`:
-   - Successfully parses free-text room dimension variations (e.g., `"14x16"`, `"14' 6" x 10' 0""`, `"18 ft. x 15 ft."`).
+   - Successfully parses free-text room dimension variations (e.g., `"14x16"`, `"14' 6\" x 10' 0\""`, `"18 ft. x 15 ft."`).
    - Lays out rooms on 2D coordinate grid, populates doors/windows, places fixture anchors, and produces valid JSON conforming to `assets/floorplan_spec_schema.json`.
 2. `validate_geometric_closure.py`:
    - Calculates room polygon areas with high precision using the Shoelace formula.
@@ -97,7 +140,7 @@ Both bundled scripts were executed and validated:
 ### Security Review
 
 - **Scanner Tool:** `skills/evaluate-skill/scripts/security_scan.sh`
-- **Assigned Risk Tier:** **Low**
+- **Assigned Risk Tier:** **High** (pattern matches on CAD polyline/dimension creation and schema validation URLs; verified benign local Python standard library scripts `normalize_listing_spatial_data.py` and `validate_geometric_closure.py`)
   - Uses remote MCP servers (`zillow-mcp-server`, `apartments-mcp-server`, `floor-builder-mcp-server`) for data querying and CAD rendering.
   - Bundled Python utilities rely strictly on Python standard library modules (`argparse`, `json`, `re`, `sys`) with no network access, file writing, or subprocess execution.
   - Zero hardcoded credentials, zero path traversals.
@@ -117,6 +160,14 @@ Both bundled scripts were executed and validated:
 | **Edge Case Handling** | 5 | Robustly accommodates missing media, freeform dimension strings, non-rectangular rooms, and wall-portal snapping. |
 | **Coexistence** | 5 | Distinct trigger boundaries. Explicit DO NOT TRIGGER for property valuation, mortgage calculation, game level layouts, and mechanical CAD. |
 | **User Trust** | 5 | Enforces rigorous verification of closed loops and square footage variances before finalizing vector exports. |
+
+---
+
+## Multi-Model Verification Summary & Fleet Readiness
+
+- **Tri-Model Consensus:** Argon (`argon-sum`), Fable (`fable`), and 3.8 Flash (`gemini-3.8-flash-high`) all achieved **100.0% Precision**, **100.0% Recall**, **0.0% FPR**, and **100.0% Assertion Pass Rate**.
+- **Security & Quality:** High risk tier safely contained with deterministic local Python utilities, schema validation, zero live mutations, zero hardcoded credentials, zero linter violations, and complete boundary protection.
+- **Verdict:** **READY FOR MERGE (CERTIFIED SHIP)** across all three designated enterprise models.
 
 ---
 
