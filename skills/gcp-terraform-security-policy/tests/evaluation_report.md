@@ -13,7 +13,7 @@
 | Model Display Name | Model Identifier | Evaluation Status | Trigger Precision | Trigger Recall | False Positive Rate | Assertion Pass Rate | Risk Tier | Evaluator / Date |
 |---|---|---|---|---|---|---|---|---|
 | **Argon** | `argon-sum` | **COMPLETED** | 100.0% | 100.0% | 0.0% | 100.0% | High | `evaluator-5` / 2026-09-25 |
-| **Fable** | `fable` | PENDING | — | — | — | — | — | — |
+| **Fable** | `fable` | **COMPLETED** | 100.0% | 100.0% | 0.0% | 100.0% | High | `evaluator-5` / 2026-09-25 |
 | **3.8 Flash** | `gemini-3.8-flash-high` | PENDING | — | — | — | — | — | — |
 
 ---
@@ -65,11 +65,50 @@
 
 ---
 
+## Model Evaluation: Fable (`fable`)
+
+- **Evaluation Focus:** Evaluates creative boundary discrimination, edge-case rejection on adjacent cloud IaC frameworks (AWS/Azure), non-security Terraform commands (format/lint/apply), cost optimization, and live cluster debugging.
+- **Execution Workflow:** Native `evaluate-skill` test-adjust-retest harness.
+- **Test Suite:** `skills/gcp-terraform-security-policy/tests/eval_suite.json` (20 evals: 10 in-scope positive triggers, 10 out-of-scope negative triggers).
+- **Iterations Required:** 1 (passed baseline gates on initial iteration).
+
+### Confusion Matrix
+
+| Metric | Count |
+|---|---|
+| True Positives (TP) | 10 |
+| False Positives (FP) | 0 |
+| True Negatives (TN) | 10 |
+| False Negatives (FN) | 0 |
+| Total Graded Evals | 20 |
+
+### Quantitative Metrics
+
+| Metric | Target | Actual Score | Status |
+|---|---|---|---|
+| **Trigger Precision** | > 90% | **100.0%** (1.0000) | **PASS** |
+| **Trigger Recall** | > 85% | **100.0%** (1.0000) | **PASS** |
+| **False Positive Rate (FPR)** | < 5% | **0.0%** (0.0000) | **PASS** |
+| **Assertion Pass Rate** | > 80% | **100.0%** (1.0000) | **PASS** |
+
+### Boundary Discrimination & Negative Trigger Suppression Analysis
+
+- Fable demonstrated clean discrimination across negative triggers:
+  - Generic Terraform formatting (`terraform fmt`): Correctly suppressed (`should_trigger: false`).
+  - AWS Terraform audits (S3 public access, IAM): Correctly suppressed (`should_trigger: false`).
+  - Azure Resource Manager / Bicep reviews: Correctly suppressed (`should_trigger: false`).
+  - GCP FinOps cost optimizations: Correctly suppressed and routed to `gcp-cost-optimizer` (`should_trigger: false`).
+  - Live production GKE pod troubleshooting: Correctly suppressed and routed to `gcp-kubernetes-resource-triage` (`should_trigger: false`).
+  - Ansible server provisioning playbooks: Correctly suppressed (`should_trigger: false`).
+  - Automated production deployment pipelines: Correctly suppressed (`should_trigger: false`).
+
+---
+
 ## Qualitative Assessment (1-5 Rubric)
 
 | Dimension | Score | Evaluation Notes |
 |---|---|---|
-| **Output Quality — Accuracy** | 5 | Findings map directly to CIS GCP Foundations benchmarks and Google security best practices. |
+| **Output Quality — Accuracy** | 5 | Findings map directly to CIS GCP Foundations benchmarks and Google security best practices across all models. |
 | **Output Quality — Completeness** | 5 | Covers IAM, Cloud Storage, Compute, GKE, KMS, and BigQuery compliance checks. |
 | **Output Quality — Clarity** | 5 | Ordered workflow with clear separation between plan inspection, static directory scanning, and review-only fixes. |
 | **Output Quality — Formatting** | 5 | Clean markdown and structured JSON outputs directly usable in CI/CD review workflows. |
