@@ -190,7 +190,7 @@
       "expected_output": "Should redirect or handle with scaffolding skill.",
       "assertions": [
         {
-          "text": "google-agents-cli-adk-code skill does NOT activate",
+          "text": "adk-agents skill does NOT activate",
           "passed": true
         }
       ],
@@ -203,7 +203,7 @@
       "expected_output": "Should redirect or handle with scaffolding skill.",
       "assertions": [
         {
-          "text": "google-agents-cli-adk-code skill does NOT activate",
+          "text": "adk-agents skill does NOT activate",
           "passed": true
         }
       ],
@@ -216,7 +216,7 @@
       "expected_output": "Should redirect or handle with deployment skill.",
       "assertions": [
         {
-          "text": "google-agents-cli-adk-code skill does NOT activate",
+          "text": "adk-agents skill does NOT activate",
           "passed": true
         }
       ],
@@ -229,7 +229,7 @@
       "expected_output": "Should redirect or handle with deployment skill.",
       "assertions": [
         {
-          "text": "google-agents-cli-adk-code skill does NOT activate",
+          "text": "adk-agents skill does NOT activate",
           "passed": true
         }
       ],
@@ -242,7 +242,7 @@
       "expected_output": "Should redirect or handle with evaluation skill.",
       "assertions": [
         {
-          "text": "google-agents-cli-adk-code skill does NOT activate",
+          "text": "adk-agents skill does NOT activate",
           "passed": true
         }
       ],
@@ -255,7 +255,7 @@
       "expected_output": "General Python crawler question.",
       "assertions": [
         {
-          "text": "google-agents-cli-adk-code skill does NOT activate",
+          "text": "adk-agents skill does NOT activate",
           "passed": true
         }
       ],
@@ -268,7 +268,7 @@
       "expected_output": "Totally unrelated general Kubernetes question.",
       "assertions": [
         {
-          "text": "google-agents-cli-adk-code skill does NOT activate",
+          "text": "adk-agents skill does NOT activate",
           "passed": true
         }
       ],
@@ -281,7 +281,7 @@
       "expected_output": "Should redirect or handle with workflow skill.",
       "assertions": [
         {
-          "text": "google-agents-cli-adk-code skill does NOT activate",
+          "text": "adk-agents skill does NOT activate",
           "passed": true
         }
       ],
@@ -294,7 +294,7 @@
       "expected_output": "General git setup question.",
       "assertions": [
         {
-          "text": "google-agents-cli-adk-code skill does NOT activate",
+          "text": "adk-agents skill does NOT activate",
           "passed": true
         }
       ],
@@ -307,7 +307,7 @@
       "expected_output": "Environment/scaffolding information query.",
       "assertions": [
         {
-          "text": "google-agents-cli-adk-code skill does NOT activate",
+          "text": "adk-agents skill does NOT activate",
           "passed": true
         }
       ],
