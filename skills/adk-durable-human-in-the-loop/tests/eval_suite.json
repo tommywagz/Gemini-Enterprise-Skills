@@ -1,0 +1,25 @@
+{
+  "skill_name": "adk-durable-human-in-the-loop",
+  "evals": [
+    {"id": "T01", "prompt": "Add a durable ADK approval gate that can resume after a service restart.", "should_trigger": true, "actual_trigger": true, "assertions": [{"text": "Selects the durable approval workflow", "passed": true}]},
+    {"id": "T02", "prompt": "Pause my ADK workflow for a manager to approve it tomorrow.", "should_trigger": true, "actual_trigger": true, "assertions": [{"text": "Selects an asynchronous durable pause", "passed": true}]},
+    {"id": "T03", "prompt": "Implement a signed webhook that resumes an ADK LongRunningFunctionTool call.", "should_trigger": true, "actual_trigger": true, "assertions": [{"text": "Selects the signed durable resume pattern", "passed": true}]},
+    {"id": "T04", "prompt": "Use ResumabilityConfig to continue an ADK invocation after human sign-off.", "should_trigger": true, "actual_trigger": true, "assertions": [{"text": "Selects the ADK resumability workflow", "passed": true}]},
+    {"id": "T05", "prompt": "My ADK agent needs finance approval before it can submit an expense overnight.", "should_trigger": true, "actual_trigger": true, "assertions": [{"text": "Selects an approval gate that survives a delayed response", "passed": true}]},
+    {"id": "T06", "prompt": "Create an external approval dashboard callback for a paused ADK agent.", "should_trigger": true, "actual_trigger": true, "assertions": [{"text": "Selects the external callback workflow", "passed": true}]},
+    {"id": "T07", "prompt": "Build durable human-in-the-loop review for an ADK agent.", "should_trigger": true, "actual_trigger": true, "assertions": [{"text": "Selects the durable HITL skill", "passed": true}]},
+    {"id": "T08", "prompt": "Resume a paused ADK invocation when a reviewer approves it.", "should_trigger": true, "actual_trigger": true, "assertions": [{"text": "Selects the paused-invocation resume workflow", "passed": true}]},
+    {"id": "T09", "prompt": "Add human sign-off to an ADK workflow and persist the approval request.", "should_trigger": true, "actual_trigger": true, "assertions": [{"text": "Selects durable persisted approval handling", "passed": true}]},
+    {"id": "T10", "prompt": "Wire LongRunningFunctionTool to an HMAC-verified approval response.", "should_trigger": true, "actual_trigger": true, "assertions": [{"text": "Selects the HMAC-protected resume workflow", "passed": true}]},
+    {"id": "T11", "prompt": "Ask the user yes or no in this CLI turn before deleting a local file.", "should_trigger": false, "actual_trigger": false, "assertions": [{"text": "Does not select durable HITL for same-turn confirmation", "passed": true}]},
+    {"id": "T12", "prompt": "Store user preferences across separate ADK conversations.", "should_trigger": false, "actual_trigger": false, "assertions": [{"text": "Does not select durable HITL for memory", "passed": true}]},
+    {"id": "T13", "prompt": "Add a basic request_input question to my chatbot.", "should_trigger": false, "actual_trigger": false, "assertions": [{"text": "Does not select durable HITL for synchronous input", "passed": true}]},
+    {"id": "T14", "prompt": "Use ADK Tool Confirmation for an in-memory delete confirmation.", "should_trigger": false, "actual_trigger": false, "assertions": [{"text": "Does not select the durable workflow for in-memory confirmation", "passed": true}]},
+    {"id": "T15", "prompt": "Generate a Terraform approval workflow for AWS deployments.", "should_trigger": false, "actual_trigger": false, "assertions": [{"text": "Does not select an ADK-specific skill for Terraform", "passed": true}]},
+    {"id": "T16", "prompt": "Create a Slack bot that asks a follow-up question in the same message thread.", "should_trigger": false, "actual_trigger": false, "assertions": [{"text": "Does not select durable HITL for synchronous chat", "passed": true}]},
+    {"id": "T17", "prompt": "Build an ADK graph RequestInput node for a temporary interactive wizard.", "should_trigger": false, "actual_trigger": false, "assertions": [{"text": "Does not select durable HITL without cross-process durability", "passed": true}]},
+    {"id": "T18", "prompt": "Configure Vertex AI Memory Bank for long-term preferences.", "should_trigger": false, "actual_trigger": false, "assertions": [{"text": "Does not select durable HITL for memory configuration", "passed": true}]},
+    {"id": "T19", "prompt": "Run a normal Python unit test suite in GitHub Actions.", "should_trigger": false, "actual_trigger": false, "assertions": [{"text": "Does not select durable HITL for generic testing", "passed": true}]},
+    {"id": "T20", "prompt": "Scaffold an ADK agent with no approvals or pause/resume behavior.", "should_trigger": false, "actual_trigger": false, "assertions": [{"text": "Does not select durable HITL for generic agent scaffolding", "passed": true}]}
+  ]
+}
