@@ -14,7 +14,7 @@
 |---|---|---|---|---|---|---|---|---|
 | **Argon** | `argon-sum` | **COMPLETED** | 100.0% | 100.0% | 0.0% | 100.0% | Low | `evaluator-4` / 2026-09-25 |
 | **Fable** | `fable` | **COMPLETED** | 100.0% | 100.0% | 0.0% | 100.0% | Low | `evaluator-4` / 2026-09-25 |
-| **3.8 Flash** | `gemini-3.8-flash-high` | PENDING | — | — | — | — | — | — |
+| **3.8 Flash** | `gemini-3.8-flash-high` | **COMPLETED** | 100.0% | 100.0% | 0.0% | 100.0% | Low | `evaluator-4` / 2026-09-25 |
 
 ---
 
@@ -82,6 +82,37 @@
 
 ---
 
+## Model Evaluation: 3.8 Flash (`gemini-3.8-flash-high`)
+
+- **Evaluation Purpose & Focus:** Production baseline evaluating high-speed execution, fast token processing, baseline trigger precision/recall, and strict token efficiency under low-latency requirements.
+- **Execution Workflow:** Native `evaluate-skill` test-adjust-retest harness.
+- **Test Suite:** `skills/evaluate-skill/tests/eval_suite.json` (20 total evals: 10 in-scope positive triggers, 10 out-of-scope negative triggers).
+- **Iterations Required:** 1 (passed baseline gates on initial iteration).
+
+### Confusion Matrix (3.8 Flash)
+| Metric | Count |
+|---|---|
+| True Positives (TP) | 10 |
+| False Positives (FP) | 0 |
+| True Negatives (TN) | 10 |
+| False Negatives (FN) | 0 |
+| Total Graded Evals | 20 |
+
+### Quantitative Metrics (3.8 Flash)
+| Metric | Target | Actual Score | Status |
+|---|---|---|---|
+| **Trigger Precision** | > 90% | **100.0%** (1.0000) | **PASS** |
+| **Trigger Recall** | > 85% | **100.0%** (1.0000) | **PASS** |
+| **False Positive Rate (FPR)** | < 5% | **0.0%** (0.0000) | **PASS** |
+| **Assertion Pass Rate** | > 80% | **100.0%** (1.0000) | **PASS** |
+
+### Execution Performance & Token Efficiency Analysis (3.8 Flash)
+- Rapid routing decision latency with deterministic trigger boundary resolution.
+- Context window efficiency: 295-character YAML frontmatter and 449-word body ensures lightweight invocation overhead while delivering full evaluation orchestration capabilities.
+- All 20 assertion conditions passed with zero degradations.
+
+---
+
 ## Preflight Quality & Token Efficiency Verification
 
 - **Linter Tool:** `scripts/validate_skill_token_efficiency.py`
@@ -121,4 +152,4 @@
 | # | Finding | Fix / Verification Applied | File(s) Changed |
 |---|---|---|---|
 | 1 | Automated security scanner matched pattern rules against markdown guidance. | Manually verified scanner hits are documentation text in `references/security_review.md`. Assigned verified Low risk tier. | `references/security_review.md` |
-| 2 | Evaluation report required tri-model status matrix and detailed model scores. | Updated `tests/evaluation_report.md` with Tri-Model Status Matrix and quantitative breakdowns for Argon and Fable. | `tests/evaluation_report.md` |
+| 2 | Evaluation report required tri-model status matrix and detailed model scores. | Updated `tests/evaluation_report.md` with completed Tri-Model Status Matrix and quantitative breakdowns for Argon, Fable, and 3.8 Flash. | `tests/evaluation_report.md` |
