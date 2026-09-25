@@ -7,7 +7,7 @@ prior conversational context) BEFORE an agent's first real turn, so
 for `generate_memories_callback` to extract them organically from a live
 conversation. Grounded in the Agent Platform Memory Bank API:
 https://docs.cloud.google.com/gemini-enterprise-agent-platform/scale/memory-bank/api-quickstart
-and .../generate-memories (fetched 2026-09-11 -- re-verify field names
+and https://docs.cloud.google.com/gemini-enterprise-agent-platform/scale/memory-bank/generate-memories (fetched 2026-09-11 -- re-verify field names
 there before depending on this for a production pipeline; the API is still
 evolving).
 
