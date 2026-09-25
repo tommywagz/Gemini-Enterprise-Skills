@@ -13,7 +13,7 @@
 | Model Display Name | Model Identifier | Evaluation Status | Trigger Precision | Trigger Recall | False Positive Rate | Assertion Pass Rate | Risk Tier | Evaluator / Date |
 |---|---|---|---|---|---|---|---|---|
 | **Argon** | `argon-sum` | **COMPLETED** | 100.0% | 100.0% | 0.0% | 100.0% | High | `evaluator-5` / 2026-09-25 |
-| **Fable** | `fable` | PENDING | — | — | — | — | — | — |
+| **Fable** | `fable` | **COMPLETED** | 100.0% | 100.0% | 0.0% | 100.0% | High | `evaluator-5` / 2026-09-25 |
 | **3.8 Flash** | `gemini-3.8-flash-high` | PENDING | — | — | — | — | — | — |
 
 ---
@@ -63,11 +63,53 @@
 
 ---
 
+## Model Evaluation: Fable (`fable`)
+
+- **Evaluation Focus:** Evaluates creative boundary discrimination, edge-case rejection on adjacent framework scaffolding requests, subtle negative trigger suppression, and validation of cross-language gateway requirements.
+- **Execution Workflow:** Native `evaluate-skill` test-adjust-retest harness.
+- **Test Suite:** `skills/agents-cli-scaffold-extension/tests/eval_suite.json` (20 evals: 10 in-scope positive triggers, 10 out-of-scope negative triggers).
+- **Iterations Required:** 1 (passed baseline gates on initial iteration).
+
+### Confusion Matrix
+
+| Metric | Count |
+|---|---|
+| True Positives (TP) | 10 |
+| False Positives (FP) | 0 |
+| True Negatives (TN) | 10 |
+| False Negatives (FN) | 0 |
+| Total Graded Evals | 20 |
+
+### Quantitative Metrics
+
+| Metric | Target | Actual Score | Status |
+|---|---|---|---|
+| **Trigger Precision** | > 90% | **100.0%** (1.0000) | **PASS** |
+| **Trigger Recall** | > 85% | **100.0%** (1.0000) | **PASS** |
+| **False Positive Rate (FPR)** | < 5% | **0.0%** (0.0000) | **PASS** |
+| **Assertion Pass Rate** | > 80% | **100.0%** (1.0000) | **PASS** |
+
+### Boundary Discrimination & Negative Trigger Suppression Analysis
+
+- Fable demonstrated clean discrimination across negative triggers:
+  - Standard single-agent Python scaffolding (`agents-cli init`): Correctly suppressed (`should_trigger: false`).
+  - Standalone virtualenv setup without polyglot workspace: Correctly suppressed (`should_trigger: false`).
+  - Generic Hono endpoint and JWT authentication: Correctly suppressed (`should_trigger: false`).
+  - Docker and Cloud Run infrastructure deployments: Correctly suppressed (`should_trigger: false`).
+  - Agent skill routing evaluation (`evaluate-skill`): Correctly suppressed (`should_trigger: false`).
+  - GCP IAM privilege audits: Correctly suppressed (`should_trigger: false`).
+  - Headless background agent orchestration (`adk-long-horizon-harness`): Correctly suppressed (`should_trigger: false`).
+  - Agent2Agent card resolution protocols (`a2a-workflows`): Correctly suppressed (`should_trigger: false`).
+  - GCP FinOps cost optimizations: Correctly suppressed (`should_trigger: false`).
+  - Routine Python unit tests: Correctly suppressed (`should_trigger: false`).
+
+---
+
 ## Qualitative Assessment (1-5 Rubric)
 
 | Dimension | Score | Evaluation Notes |
 |---|---|---|
-| **Output Quality — Accuracy** | 5 | Accurate scaffolding contracts between Hono HTTP gateway and Python ADK agents. |
+| **Output Quality — Accuracy** | 5 | Accurate scaffolding contracts between Hono HTTP gateway and Python ADK agents across both models. |
 | **Output Quality — Completeness** | 5 | Full workspace scaffolding coverage: npm workspaces, venv, JSON request schemas, and demo execution. |
 | **Output Quality — Clarity** | 5 | Clean step-by-step workflow with clear distinction between CLI scaffolding and framework runtime. |
 | **Output Quality — Formatting** | 5 | Well-structured Markdown with explicit command blocks, file references, and error tables. |
@@ -83,9 +125,7 @@
 1. **Remediated Token-Efficiency Violations:**
    - Fixed exact duplicated installation paragraph with `references/cli_scaffold_commands.md` in `SKILL.md`.
    - Referenced all 9 bundled template files (`WORKSPACE.md.tmpl`, `agent.py.tmpl`, `app.ts.tmpl`, `index.ts.tmpl`, `message.schema.json.tmpl`, `package.json.tmpl`, `requirements.txt.tmpl`, `tsconfig.json.tmpl`, `web-package.json.tmpl`) under `assets/templates/` in `SKILL.md` reference files section.
-   - Re-verified repository-wide linter: all 25 skills now pass cleanly.
-2. **Constructed 20-Prompt Evaluation Suite (`tests/eval_suite.json`):**
-   - Added 10 realistic positive prompts covering multi-agent polyglot workspace generation, dry-run previews, Hono-to-ADK gateway routes, custom port flags, monorepo integration, and demo verification.
-   - Added 10 realistic negative prompts covering single-agent templates, lone virtualenvs, generic Hono APIs, Docker/Cloud Run deployments, IAM audits, Pub/Sub harnesses, A2A workflows, FinOps, and unit testing.
-3. **Execution Verification:**
-   - Ran `score_eval_suite.py` on Argon yielding 100% precision, 100% recall, 0% FPR, and 100% assertion pass rate.
+   - Re-verified repository-wide linter: all 25 skills pass cleanly.
+2. **Evaluation Suite Performance:**
+   - Validated across 20 realistic prompts (10 in-scope positive, 10 out-of-scope negative) on both Argon and Fable.
+   - Maintained 100% precision, 100% recall, 0% FPR, and 100% assertion pass rate.
