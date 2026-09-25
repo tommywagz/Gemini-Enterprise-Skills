@@ -3,7 +3,7 @@
 **Evaluation Workflow:** `evaluate-skill`  
 **Target Skill:** `write-skill`  
 **Skill Path:** `skills/write-skill`  
-**Evaluator Worker:** `evaluator-5`  
+**Evaluator Worker:** `evaluator-2`  
 **Date:** 2026-09-25  
 
 ---
@@ -14,7 +14,7 @@
 |---|---|---|---|---|---|---|---|---|
 | **Argon** | `argon-sum` | **COMPLETED** | 100.0% | 100.0% | 0.0% | 100.0% | Medium | `evaluator-5` / 2026-09-25 |
 | **Fable** | `fable` | **COMPLETED** | 100.0% | 100.0% | 0.0% | 100.0% | Medium | `evaluator-4` / 2026-09-25 |
-| **3.8 Flash** | `gemini-3.8-flash-high` | PENDING | — | — | — | — | — | — |
+| **3.8 Flash** | `gemini-3.8-flash-high` | **COMPLETED** | 100.0% | 100.0% | 0.0% | 100.0% | Medium | `evaluator-2` / 2026-09-25 |
 
 ---
 
@@ -25,7 +25,7 @@
 - **Test Suite:** `skills/write-skill/tests/eval_suite.json` (20 evals: 10 in-scope positive triggers, 10 out-of-scope negative triggers).
 - **Iterations Required:** 1 (passed baseline gates on initial iteration).
 
-### Confusion Matrix
+### Confusion Matrix (Argon)
 
 | Metric | Count |
 |---|---|
@@ -35,7 +35,7 @@
 | False Negatives (FN) | 0 |
 | Total Graded Evals | 20 |
 
-### Quantitative Metrics
+### Quantitative Metrics (Argon)
 
 | Metric | Target | Actual Score | Status |
 |---|---|---|---|
@@ -82,6 +82,33 @@
 
 ---
 
+## Model Evaluation: 3.8 Flash (`gemini-3.8-flash-high`)
+
+- **Evaluation Purpose & Focus:** Evaluates high-throughput fast-path routing, concise prompt instruction parsing, strict assertion fulfillment, and rapid boundary suppression against general writing tasks.
+- **Execution Workflow:** Native `evaluate-skill` test-adjust-retest harness.
+- **Test Suite:** `skills/write-skill/tests/eval_suite.json` (20 total evals: 10 in-scope positive triggers, 10 out-of-scope negative triggers).
+- **Iterations Required:** 1 (passed baseline gates on initial iteration).
+
+### Confusion Matrix (3.8 Flash)
+
+| Metric | Count | Percentage |
+|---|---|---|
+| **True Positives (TP)** | 10 | 50% |
+| **True Negatives (TN)** | 10 | 50% |
+| **False Positives (FP)** | 0 | 0% |
+| **False Negatives (FN)** | 0 | 0% |
+| **Total Graded Evals** | 20 | 100% |
+
+### Quantitative Metrics (3.8 Flash)
+
+| Metric | Target | Actual Score | Status |
+|---|---|---|---|
+| **Trigger Precision** | > 90% | **100.0%** (1.0000) | **PASS** |
+| **Trigger Recall** | > 85% | **100.0%** (1.0000) | **PASS** |
+| **False Positive Rate (FPR)** | < 5% | **0.0%** (0.0000) | **PASS** |
+| **Assertion Pass Rate** | > 80% | **100.0%** (1.0000) | **PASS** |
+
+---
 ## Preflight Quality & Token Efficiency Verification
 
 - **Linter Tool:** `scripts/validate_skill_token_efficiency.py`
@@ -123,3 +150,4 @@
 3. **Reference Links:** All references (`references/writing_principles.md`, `references/formatter_fields.md`, `references/full_template.md`, `assets/skill_template.md`, `scripts/scaffold_skill.sh`) verified present and referenced in `SKILL.md`.
 4. **Safety Verification:** Confirmed that `scaffold_skill.sh` strictly initializes local folder templates without network operations or elevated privileges.
 5. **Fable Model Benchmark & Edge-Case Verification:** Validated 100% precision and recall under Fable (`fable`), verifying robust boundary discrimination against adjacent skills (`evaluate-skill`, `find-skill`) and generic developer queries.
+6. **3.8 Flash Benchmark & Tri-Model Certification:** Verified 100% precision, 100% recall, 0% FPR, and 100% assertion pass rate under 3.8 Flash (`gemini-3.8-flash-high`), completing the full tri-model scorecard.
