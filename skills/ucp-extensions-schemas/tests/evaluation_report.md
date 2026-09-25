@@ -1,65 +1,96 @@
 # Skill Evaluation Report: ucp-extensions-schemas
 
-**Date:** 2026-09-18  
-**Evaluator:** evaluator  
-**Iteration:** 1 (of 3)  
+**Evaluation Workflow:** `evaluate-skill`  
+**Target Skill:** `ucp-extensions-schemas`  
+**Skill Path:** `skills/ucp-extensions-schemas`  
+**Evaluator Worker:** `evaluator-4`  
+**Date:** 2026-09-25  
 
-## Summary
+---
 
-Ship after initial evaluation pass. The skill provides clear and comprehensive guidance for authoring, structuring, and date-based versioning of Universal Commerce Protocol (UCP) capability extensions using JSON Schema Draft 2020-12 and reverse-domain authority binding. The 20-case balanced routing suite scored 100% precision, 100% recall, and 0% false positive rate. All bundled schemas, sample payload, discovery manifest, and validator test suites passed cleanly with zero errors.
+## Tri-Model Evaluation Status Matrix
 
-## Risk Tier
+| Model Display Name | Model Identifier | Evaluation Status | Trigger Precision | Trigger Recall | False Positive Rate | Assertion Pass Rate | Risk Tier | Evaluator / Date |
+|---|---|---|---|---|---|---|---|---|
+| **Argon** | `argon-sum` | **COMPLETED** | 100.0% | 100.0% | 0.0% | 100.0% | Low | `evaluator-4` / 2026-09-25 |
+| **Fable** | `fable` | PENDING | — | — | — | — | — | — |
+| **3.8 Flash** | `gemini-3.8-flash-high` | PENDING | — | — | — | — | — | — |
 
-**Low**
+---
 
-The skill operates entirely locally without external network dependencies, high-privilege commands, credentials, or filesystem mutations outside the schema authoring scope. Static analysis confirms absence of malicious or injection patterns.
+## Model Evaluation: Argon (`argon-sum`)
 
-## Quantitative Metrics
+- **Evaluation Purpose & Focus:** Evaluates dense instruction comprehension, strict compliance with JSON Schema Draft 2020-12 specifications, date-based versioning schemes (`YYYY-MM-DD`), reverse-domain authority binding, and discovery manifest capability integration.
+- **Execution Workflow:** Native `evaluate-skill` test-adjust-retest harness.
+- **Test Suite:** `skills/ucp-extensions-schemas/tests/eval_suite.json` (20 total evals: 10 in-scope positive triggers, 10 out-of-scope negative triggers).
+- **Iterations Required:** 1 (passed baseline gates on initial iteration).
 
-| Metric | Target | Before | After | Status |
-|---|---|---:|---:|---|
-| Trigger Precision | > 90% | 100% | 100% | PASS |
-| Trigger Recall | > 85% | 100% | 100% | PASS |
-| False Positive Rate | < 5% | 0% | 0% | PASS |
-| Task Completion Rate | > 80% | 100% | 100% | PASS |
-| Token Usage | < 5,000 | 1,323 words | 1,323 words | PASS |
-| Step Error Rate | baseline | 0/7 checks | 0/7 checks | PASS |
-| Reference Hit Rate | baseline | 3/3 reference paths | 3/3 reference paths | PASS |
-| Time to Completion | baseline | Not measured | Not measured | Baseline |
+### Confusion Matrix (Argon)
+| Metric | Count |
+|---|---|
+| True Positives (TP) | 10 |
+| False Positives (FP) | 0 |
+| True Negatives (TN) | 10 |
+| False Negatives (FN) | 0 |
+| Total Graded Evals | 20 |
 
-Routing results were verified using `score_eval_suite.py`: 10 TP, 10 TN, 0 FP, 0 FN.
+### Quantitative Metrics (Argon)
+| Metric | Target | Actual Score | Status |
+|---|---|---|---|
+| **Trigger Precision** | > 90% | **100.0%** (1.0000) | **PASS** |
+| **Trigger Recall** | > 85% | **100.0%** (1.0000) | **PASS** |
+| **False Positive Rate (FPR)** | < 5% | **0.0%** (0.0000) | **PASS** |
+| **Assertion Pass Rate** | > 80% | **100.0%** (1.0000) | **PASS** |
 
-## Qualitative Metrics (1-5 rubric)
+### Execution Performance & Verification Details (Argon)
+- Executed deterministic test scoring via `score_eval_suite.py` on `skills/ucp-extensions-schemas/tests/eval_suite.json`.
+- Tested extension validator (`scripts/validate_ucp_extension.py`) against bundled schema assets:
+  - `assets/schemas/food_ordering_extension.json`
+  - `assets/schemas/lodging_extension.json`
+  - `assets/schemas/discount_extension.json`
+  - `assets/schemas/fulfillment_extension.json`
+  - Discovery profile manifest: `assets/discovery_profile_extension_example.json`
+- All schema validations and routing assertions passed cleanly with zero errors.
 
-| Dimension | Score | Notes |
-|---|---:|---|
-| Output Quality - Accuracy | 5 | Aligns with UCP schema specifications, Draft 2020-12 dialect, and date versioning. |
-| Output Quality - Completeness | 5 | Covers horizontal (discounts, fulfillment) and vertical (food ordering, lodging) extensions. |
-| Output Quality - Clarity | 5 | Step-by-step ordered instructions with explicit anti-patterns and examples. |
-| Output Quality - Formatting | 5 | Standard YAML frontmatter, markdown sections, and valid JSON schemas. |
-| Instruction Fidelity | 5 | Accurate guidance regarding property closure rules (`additionalProperties: false`) and authority binding. |
-| Edge Case Handling | 5 | Covers SemVer vs calendar date validation, authority mismatch, and manifest capability arrays/dicts. |
-| Coexistence | 5 | Explicitly avoids overlaps with `ucp-merchant-servers`, `ucp-consumer-surface`, and `ap2-agent-payments`. |
-| User Trust | 5 | Standardized validation script provides automated verification. |
+---
 
-## Production Checklist Status
+## Preflight Quality & Token Efficiency Verification
 
-- [x] Standard YAML frontmatter with tags, license, and compatibility
-- [x] Description under 1,024 characters with explicit TRIGGER and DO NOT TRIGGER criteria
-- [x] Body under 5,000 tokens
-- [x] Step-by-step workflow with inputs, actions, and verification
-- [x] Anti-patterns and error handling clearly documented
-- [x] Executable validation utility provided and tested
-- [x] Concrete JSON Schema Draft 2020-12 samples provided
-- [x] Discovery manifest integration covered
-- [x] Security review completed; Risk Tier assigned (Low)
-
-## Findings & Fixes Applied
-
-None required; draft met all quality, performance, and security thresholds on iteration 1.
+- **Linter Tool:** `scripts/validate_skill_token_efficiency.py`
+  - Description length: 846 characters (limit: 1024 characters) -> **PASS**
+  - Body word count: 1,323 words / ~1,050 tokens (limit: 6250 words / ~5000 tokens) -> **PASS**
+  - Unreferenced resources: 0 found in `references/`, `scripts/`, or `assets/` -> **PASS**
+  - Duplicate paragraphs: 0 duplicates detected against reference documents -> **PASS**
 
 ## Security Review
 
-- `scripts/security_scan.sh` reported no path traversal, credentials, or high-privilege CLI invocations.
-- URL references in schemas and documents are declarative identifiers (`$id`, `$schema`, `spec`, and namespaces) rather than runtime network fetch endpoints.
-- Evaluated risk tier: **Low**.
+- **Scanner Tool:** `skills/evaluate-skill/scripts/security_scan.sh`
+- **Assigned Risk Tier:** **Low**
+  - Automated regex matches for external URLs were verified as JSON Schema `$schema` dialects, `$id` URIs, and specification documentation links.
+  - The validation script (`validate_ucp_extension.py`) performs offline static syntax and schema structure inspection using `urllib.parse.urlparse` for URL validation without making HTTP calls.
+  - Zero hardcoded credentials, zero command executions, zero file modification outside designated scopes.
+- **Data Classification:** Public / Internal (open commerce protocol specifications and JSON schemas).
+
+---
+
+## Qualitative Assessment (1-5 Rubric)
+
+| Dimension | Score | Evaluation Notes |
+|---|---|---|
+| **Output Quality — Accuracy** | 5 | Aligns with UCP schema specifications, Draft 2020-12 dialect, and date-based versioning. |
+| **Output Quality — Completeness** | 5 | Covers horizontal (discounts, fulfillment) and vertical (food ordering, lodging) extensions. |
+| **Output Quality — Clarity** | 5 | Step-by-step ordered instructions with explicit anti-patterns and examples. |
+| **Output Quality — Formatting** | 5 | Standard YAML frontmatter, markdown sections, and valid JSON schemas. |
+| **Instruction Fidelity** | 5 | Accurate guidance regarding property closure rules (`additionalProperties: false`) and authority binding. |
+| **Edge Case Handling** | 5 | Covers SemVer vs calendar date validation, authority mismatch, and manifest capability arrays/dicts. |
+| **Coexistence** | 5 | Explicitly avoids overlaps with `ucp-merchant-servers`, `ucp-consumer-surface`, and `ap2-agent-payments`. |
+| **User Trust** | 5 | Standardized validation script provides automated verification. |
+
+---
+
+## Findings & Verifications Applied
+
+| # | Finding | Fix / Verification Applied | File(s) Changed |
+|---|---|---|---|
+| 1 | SemVer vs calendar-date validation boundary. | Verified that validator strictly enforces `YYYY-MM-DD` date paths in `$id` URIs rather than SemVer (`v1.0.0`). | `scripts/validate_ucp_extension.py` |
+| 2 | Evaluation report required tri-model status matrix and detailed model scores. | Updated `tests/evaluation_report.md` with Tri-Model Status Matrix and quantitative Argon metrics. | `tests/evaluation_report.md` |
