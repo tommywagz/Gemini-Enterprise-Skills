@@ -1,0 +1,59 @@
+# proto-file: learning/gemini/agents/evaluation/evalin/proto/eval_suite.proto
+# proto-message: EvalSuite
+# txtpbfmt: wrap_strings_after_newlines
+#
+# Run with: evalin run third_party/jetski/cortex/customizations/builtin/assets/internal/skills/jetski-customizations/EVAL.txtpb
+
+suite_name: "jetski-customizations"
+timeout_seconds: 600
+eval_mode: EVAL_MODE_FULL
+
+# Answer keys: these spell out the customization roots, so an agent that reads
+# them can pass without the skill.
+forbidden_paths: "third_party/jetski/cortex/mixins/conversational_prompt_sections.go"
+forbidden_paths: "third_party/jetski/cortex/customizations/customization.go"
+forbidden_paths: "third_party/jetski/cortex/customizations/agents_parser.go"
+forbidden_paths: "third_party/jetski/cortex/customizations/skills.go"
+forbidden_paths: "third_party/jetski/cortex/customizations/builtin/assets/external/skills/agy-customizations/SKILL.md"
+
+# Case 1: Persisting a preference — tests root selection and the google3/ nesting trap.
+cases {
+  name: "persist_preference_without_nesting_under_google3"
+  prompt: "I always want you to use table-driven tests when you write Go tests for me. Save that somewhere it'll stick for my future sessions, and tell me where you put it and what that location covers. "
+  expectations: "The preference is persisted to a markdown rule file on disk, not merely acknowledged in the conversation."
+  expectations: "That rule file is in one of the documented customization roots: configs/users/<username>/_agents/, google3/configs/jetski/_agents/, or ~/.gemini/config/. Any of the three is equally acceptable."
+  expectations: "No rule file was placed under google3/configs/users/. The personal root is a sibling of google3/, not nested inside it."
+  expectations: "The agent tells the user which location holds the rule."
+  expectations: "The agent tells the user the scope of that location, meaning whether it applies to one workspace, all their google3 workspaces, or the whole machine."
+}
+
+# Case 2: Authoring a skill — tests skill structure and discoverability.
+cases {
+  name: "author_reusable_skill_in_discoverable_location"
+  prompt: "I keep repeating the same steps to triage a flaky test: pull the Sponge log, find the failing testcase, then check recent CLs touching that target. Package that up so you can do it for me automatically next time. Just scaffold it with those three steps written down; don't go research the tooling, I'll fill in the details later. "
+  expectations: "A skill directory containing a SKILL.md exists for flaky-test triage, rather than a plain rule file or an unstructured notes file."
+  expectations: "The SKILL.md starts with YAML frontmatter containing at least a name and a description."
+  expectations: "The description says when the skill should be used, in terms that would match a future flaky-test triage request."
+  expectations: "The SKILL.md records the three steps the user gave: pulling the Sponge log, finding the failing testcase, and checking recent CLs touching that target."
+  expectations: "The skill directory is in one of the documented customization roots, not an arbitrary directory such as the current working directory or a bare .agents/ folder."
+}
+
+# Case 3: Team-wide scope — tests picking the shared root over a personal one.
+cases {
+  name: "scope_customization_to_whole_team"
+  prompt: "We want every Jetski developer to get our code review checklist automatically, not just me. Where would that live and what would it look like? Don't create it yet, just show me the plan. "
+  expectations: "The agent identifies google3/configs/jetski/_agents/ as the correct location."
+  expectations: "The agent does NOT propose a personal or machine-global location for something the whole team needs."
+  expectations: "The agent describes what would go there, such as a rule file or a skill directory, and not only where it goes."
+  expectations: "The agent did not create or modify any files."
+}
+
+# Case 4: False premise — tests that precedence is not explained backwards.
+cases {
+  name: "diagnose_personal_rule_not_taking_effect"
+  prompt: "I added a rule in my personal customizations telling you to skip adding license headers, but you keep adding them anyway and I think the shared repo rule is what you're picking up. What's going on? "
+  expectations: "The agent does not leave the user believing the shared repo rule is overriding their personal one. Either stating that personal customizations take priority, or otherwise making clear the shared rule is not the cause, is acceptable."
+  expectations: "The agent does NOT claim that google3/configs/jetski/_agents/ rules override personal ones."
+  expectations: "The agent offers a concrete cause that actually explains the symptom, most plausibly that the rule is not in a location that gets discovered."
+  expectations: "The agent gives the specific path the personal rule needs to live at to take effect."
+}

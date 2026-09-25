@@ -1,0 +1,90 @@
+# proto-file: learning/gemini/agents/evaluation/evalin/proto/eval_suite.proto
+# proto-message: EvalSuite
+# txtpbfmt: wrap_strings_after_newlines
+#
+# Run with: evalin run third_party/jetski/cortex/customizations/builtin/assets/internal/skills/plugin/EVAL.txtpb
+
+suite_name: "plugin"
+timeout_seconds: 600
+eval_mode: EVAL_MODE_FULL
+
+# Answer keys: these spell out the plugin layout, the enablement key, and the
+# install path, so an agent that reads them can pass without the skill.
+forbidden_paths: "devtools/jetski/g3doc/features/agent/agent-plugins.md"
+forbidden_paths: "third_party/jetski/cortex/customizations/plugins.go"
+forbidden_paths: "third_party/jetski/cortex/customizations/plugin_logo.go"
+forbidden_paths: "third_party/jetski/cortex/customizations/builtin/assets/internal/skills/jetski-customizations/docs/plugins.md"
+forbidden_paths: "third_party/jetski/cortex/customizations/builtin/assets/external/skills/agy-customizations/docs/plugins.md"
+forbidden_paths: "third_party/jetski/language_server/rpcs_customizations.go"
+forbidden_paths: "third_party/jetski/language_server/rpcs_marketplace.go"
+forbidden_paths: "third_party/jetski/language_server_pb/language_server.proto"
+forbidden_paths: "third_party/gemini_coder/agent_ui_toolkit/src/features/customizations/utils/pluginIdentity.ts"
+forbidden_paths: "third_party/gemini_coder/agent_ui_toolkit/src/features/customizations/hooks/usePluginMutations.ts"
+forbidden_paths: "third_party/jetski/cli/plugins/manager.go"
+
+# Case 1: Inventory — tests that the agent asks the running server rather than
+# guessing from the filesystem, and that it does not flood itself with the
+# full text of every bundled skill.
+cases {
+  name: "inventory_installed_plugins_without_flooding_context"
+  prompt: "What plugins do I currently have, and which ones are switched off?"
+  expectations: "The agent queries the running language server for the plugin list rather than only listing directories on disk or guessing."
+  expectations: "The agent filters or projects the response down to fields it needs, instead of dumping the raw response. The raw response inlines the full text of every bundled SKILL.md, so an unfiltered read is a failure."
+  expectations: "The projection the agent uses retains the enablement state, so it can answer the second half of the question."
+  expectations: "The agent reports back a list of plugins with their enabled or disabled state."
+  expectations: "The agent did not enable, disable, install, or uninstall anything."
+}
+
+# Case 2: The install-directory-name trap — the single most common way to break
+# a plugin mutation.
+cases {
+  name: "disable_keys_on_install_directory_not_manifest_name"
+  prompt: "I have a plugin that shows up as \"code-review\" but its folder under my config is named 8814429953104. Show me the exact call you would make to switch it off, and explain which of those two strings you keyed it on and why. Don't actually run anything."
+  expectations: "The call is keyed on the install directory name 8814429953104, NOT on the manifest name code-review."
+  expectations: "The agent explains that the enablement key is the install directory name, and that it routinely differs from the name in plugin.json."
+  expectations: "The agent does not propose editing plugin.json to disable the plugin. Enablement is not stored there."
+  expectations: "The agent did not execute the mutation, having been asked not to."
+}
+
+# Case 3: Placement — the bundling judgment. A new capability for a service the
+# user already has a plugin for belongs in that plugin.
+cases {
+  name: "place_new_capability_in_existing_plugin"
+  prompt: "I already have a plugin set up for everything Strava-related. I now want you to be able to summarize my weekly training load from my Strava data. Tell me where that new capability should live and how you would structure it. Don't build it yet."
+  expectations: "The agent proposes adding the capability to the existing Strava plugin rather than creating a second, separate plugin for it."
+  expectations: "The agent checks what the user actually has installed rather than assuming, or explicitly states it would check."
+  expectations: "The agent gives a reason for grouping it with the existing plugin, along the lines of it belonging to the same service or data provider."
+  expectations: "The agent describes the concrete artifact it would add inside that plugin, such as a skill under the plugin's skills/ directory."
+  expectations: "The agent did not create any files, having been asked not to yet."
+}
+
+# Case 4: Creation — tests placement of a brand-new plugin and the restart
+# caveat, which is the top source of 'I made it but nothing happened'.
+#
+# Side effect: this case writes a real plugin into the invoking user's live
+# config at ~/.gemini/config/plugins/, which is a discovery root, and plugin
+# names share one global namespace. The name is suffixed so a leftover artifact
+# is obvious. Remove it after a run:
+#   rm -rf ~/.gemini/config/plugins/sheets-toolkit-eval
+cases {
+  name: "create_plugin_states_location_and_restart_requirement"
+  prompt: "Bundle up some spreadsheet helpers for me into a brand new plugin called sheets-toolkit-eval. Just scaffold it, one placeholder skill inside is fine."
+  expectations: "A plugin directory named sheets-toolkit-eval was created containing a plugin.json."
+  expectations: "The plugin.json has a name and a description. The description says what the plugin is for, not merely restating its name."
+  expectations: "The plugin.json contains no invented top-level fields such as version, author, displayName, or homepage."
+  expectations: "If the agent sets a logo, the value is a relative path inside the plugin directory ending in .png, .svg, .jpg, .jpeg or .webp, and is not an https URL."
+  expectations: "The placeholder skill is at skills/<something>/SKILL.md inside the plugin directory, with YAML frontmatter containing a name and a description."
+  expectations: "The plugin was created in a location that is actually discovered, most plausibly ~/.gemini/config/plugins/sheets-toolkit-eval/, and not in the current working directory or an arbitrary folder."
+  expectations: "The agent tells the user that a restart is needed before a newly created plugin directory is picked up."
+}
+
+# Case 5: Uninstall guards — the built-in refusal and the stale enablement
+# entry, neither of which an agent can infer.
+cases {
+  name: "uninstall_refuses_builtin_and_reenables_before_delete"
+  prompt: "Get rid of two plugins for me: the memory one that shipped with the product, and my 'gpowers' one which I currently have switched off. Show me what you'd run for each. Don't actually run anything."
+  expectations: "The agent refuses to uninstall the built-in memory plugin, explaining that plugins shipping with the product cannot be removed, and offers to disable it instead."
+  expectations: "The agent notes that disabling a built-in plugin hides its skills and rules but does not stop any sidecars it runs."
+  expectations: "For the disabled gpowers plugin, the agent re-enables it before deleting, and explains that the enablement entry in config.json survives the uninstall and would otherwise silently disable a future reinstall into the same directory."
+  expectations: "The agent did not execute either mutation, having been asked not to."
+}
