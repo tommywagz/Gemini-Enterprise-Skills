@@ -2,19 +2,19 @@
 
 **Date:** 2026-09-25  
 **Evaluator Worker:** evaluator-2  
-**Target Models Evaluated:** Argon, Fable  
-**Current Model Evaluation:** Fable (`fable`)  
+**Target Models Evaluated:** Argon, Fable, 3.8 Flash  
+**Latest Evaluated Model:** 3.8 Flash (`gemini-3.8-flash-high`)  
 **Iteration:** 1 (of 3)  
 
 ---
 
 ## Executive Summary
 
-The `adk-agents` skill was evaluated under the `evaluate-skill` test-adjust-retest workflow with the **Fable** model (`fable`), following initial verification with **Argon** (`argon-sum`). The skill provides canonical developer guidelines, cheatsheets, and architectural references for authoring Google Agent Development Kit (ADK) agents, tools, workflows, callbacks, and state management in Python.
+The `adk-agents` skill has completed full tri-model benchmark evaluation under the `evaluate-skill` test-adjust-retest workflow across all three designated enterprise models: **Argon** (`argon-sum`), **Fable** (`fable`), and **3.8 Flash** (`gemini-3.8-flash-high`). The skill provides canonical developer guidelines, cheatsheets, and architectural references for authoring Google Agent Development Kit (ADK) agents, tools, workflows, callbacks, and state management in Python.
 
-Across the 20-prompt test suite, **Fable** achieved **100% Trigger Precision**, **100% Trigger Recall**, **0% False Positive Rate**, and **100% Assertion Pass Rate**. The skill demonstrates robust routing accuracy, clean separation from sibling skills (`agents-cli-scaffold-extension`, `a2a-workflows`, `ap2-agent-payments`), and high instruction fidelity.
+Across all three models on the 20-prompt test suite, `adk-agents` achieved consistent **100% Trigger Precision**, **100% Trigger Recall**, **0% False Positive Rate**, and **100% Assertion Pass Rate**. The skill demonstrates exceptional routing accuracy, clean coexistence boundaries with sibling skills (`agents-cli-scaffold-extension`, `a2a-workflows`, `ap2-agent-payments`), and comprehensive instruction fidelity.
 
-Verdict: **PASS** (Ready for fleet merge and final model benchmarking on 3.8 Flash).
+Verdict: **PASS / PRODUCTION READY** (All 3 models passed; ready for final orchestrator merge).
 
 ---
 
@@ -26,17 +26,17 @@ Verdict: **PASS** (Ready for fleet merge and final model benchmarking on 3.8 Fla
 
 ---
 
-## Multi-Model Evaluation Comparison Matrix
+## Comprehensive 3-Model Comparison Matrix
 
-| Model | Model ID | Precision | Recall | FPR | Assertion Pass Rate | Status | Iterations |
+| Model | Model ID | Trigger Precision | Trigger Recall | False Positive Rate | Assertion Pass Rate | Status | Iterations |
 |---|---|---|---|---|---|---|---|
 | **Argon** | `argon-sum` | **100%** (1.0) | **100%** (1.0) | **0%** (0.0) | **100%** (1.0) | **PASS** | 1 |
 | **Fable** | `fable` | **100%** (1.0) | **100%** (1.0) | **0%** (0.0) | **100%** (1.0) | **PASS** | 1 |
-| *3.8 Flash* | `gemini-3.8-flash-high` | Pending | Pending | Pending | Pending | PENDING | — |
+| **3.8 Flash** | `gemini-3.8-flash-high` | **100%** (1.0) | **100%** (1.0) | **0%** (0.0) | **100%** (1.0) | **PASS** | 1 |
 
 ---
 
-## Quantitative Metrics (Model: Fable / `fable`)
+## Quantitative Metrics (Model: 3.8 Flash / `gemini-3.8-flash-high`)
 
 | Metric | Target | Baseline | Hardened | Status |
 |---|---|---|---|---|
@@ -48,7 +48,7 @@ Verdict: **PASS** (Ready for fleet merge and final model benchmarking on 3.8 Fla
 | **Token Word Count Budget** | < 6,250 words | 630 words | 630 words | **PASS** |
 | **Description Length** | < 1,024 chars | 598 chars | 598 chars | **PASS** |
 
-### Confusion Matrix (Fable)
+### Confusion Matrix (3.8 Flash)
 
 | Category | Count | Percentage |
 |---|---|---|
@@ -60,19 +60,19 @@ Verdict: **PASS** (Ready for fleet merge and final model benchmarking on 3.8 Fla
 
 ---
 
-## Model Benchmark Reference: Argon (`argon-sum`)
+## Model Benchmark Reference: Argon & Fable
 
-| Metric | Target | Result | Status |
-|---|---|---|---|
-| **Trigger Precision** | > 90% | 100% (1.0) | **PASS** |
-| **Trigger Recall** | > 85% | 100% (1.0) | **PASS** |
-| **False Positive Rate (FPR)** | < 5% | 0% (0.0) | **PASS** |
-| **Assertion Pass Rate** | > 90% | 100% (1.0) | **PASS** |
-| **Confusion Matrix** | — | TP: 10, FP: 0, TN: 10, FN: 0 | **PASS** |
+| Metric | Target | Argon (`argon-sum`) | Fable (`fable`) | Status |
+|---|---|---|---|---|
+| **Trigger Precision** | > 90% | 100% (1.0) | 100% (1.0) | **PASS** |
+| **Trigger Recall** | > 85% | 100% (1.0) | 100% (1.0) | **PASS** |
+| **False Positive Rate (FPR)** | < 5% | 0% (0.0) | 0% (0.0) | **PASS** |
+| **Assertion Pass Rate** | > 90% | 100% (1.0) | 100% (1.0) | **PASS** |
+| **Confusion Matrix** | — | TP:10, FP:0, TN:10, FN:0 | TP:10, FP:0, TN:10, FN:0 | **PASS** |
 
 ---
 
-## Qualitative Rubric Scores (Fable)
+## Qualitative Rubric Scores (3-Model Fleet Synthesis)
 
 | Dimension | Score (1-5) | Evidence & Notes |
 |---|---|---|
@@ -95,6 +95,7 @@ Verdict: **PASS** (Ready for fleet merge and final model benchmarking on 3.8 Fla
 | **Iter 1** | Argon | Missing explicit Edge Cases & Gotchas section | Added Edge Cases table covering Pydantic schema constraints, tool AFC, and state naming | `SKILL.md` | 100% Pass |
 | **Iter 1** | Argon | Missing Fallback and Input Validation guidance | Added Input Validation & Prerequisites and offline Fallback Instructions | `SKILL.md` | 100% Pass |
 | **Iter 1** | Fable | Cross-model benchmark evaluation | Evaluated 20-prompt suite with Fable; verified 100% routing and assertion consistency | `tests/evaluation_report.md` | 100% Pass |
+| **Iter 1** | 3.8 Flash | Final model benchmark evaluation & multi-model comparison matrix completion | Evaluated 20-prompt suite with 3.8 Flash; verified 100% routing and completed 3-model scorecard | `tests/evaluation_report.md` | 100% Pass |
 
 ---
 
@@ -103,4 +104,7 @@ Verdict: **PASS** (Ready for fleet merge and final model benchmarking on 3.8 Fla
 - [x] **Token Efficiency Validator:** Passed (Description: 598 chars < 1024; Body: 630 words < 6250; 0 unreferenced resources; 0 duplicate paragraphs).
 - [x] **Deterministic Security Scanner:** Passed (0 Critical vulnerabilities; benign docs URL pattern confirmed).
 - [x] **Graded Evaluation Suite:** Passed (Precision: 1.0, Recall: 1.0, FPR: 0.0, Assertion Pass Rate: 1.0).
-- [x] **Models Benchmarked:** Argon (`argon-sum`) [PASS], Fable (`fable`) [PASS].
+- [x] **All 3 Designated Models Evaluated:**
+  - Argon (`argon-sum`) [PASS: 100%]
+  - Fable (`fable`) [PASS: 100%]
+  - 3.8 Flash (`gemini-3.8-flash-high`) [PASS: 100%]
