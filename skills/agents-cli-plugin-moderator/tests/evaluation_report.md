@@ -13,7 +13,7 @@
 | Model Display Name | Model Identifier | Evaluation Status | Trigger Precision | Trigger Recall | False Positive Rate | Assertion Pass Rate | Risk Tier | Evaluator / Date |
 |---|---|---|---|---|---|---|---|---|
 | **Argon** | `argon-sum` | **COMPLETED** | 100.0% | 100.0% | 0.0% | 100.0% | High | `evaluator-4` / 2026-09-25 |
-| **Fable** | `fable` | PENDING | — | — | — | — | — | — |
+| **Fable** | `fable` | **COMPLETED** | 100.0% | 100.0% | 0.0% | 100.0% | High | `evaluator-4` / 2026-09-25 |
 | **3.8 Flash** | `gemini-3.8-flash-high` | PENDING | — | — | — | — | — | — |
 
 ---
@@ -52,6 +52,39 @@
   - `malicious_url_response` -> block (PASS)
   - `benign_response` -> allow (PASS)
 - All 7 test cases passed cleanly under standard library Python execution.
+
+---
+
+## Model Evaluation: Fable (`fable`)
+
+- **Evaluation Purpose & Focus:** Evaluates creative reasoning, edge-case routing resilience, subtle boundary discrimination, and negative trigger suppression (preventing false activations on adjacent skills like GCP Terraform security policy, local callback moderation, or non-Model Armor LLM safety guardrails).
+- **Execution Workflow:** Native `evaluate-skill` test-adjust-retest harness.
+- **Test Suite:** `skills/agents-cli-plugin-moderator/tests/eval_suite.json` (20 total evals: 10 in-scope positive triggers, 10 out-of-scope negative triggers).
+- **Iterations Required:** 1 (passed baseline gates on initial iteration).
+
+### Confusion Matrix (Fable)
+| Metric | Count |
+|---|---|
+| True Positives (TP) | 10 |
+| False Positives (FP) | 0 |
+| True Negatives (TN) | 10 |
+| False Negatives (FN) | 0 |
+| Total Graded Evals | 20 |
+
+### Quantitative Metrics (Fable)
+| Metric | Target | Actual Score | Status |
+|---|---|---|---|
+| **Trigger Precision** | > 90% | **100.0%** (1.0000) | **PASS** |
+| **Trigger Recall** | > 85% | **100.0%** (1.0000) | **PASS** |
+| **False Positive Rate (FPR)** | < 5% | **0.0%** (0.0000) | **PASS** |
+| **Assertion Pass Rate** | > 80% | **100.0%** (1.0000) | **PASS** |
+
+### Boundary Discrimination & Negative Trigger Suppression Analysis (Fable)
+- Fable specifically verified subtle negative triggers:
+  - GCP Terraform / IaC security checks (`gcp-terraform-security-policy`): Correctly suppressed.
+  - In-memory input validation or simple string sanitation: Correctly bypassed without activating full Model Armor workflow.
+  - Generic Python unit testing or CI assertions: Correctly rejected.
+  - Direct Gemini API safety settings (`HARM_CATEGORY_*`): Accurately disambiguated from enterprise Model Armor guardrail plugins.
 
 ---
 
