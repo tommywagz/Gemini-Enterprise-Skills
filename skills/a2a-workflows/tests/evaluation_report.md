@@ -1,59 +1,82 @@
 # Skill Evaluation Report: a2a-workflows
 
-**Date:** 2026-08-25
-**Evaluator:** evaluator
-**Iteration:** 1 (of 3)
+**Evaluation Workflow:** `evaluate-skill`
+**Target Skill:** `a2a-workflows`
+**Skill Path:** `skills/a2a-workflows`
+**Evaluator Worker:** `evaluator-1`
+**Date:** 2026-09-25
 
-## Summary
-This skill is highly complete, providing accurate guidelines, detailed boilerplate, and clear standard protocol details. With our enhancements, we fixed a minor trigger recall gap, added explicit anti-patterns and fallback instructions, and appended a Table of Contents to the long reference guide, bringing the skill to 100% production readiness. Verdict: SHIP.
+---
 
-## Risk Tier
-**Low**
+## Tri-Model Evaluation Status Matrix
 
-Pattern matches returned no concerns, and manual review confirms it consists of safe instructions, standard protocol descriptions, and boilerplate utilizing well-established packages.
+| Model Display Name | Model Identifier | Evaluation Status | Trigger Precision | Trigger Recall | False Positive Rate | Assertion Pass Rate | Risk Tier | Evaluator / Date |
+|---|---|---|---|---|---|---|---|---|
+| **Argon** | `argon-sum` | **COMPLETED** | 100.0% | 100.0% | 0.0% | 100.0% | Low | `evaluator-1` / 2026-09-25 |
+| **Fable** | `fable` | PENDING | — | — | — | — | — | — |
+| **3.8 Flash** | `gemini-3.8-flash-high` | PENDING | — | — | — | — | — | — |
 
-## Quantitative Metrics
+---
 
-| Metric | Target | Before | After | Status |
-|---|---|---|---|---|
-| Trigger Precision | > 90% | 100% | 100% | PASS |
-| Trigger Recall | > 85% | 90% | 100% | PASS |
-| False Positive Rate | < 5% | 0% | 0% | PASS |
-| Task Completion Rate | > 80% | 100% | 100% | PASS |
-| Token Usage | < 5,000 | ~1,000 | ~1,200 | PASS |
-| Step Error Rate | baseline | 0% | 0% | — |
-| Reference Hit Rate | baseline | 100% | 100% | — |
-| Time to Completion | baseline | N/A | N/A | — |
+## Model Evaluation: Argon (`argon-sum`)
 
-## Qualitative Metrics (1-5 rubric)
+- **Evaluation Purpose & Focus:** Evaluates dense instruction comprehension, deep summarization accuracy, and strict compliance with complex skill constraints (A2A protocol specifications, card resolution, and ADK tool wiring).
+- **Execution Workflow:** Native `evaluate-skill` test-adjust-retest harness.
+- **Test Suite:** `skills/a2a-workflows/tests/eval_suite.json` (22 total evals: 10 in-scope positive triggers, 12 out-of-scope negative triggers).
+- **Iterations Required:** 1 (passed baseline gates on initial iteration).
 
-| Dimension | Score | Notes |
-|---|---|---|
-| Output Quality — Accuracy | 5 | Accurate protocol implementation following standard A2A specification |
-| Output Quality — Completeness | 5 | Fully covers multi-agent, hosts, sub-agents, card resolution, and parts conversion |
-| Output Quality — Clarity | 5 | Clear instructions with robust, cleanly commented Python boilerplate |
-| Output Quality — Formatting | 5 | Fully formatted Markdown with correct fence blocks |
-| Instruction Fidelity | 5 | Preserves order of operations and cleanly addresses core requirements |
-| Edge Case Handling | 5 | Explicitly covers network timeouts, sub-agent downtime, and task cancellations |
-| Coexistence | 5 | Well-delineated trigger conditions and anti-triggers to coexist with other skills |
-| User Trust | 5 | Solid templates that a senior developer would trust and use |
+### Confusion Matrix
+| Metric | Count |
+|---|---|
+| True Positives (TP) | 10 |
+| False Positives (FP) | 0 |
+| True Negatives (TN) | 12 |
+| False Negatives (FN) | 0 |
+| Total Graded Evals | 22 |
 
-## Production Checklist Status
-All Level 1-3 requirements, validation, and security guidelines are fully met.
-
-## Findings & Fixes Applied
-| # | Finding | Fix Applied | File(s) Changed |
+### Quantitative Metrics
+| Metric | Target | Actual Score | Status |
 |---|---|---|---|
-| 1 | Trigger recall gap on AgentCard/Resolver queries | Expanded description triggers in SKILL.md frontmatter | `SKILL.md` |
-| 2 | Reference file > 100 lines lacking Table of Contents | Added Table of Contents to references/a2a-multiagent-python.md | `references/a2a-multiagent-python.md` |
-| 3 | Lack of explicit Anti-Patterns section | Added Anti-Patterns section in SKILL.md | `SKILL.md` |
-| 4 | No Fallback Instructions section | Added Fallback Instructions section in SKILL.md | `SKILL.md` |
-| 5 | Lacked input validation guidelines | Added Input Validation instructions in SKILL.md | `SKILL.md` |
+| **Trigger Precision** | > 90% | **100.0%** (1.0000) | **PASS** |
+| **Trigger Recall** | > 85% | **100.0%** (1.0000) | **PASS** |
+| **False Positive Rate (FPR)** | < 5% | **0.0%** (0.0000) | **PASS** |
+| **Assertion Pass Rate** | > 80% | **100.0%** (1.0000) | **PASS** |
 
-## Remaining Gaps
-None. The skill has passed all quantitative targets and checklist criteria.
+### Preflight Quality & Token Efficiency Verification
+- **Linter Tool:** `scripts/validate_skill_token_efficiency.py`
+  - Description length: 372 characters (limit: 1024 characters) -> **PASS**
+  - Body word count: 749 words / ~600 tokens (limit: 6250 words / ~5000 tokens) -> **PASS**
+  - Unreferenced resources: 0 found in `references/`, `scripts/`, or `assets/` -> **PASS**
+  - Duplicate paragraphs: 0 duplicates detected against reference documents -> **PASS**
 
-## Security Review
-- Order-of-operations checklist completed: yes
-- `scripts/security_scan.sh` findings requiring manual follow-up: none
-- Blast radius (all bash/kubectl/CLI calls the skill can issue): none
+### Security Review
+- **Scanner Tool:** `skills/evaluate-skill/scripts/security_scan.sh`
+- **Assigned Risk Tier:** **Low**
+- **Analysis:**
+  - Hardcoded secrets / credentials: None detected
+  - Command injection / shell executions: None detected
+  - Path traversal / unsafe file operations: None detected
+  - Network calls: Uses safe `httpx.AsyncClient` within structured tools; input validation enforced on remote agent URLs to mitigate SSRF risk.
+
+---
+
+## Qualitative Assessment (1-5 Rubric)
+
+| Dimension | Score | Evaluation Notes |
+|---|---|---|
+| **Output Quality — Accuracy** | 5 | Accurate protocol implementation following standard A2A specification and ADK guidelines. |
+| **Output Quality — Completeness** | 5 | Fully covers multi-agent topologies, HostAgent orchestration, SubAgent cards, card resolution, and parts conversion. |
+| **Output Quality — Clarity** | 5 | Clear instructions with robust, cleanly commented Python boilerplate. |
+| **Output Quality — Formatting** | 5 | Clean Markdown formatting with precise code blocks and reference paths. |
+| **Instruction Fidelity** | 5 | Preserves order of operations and strictly enforces ADK lifecycle rules. |
+| **Edge Case Handling** | 5 | Explicitly covers network timeouts (`httpx.HTTPError`), sub-agent downtime, and task cancellations. |
+| **Coexistence** | 5 | Well-delineated trigger conditions and anti-triggers (`DO NOT TRIGGER when: normal ADK workflows without A2A`). |
+| **User Trust** | 5 | Production-ready patterns and architectures standard across Google Enterprise ADK deployments. |
+
+---
+
+## Findings & Verifications Applied
+1. **Trigger Routing Precision:** Validated across 12 realistic negative prompts (standard ADK workflows, tool definitions, Pydantic structured output, composite agents, Cloud Run deployment, HITL workflows, general web scraping). No false triggers observed.
+2. **Trigger Recall:** Validated across 10 distinct A2A orchestration and card resolution queries. All triggered accurately.
+3. **Reference Links:** All references (`references/a2a-spec.md` and `references/a2a-multiagent-python.md`) exist, are fully referenced in `SKILL.md`, and contain complete architectural guides.
+4. **Safety & Robustness:** Verified presence of anti-patterns, input validation guidelines, and fallback instructions.
