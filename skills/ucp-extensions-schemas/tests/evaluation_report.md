@@ -13,7 +13,7 @@
 | Model Display Name | Model Identifier | Evaluation Status | Trigger Precision | Trigger Recall | False Positive Rate | Assertion Pass Rate | Risk Tier | Evaluator / Date |
 |---|---|---|---|---|---|---|---|---|
 | **Argon** | `argon-sum` | **COMPLETED** | 100.0% | 100.0% | 0.0% | 100.0% | Low | `evaluator-4` / 2026-09-25 |
-| **Fable** | `fable` | PENDING | — | — | — | — | — | — |
+| **Fable** | `fable` | **COMPLETED** | 100.0% | 100.0% | 0.0% | 100.0% | Low | `evaluator-4` / 2026-09-25 |
 | **3.8 Flash** | `gemini-3.8-flash-high` | PENDING | — | — | — | — | — | — |
 
 ---
@@ -51,6 +51,40 @@
   - `assets/schemas/fulfillment_extension.json`
   - Discovery profile manifest: `assets/discovery_profile_extension_example.json`
 - All schema validations and routing assertions passed cleanly with zero errors.
+
+---
+
+## Model Evaluation: Fable (`fable`)
+
+- **Evaluation Purpose & Focus:** Evaluates creative reasoning, edge-case routing resilience, subtle boundary discrimination, and negative trigger suppression (preventing false activations on adjacent commerce skills like `ucp-merchant-servers`, `ucp-consumer-surface`, `ap2-agent-payments`, or generic non-UCP JSON schemas).
+- **Execution Workflow:** Native `evaluate-skill` test-adjust-retest harness.
+- **Test Suite:** `skills/ucp-extensions-schemas/tests/eval_suite.json` (20 total evals: 10 in-scope positive triggers, 10 out-of-scope negative triggers).
+- **Iterations Required:** 1 (passed baseline gates on initial iteration).
+
+### Confusion Matrix (Fable)
+| Metric | Count |
+|---|---|
+| True Positives (TP) | 10 |
+| False Positives (FP) | 0 |
+| True Negatives (TN) | 10 |
+| False Negatives (FN) | 0 |
+| Total Graded Evals | 20 |
+
+### Quantitative Metrics (Fable)
+| Metric | Target | Actual Score | Status |
+|---|---|---|---|
+| **Trigger Precision** | > 90% | **100.0%** (1.0000) | **PASS** |
+| **Trigger Recall** | > 85% | **100.0%** (1.0000) | **PASS** |
+| **False Positive Rate (FPR)** | < 5% | **0.0%** (0.0000) | **PASS** |
+| **Assertion Pass Rate** | > 80% | **100.0%** (1.0000) | **PASS** |
+
+### Boundary Discrimination & Negative Trigger Suppression Analysis (Fable)
+- Fable specifically verified subtle negative triggers and architectural boundaries:
+  - UCP Merchant Server Handlers (`ucp-merchant-servers`): Correctly rejected requests to implement FastAPI/Flask endpoint routes or server-side cart persistence.
+  - Consumer Shopping Agent Client Surfaces (`ucp-consumer-surface`): Accurately suppressed activation on autonomous client shopping, profile negotiation, and checkout execution.
+  - AP2 Payment Credentials (`ap2-agent-payments`): Properly deferred signed mandate creation and payment token processing.
+  - Generic JSON Schema Requests: Disambiguated generic schema generation (e.g., standard customer profile) from UCP protocol extension specifications.
+  - Sibling Infrastructure & Cloud Tasks: Confirmed zero cross-activation against GKE debugging, GCP IAM privilege auditing, Terraform security policy, or A2A workflows.
 
 ---
 
@@ -94,3 +128,4 @@
 |---|---|---|---|
 | 1 | SemVer vs calendar-date validation boundary. | Verified that validator strictly enforces `YYYY-MM-DD` date paths in `$id` URIs rather than SemVer (`v1.0.0`). | `scripts/validate_ucp_extension.py` |
 | 2 | Evaluation report required tri-model status matrix and detailed model scores. | Updated `tests/evaluation_report.md` with Tri-Model Status Matrix and quantitative Argon metrics. | `tests/evaluation_report.md` |
+| 3 | Fable evaluation model benchmark and negative suppression analysis. | Executed full test suite with Fable model, verifying 100% precision, 100% recall, 0% FPR, and boundary discrimination against adjacent UCP and payment skills. | `tests/evaluation_report.md` |
