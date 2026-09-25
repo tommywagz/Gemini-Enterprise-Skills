@@ -7,7 +7,7 @@ a seed from `preload_memory.py` actually landed, debugging "why didn't my
 agent recall X", or building a small support tool that inspects what an
 agent remembers about a user. Grounded in the Agent Platform Memory Bank
 API: https://docs.cloud.google.com/gemini-enterprise-agent-platform/scale/memory-bank/api-quickstart,
-.../fetch-memories, and .../revisions (fetched 2026-09-11 -- re-verify
+https://docs.cloud.google.com/gemini-enterprise-agent-platform/scale/memory-bank/fetch-memories, and https://docs.cloud.google.com/gemini-enterprise-agent-platform/scale/memory-bank/revisions (fetched 2026-09-11 -- re-verify
 before depending on this for anything beyond ad hoc inspection).
 
 Modes:

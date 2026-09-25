@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "Memory Bank Seed Entry List",
-  "description": "Canonical local file format used by scripts/preload_memory.py (--facts-file) and scripts/load_memory.py (--dry-run --local-file). Each entry maps to one pre-extracted fact that Memory Bank's direct_memories_source / GenerateMemories or CreateMemory API can consolidate or store. Grounded in the Agent Platform Memory Bank API (https://docs.cloud.google.com/gemini-enterprise-agent-platform/scale/memory-bank/api-quickstart and .../generate-memories) as of 2026-09-11 -- re-verify field names against those pages before depending on this for a production seeding pipeline, the API is still evolving.",
+  "description": "Canonical local file format used by scripts/preload_memory.py (--facts-file) and scripts/load_memory.py (--dry-run --local-file). Each entry maps to one pre-extracted fact that Memory Bank's direct_memories_source / GenerateMemories or CreateMemory API can consolidate or store. Grounded in the Agent Platform Memory Bank API (https://docs.cloud.google.com/gemini-enterprise-agent-platform/scale/memory-bank/api-quickstart and https://docs.cloud.google.com/gemini-enterprise-agent-platform/scale/memory-bank/generate-memories) as of 2026-09-11 -- re-verify field names against those pages before depending on this for a production seeding pipeline, the API is still evolving.",
   "type": "array",
   "items": {
     "type": "object",
