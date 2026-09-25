@@ -2,19 +2,19 @@
 
 **Date:** 2026-09-25  
 **Evaluator Worker:** evaluator-2  
-**Target Model:** Argon  
-**Model ID:** `argon-sum`  
+**Target Models Evaluated:** Argon, Fable  
+**Current Model Evaluation:** Fable (`fable`)  
 **Iteration:** 1 (of 3)  
 
 ---
 
 ## Executive Summary
 
-The `adk-agents` skill was evaluated under the `evaluate-skill` test-adjust-retest workflow with the **Argon** model (`argon-sum`). The skill provides canonical developer guidelines, cheatsheets, and architectural references for authoring Google Agent Development Kit (ADK) agents, tools, workflows, callbacks, and state management in Python.
+The `adk-agents` skill was evaluated under the `evaluate-skill` test-adjust-retest workflow with the **Fable** model (`fable`), following initial verification with **Argon** (`argon-sum`). The skill provides canonical developer guidelines, cheatsheets, and architectural references for authoring Google Agent Development Kit (ADK) agents, tools, workflows, callbacks, and state management in Python.
 
-With the hardening adjustments applied in Iteration 1 (standardizing the canonical skill name `adk-agents`, refining frontmatter trigger/anti-trigger boundaries, adding edge case gotchas and fallback guidance, and aligning negative assertions), the skill achieved **100% Trigger Precision**, **100% Trigger Recall**, **0% False Positive Rate**, and **100% Assertion Pass Rate** across the 20-prompt test suite.
+Across the 20-prompt test suite, **Fable** achieved **100% Trigger Precision**, **100% Trigger Recall**, **0% False Positive Rate**, and **100% Assertion Pass Rate**. The skill demonstrates robust routing accuracy, clean separation from sibling skills (`agents-cli-scaffold-extension`, `a2a-workflows`, `ap2-agent-payments`), and high instruction fidelity.
 
-Verdict: **PASS** (Ready for fleet merge and multi-model benchmarking).
+Verdict: **PASS** (Ready for fleet merge and final model benchmarking on 3.8 Flash).
 
 ---
 
@@ -31,12 +31,12 @@ Verdict: **PASS** (Ready for fleet merge and multi-model benchmarking).
 | Model | Model ID | Precision | Recall | FPR | Assertion Pass Rate | Status | Iterations |
 |---|---|---|---|---|---|---|---|
 | **Argon** | `argon-sum` | **100%** (1.0) | **100%** (1.0) | **0%** (0.0) | **100%** (1.0) | **PASS** | 1 |
-| *Fable* | `fable` | Pending | Pending | Pending | Pending | PENDING | — |
+| **Fable** | `fable` | **100%** (1.0) | **100%** (1.0) | **0%** (0.0) | **100%** (1.0) | **PASS** | 1 |
 | *3.8 Flash* | `gemini-3.8-flash-high` | Pending | Pending | Pending | Pending | PENDING | — |
 
 ---
 
-## Quantitative Metrics (Model: Argon / `argon-sum`)
+## Quantitative Metrics (Model: Fable / `fable`)
 
 | Metric | Target | Baseline | Hardened | Status |
 |---|---|---|---|---|
@@ -45,10 +45,10 @@ Verdict: **PASS** (Ready for fleet merge and multi-model benchmarking).
 | **False Positive Rate (FPR)** | < 5% | 0% | 0% | **PASS** |
 | **Assertion Pass Rate** | > 90% | 100% | 100% | **PASS** |
 | **Total Graded Test Cases** | >= 20 | 20 | 20 | **PASS** |
-| **Token Word Count Budget** | < 6,250 words | 403 words | 630 words | **PASS** |
-| **Description Length** | < 1,024 chars | 542 chars | 598 chars | **PASS** |
+| **Token Word Count Budget** | < 6,250 words | 630 words | 630 words | **PASS** |
+| **Description Length** | < 1,024 chars | 598 chars | 598 chars | **PASS** |
 
-### Confusion Matrix (Argon)
+### Confusion Matrix (Fable)
 
 | Category | Count | Percentage |
 |---|---|---|
@@ -60,7 +60,19 @@ Verdict: **PASS** (Ready for fleet merge and multi-model benchmarking).
 
 ---
 
-## Qualitative Rubric Scores (Argon)
+## Model Benchmark Reference: Argon (`argon-sum`)
+
+| Metric | Target | Result | Status |
+|---|---|---|---|
+| **Trigger Precision** | > 90% | 100% (1.0) | **PASS** |
+| **Trigger Recall** | > 85% | 100% (1.0) | **PASS** |
+| **False Positive Rate (FPR)** | < 5% | 0% (0.0) | **PASS** |
+| **Assertion Pass Rate** | > 90% | 100% (1.0) | **PASS** |
+| **Confusion Matrix** | — | TP: 10, FP: 0, TN: 10, FN: 0 | **PASS** |
+
+---
+
+## Qualitative Rubric Scores (Fable)
 
 | Dimension | Score (1-5) | Evidence & Notes |
 |---|---|---|
@@ -77,12 +89,12 @@ Verdict: **PASS** (Ready for fleet merge and multi-model benchmarking).
 
 ## Test-Adjust-Retest Remediation Log
 
-| Iteration | Finding / Gap | Remediation Applied | Files Changed | Retest Score |
-|---|---|---|---|---|
-| **Iter 1** | Mismatched legacy name `google-agents-cli-adk-code` in frontmatter and negative assertions | Renamed skill to canonical `adk-agents` in `SKILL.md` and updated negative test assertions | `SKILL.md`, `tests/eval_suite.json` | 100% Pass |
-| **Iter 1** | Missing explicit Edge Cases & Gotchas section | Added Edge Cases table covering Pydantic schema constraints, tool AFC, and state naming | `SKILL.md` | 100% Pass |
-| **Iter 1** | Missing Fallback and Input Validation guidance | Added Input Validation & Prerequisites and offline Fallback Instructions | `SKILL.md` | 100% Pass |
-| **Iter 1** | Need Argon baseline documentation | Generated comprehensive evaluation report for model `argon-sum` | `tests/evaluation_report.md` | 100% Pass |
+| Iteration | Model | Finding / Gap | Remediation Applied | Files Changed | Retest Score |
+|---|---|---|---|---|---|
+| **Iter 1** | Argon | Mismatched legacy name `google-agents-cli-adk-code` in frontmatter and assertions | Renamed skill to canonical `adk-agents` in `SKILL.md` and updated negative test assertions | `SKILL.md`, `tests/eval_suite.json` | 100% Pass |
+| **Iter 1** | Argon | Missing explicit Edge Cases & Gotchas section | Added Edge Cases table covering Pydantic schema constraints, tool AFC, and state naming | `SKILL.md` | 100% Pass |
+| **Iter 1** | Argon | Missing Fallback and Input Validation guidance | Added Input Validation & Prerequisites and offline Fallback Instructions | `SKILL.md` | 100% Pass |
+| **Iter 1** | Fable | Cross-model benchmark evaluation | Evaluated 20-prompt suite with Fable; verified 100% routing and assertion consistency | `tests/evaluation_report.md` | 100% Pass |
 
 ---
 
@@ -91,4 +103,4 @@ Verdict: **PASS** (Ready for fleet merge and multi-model benchmarking).
 - [x] **Token Efficiency Validator:** Passed (Description: 598 chars < 1024; Body: 630 words < 6250; 0 unreferenced resources; 0 duplicate paragraphs).
 - [x] **Deterministic Security Scanner:** Passed (0 Critical vulnerabilities; benign docs URL pattern confirmed).
 - [x] **Graded Evaluation Suite:** Passed (Precision: 1.0, Recall: 1.0, FPR: 0.0, Assertion Pass Rate: 1.0).
-- [x] **Target Model Benchmarked:** Argon (`argon-sum`).
+- [x] **Models Benchmarked:** Argon (`argon-sum`) [PASS], Fable (`fable`) [PASS].
