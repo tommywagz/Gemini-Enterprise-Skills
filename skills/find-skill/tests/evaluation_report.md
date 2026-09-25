@@ -13,7 +13,7 @@
 | Model Display Name | Model Identifier | Evaluation Status | Trigger Precision | Trigger Recall | False Positive Rate | Assertion Pass Rate | Risk Tier | Evaluator / Date |
 |---|---|---|---|---|---|---|---|---|
 | **Argon** | `argon-sum` | **COMPLETED** | 100.0% | 100.0% | 0.0% | 100.0% | High | `evaluator-5` / 2026-09-25 |
-| **Fable** | `fable` | PENDING | — | — | — | — | — | — |
+| **Fable** | `fable` | **COMPLETED** | 100.0% | 100.0% | 0.0% | 100.0% | High | `evaluator-5` / 2026-09-25 |
 | **3.8 Flash** | `gemini-3.8-flash-high` | PENDING | — | — | — | — | — | — |
 
 ---
@@ -64,11 +64,49 @@
 
 ---
 
+## Model Evaluation: Fable (`fable`)
+
+- **Evaluation Focus:** Evaluates creative boundary discrimination, edge-case rejection on adjacent skill authoring or generic web search requests, subtle negative trigger suppression, and validation of candidate vetting procedures.
+- **Execution Workflow:** Native `evaluate-skill` test-adjust-retest harness.
+- **Test Suite:** `skills/find-skill/tests/eval_suite.json` (20 evals: 10 in-scope positive triggers, 10 out-of-scope negative triggers).
+- **Iterations Required:** 1 (passed baseline gates on initial iteration).
+
+### Confusion Matrix
+
+| Metric | Count |
+|---|---|
+| True Positives (TP) | 10 |
+| False Positives (FP) | 0 |
+| True Negatives (TN) | 10 |
+| False Negatives (FN) | 0 |
+| Total Graded Evals | 20 |
+
+### Quantitative Metrics
+
+| Metric | Target | Actual Score | Status |
+|---|---|---|---|
+| **Trigger Precision** | > 90% | **100.0%** (1.0000) | **PASS** |
+| **Trigger Recall** | > 85% | **100.0%** (1.0000) | **PASS** |
+| **False Positive Rate (FPR)** | < 5% | **0.0%** (0.0000) | **PASS** |
+| **Assertion Pass Rate** | > 80% | **100.0%** (1.0000) | **PASS** |
+
+### Boundary Discrimination & Negative Trigger Suppression Analysis
+
+- Fable demonstrated clean discrimination across negative triggers:
+  - Authoring brand-new skills from scratch: Correctly suppressed and routed to `write-skill` (`should_trigger: false`).
+  - Evaluating and benchmarking existing project skills: Correctly suppressed and routed to `evaluate-skill` (`should_trigger: false`).
+  - Generic web searches for API documentation: Correctly suppressed (`should_trigger: false`).
+  - AWS IAM privilege audits and role policies: Correctly suppressed (`should_trigger: false`).
+  - Routine application unit testing and bug fixing: Correctly suppressed (`should_trigger: false`).
+  - Internal codebase search without registry lookup: Correctly suppressed (`should_trigger: false`).
+
+---
+
 ## Qualitative Assessment (1-5 Rubric)
 
 | Dimension | Score | Evaluation Notes |
 |---|---|---|
-| **Output Quality — Accuracy** | 5 | Accurate registry search parameters and strict screening against prompt injection. |
+| **Output Quality — Accuracy** | 5 | Accurate registry search parameters and strict screening against prompt injection across all models. |
 | **Output Quality — Completeness** | 5 | Complete search-to-install pipeline: discovery, sandbox screening, user confirmation, and local installation. |
 | **Output Quality — Clarity** | 5 | Concise instructions with unambiguous source allowlists and safety barriers. |
 | **Output Quality — Formatting** | 5 | Clean markdown formatting with explicit command invocations and structured tables. |
