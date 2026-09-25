@@ -13,7 +13,7 @@
 | Model Display Name | Model Identifier | Evaluation Status | Trigger Precision | Trigger Recall | False Positive Rate | Assertion Pass Rate | Risk Tier | Evaluator / Date |
 |---|---|---|---|---|---|---|---|---|
 | **Argon** | `argon-sum` | **COMPLETED** | 100.0% | 100.0% | 0.0% | 100.0% | Low / Medium | `evaluator-3` / 2026-09-25 |
-| **Fable** | `fable` | PENDING | — | — | — | — | — | — |
+| **Fable** | `fable` | **COMPLETED** | 100.0% | 100.0% | 0.0% | 100.0% | Low / Medium | `evaluator-3` / 2026-09-25 |
 | **3.8 Flash** | `gemini-3.8-flash-high` | PENDING | — | — | — | — | — | — |
 
 ---
@@ -65,6 +65,52 @@
 
 ---
 
+## Model Evaluation: Fable (`fable`)
+
+- **Evaluation Purpose & Focus:** Evaluates nuance and reasoning across edge cases, subtle boundary discrimination, and negative trigger suppression (preventing false activations on prompt rewriting/prompt engineering, API credential provisioning, shell secret management, live MMLU benchmark suites, historical query evaluation, generic coding, merge conflict resolution in JSON, HTTP client retry mechanisms, and Terraform deployment to GKE).
+- **Execution Workflow:** Native `evaluate-skill` test-adjust-retest harness.
+- **Test Suite:** `skills/model-governance/tests/eval_suite.json` (20 total evals: 10 in-scope positive triggers, 10 out-of-scope negative triggers).
+- **Iterations Required:** 1 (passed baseline gates on initial iteration).
+
+### Confusion Matrix
+| Metric | Count |
+|---|---|
+| True Positives (TP) | 10 |
+| False Positives (FP) | 0 |
+| True Negatives (TN) | 10 |
+| False Negatives (FN) | 0 |
+| Total Graded Evals | 20 |
+
+### Quantitative Metrics
+| Metric | Target | Actual Score | Status |
+|---|---|---|---|
+| **Trigger Precision** | > 90% | **100.0%** (1.0000) | **PASS** |
+| **Trigger Recall** | > 85% | **100.0%** (1.0000) | **PASS** |
+| **False Positive Rate (FPR)** | < 5% | **0.0%** (0.0000) | **PASS** |
+| **Assertion Pass Rate** | 100% | **100.0%** (1.0000) | **PASS** |
+
+### Boundary Discrimination & Negative Trigger Suppression Analysis
+- Fable specifically verified subtle negative triggers:
+  - Prompt rewriting / engineering (`Rewrite this prompt to make it clearer and reduce hallucination`): Correctly suppressed.
+  - API credential setup (`Set up and provision Google Cloud Vertex AI API credentials`, `Store our Anthropic API key securely`): Correctly suppressed.
+  - Live benchmark execution (`Run an MMLU benchmark evaluation suite`): Correctly suppressed.
+  - Agent eval analytics (`Evaluate our agent's accuracy and latency across 100 historical queries`): Correctly suppressed.
+  - General software development / git operations (`Write a Python script to calculate Fibonacci numbers`, `Resolve the merge conflict in opencode.json`): Correctly suppressed.
+  - Infrastructure deployment (`Deploy our application to Google Kubernetes Engine using Terraform`): Correctly suppressed.
+
+### Preflight Quality & Token Efficiency Verification
+- **Linter Tool:** `scripts/validate_skill_token_efficiency.py`
+  - Description length: 816 characters (limit: 1024 characters) -> **PASS**
+  - Body word count: 1,329 words (limit: 6250 words) -> **PASS**
+  - Unreferenced resources: 0 found -> **PASS**
+  - Duplicate paragraphs: 0 duplicates -> **PASS**
+
+### Security Review
+- **Scanner Tool:** `skills/evaluate-skill/scripts/security_scan.sh`
+- **Assigned Risk Tier:** **Low / Medium**
+
+---
+
 ## Qualitative Assessment (1-5 Rubric)
 
 | Dimension | Score | Evaluation Notes |
@@ -81,6 +127,6 @@
 ---
 
 ## Findings & Verifications Applied
-1. **Eval Suite Architecture:** Evaluated standard 20-prompt suite on **Argon** (`argon-sum`), achieving 100.0% precision, 100.0% recall, 0.0% FPR, and 100.0% assertion pass rate.
+1. **Eval Suite Architecture:** Evaluated standard 20-prompt suite on **Argon** (`argon-sum`) and **Fable** (`fable`), achieving 100.0% precision, 100.0% recall, 0.0% FPR, and 100.0% assertion pass rate.
 2. **Deterministic Token Efficiency:** Validated description at 816 characters and active body at 1,329 words with zero unreferenced resources.
 3. **Execution Safety:** Verified that bundled utilities rely purely on standard library modules (`argparse`, `json`, `os`, `re`, `sys`) with 0 external network dependencies.
