@@ -67,9 +67,10 @@ documentation and dependency locks. Do not run the generator on the repo root.
 Follow generated `WORKSPACE.md` from the workspace root:
 
 ```sh
+# Install workspace dependencies, initialize Python virtualenv, and compile
 npm install
-python3 -m venv .venv
-.venv/bin/python -m pip install -r apps/agents/requirements.txt
+python3 -m venv .venv && source .venv/bin/activate
+pip install -r apps/agents/requirements.txt
 npm run build
 ```
 
@@ -130,6 +131,16 @@ session lifecycle, and timeout semantics documented in the architecture referenc
 - [assets/workspace_layout_schema.json](assets/workspace_layout_schema.json):
   JSON Schema for the generated descriptor; generator also enforces distinct ports
   and valid non-keyword Python app names.
+- Template files rendered by the manifest:
+  - `assets/templates/WORKSPACE.md.tmpl`: workspace README template with setup and run instructions.
+  - `assets/templates/agent.py.tmpl`: ADK multi-agent workflow definition template.
+  - `assets/templates/app.ts.tmpl`: Hono HTTP gateway application template.
+  - `assets/templates/index.ts.tmpl`: Node.js server entrypoint template.
+  - `assets/templates/message.schema.json.tmpl`: JSON schema for the request contract.
+  - `assets/templates/package.json.tmpl`: root npm workspace configuration template.
+  - `assets/templates/requirements.txt.tmpl`: Python ADK dependencies template.
+  - `assets/templates/tsconfig.json.tmpl`: TypeScript compiler configuration template.
+  - `assets/templates/web-package.json.tmpl`: gateway service package manifest template.
 - [tests/verification.md](tests/verification.md): creator checks and reproducible
   generator/runtime test commands for package maintenance.
 
