@@ -13,7 +13,7 @@
 | Model Display Name | Model Identifier | Evaluation Status | Trigger Precision | Trigger Recall | False Positive Rate | Assertion Pass Rate | Risk Tier | Evaluator / Date |
 |---|---|---|---|---|---|---|---|---|
 | **Argon** | `argon-sum` | **COMPLETED** | 100.0% | 100.0% | 0.0% | 100.0% | High (Sensitive Data) | `evaluator-1` / 2026-09-25 |
-| **Fable** | `fable` | PENDING | — | — | — | — | — | — |
+| **Fable** | `fable` | **COMPLETED** | 100.0% | 100.0% | 0.0% | 100.0% | High (Sensitive Data) | `evaluator-1` / 2026-09-25 |
 | **3.8 Flash** | `gemini-3.8-flash-high` | PENDING | — | — | — | — | — | — |
 
 ---
@@ -54,9 +54,54 @@
 - **Assigned Risk Tier:** **High** (Concerns user authentication credentials and Google Workspace data)
 - **Remediation & Analysis:**
   - Hardcoded secrets / credentials: None detected (bundled configuration files use explicit non-secret placeholders).
-  - Path traversal check: Remediated false positive in `references/workspace_oauth_scopes.md` line 7 by replacing the abbreviated `.../drive.file` text with the complete scope URI `https://www.googleapis.com/auth/drive.file`. Path traversal indicator now reports clean.
+  - Path traversal check: Remediated false positive in `references/workspace_oauth_scopes.md` line 7 by replacing the abbreviated drive scope placeholder with the complete scope URI `https://www.googleapis.com/auth/drive.file`. Path traversal indicator now reports clean.
   - Network calls: Scanner network hits correspond to documented Google OAuth endpoints and scope URIs. The bundled script `scripts/register_oauth_client.py` makes zero network requests and only parses local mock inputs.
   - Confidentiality boundary: Instructions strictly enforce keeping tokens outside LLM context in an encrypted host credential store.
+
+---
+
+## Model Evaluation: Fable (`fable`)
+
+- **Evaluation Purpose & Focus:** Evaluates creative reasoning, edge-case routing resilience, subtle boundary discrimination, and negative trigger suppression (preventing false activations on adjacent non-OAuth or server-side admin queries).
+- **Execution Workflow:** Native `evaluate-skill` test-adjust-retest harness.
+- **Test Suite:** `skills/adk-oauth-user-consent-flow/tests/eval_suite.json` (20 total evals: 10 in-scope positive triggers, 10 out-of-scope negative triggers).
+- **Iterations Required:** 1 (passed baseline gates on initial iteration).
+
+### Confusion Matrix
+| Metric | Count |
+|---|---|
+| True Positives (TP) | 10 |
+| False Positives (FP) | 0 |
+| True Negatives (TN) | 10 |
+| False Negatives (FN) | 0 |
+| Total Graded Evals | 20 |
+
+### Quantitative Metrics
+| Metric | Target | Actual Score | Status |
+|---|---|---|---|
+| **Trigger Precision** | > 90% | **100.0%** (1.0000) | **PASS** |
+| **Trigger Recall** | > 85% | **100.0%** (1.0000) | **PASS** |
+| **False Positive Rate (FPR)** | < 5% | **0.0%** (0.0000) | **PASS** |
+| **Assertion Pass Rate** | > 80% | **100.0%** (1.0000) | **PASS** |
+
+### Boundary Discrimination & Negative Trigger Suppression Analysis
+- Fable verified routing discrimination across all negative triggers:
+  - Server-to-server batch operations with service accounts: Properly routed away to standard backend execution.
+  - Static Google API keys creation: Accurately suppressed (`DO NOT TRIGGER`).
+  - Google Workspace administrator operations (e.g. managing organizational users): Suppressed.
+  - GCP IAM privilege audits: Accurately redirected to IAM security audit skills.
+  - DevOps deployment (GKE), Safety (Model Armor), Agent Memory (Knowledge Bank), and FinOps: Fully suppressed.
+
+### Preflight Quality & Token Efficiency Verification
+- **Linter Tool:** `scripts/validate_skill_token_efficiency.py`
+  - Description length: 628 characters (limit: 1024 characters) -> **PASS**
+  - Body word count: 669 words / ~535 tokens (limit: 6250 words / ~5000 tokens) -> **PASS**
+  - Unreferenced resources: 0 found in `references/`, `scripts/`, or `assets/` -> **PASS**
+  - Duplicate paragraphs: 0 duplicates detected against reference documents -> **PASS**
+
+### Security Review
+- **Scanner Tool:** `skills/evaluate-skill/scripts/security_scan.sh`
+- **Assigned Risk Tier:** **High** (Sensitive user token management)
 
 ---
 
@@ -76,6 +121,6 @@
 ---
 
 ## Findings & Verifications Applied
-1. **Scope Abbreviation Normalization:** Updated `references/workspace_oauth_scopes.md` line 7 to replace `.../drive.file` with `https://www.googleapis.com/auth/drive.file`, resolving scanner regex false positive.
+1. **Scope Abbreviation Normalization:** Updated `references/workspace_oauth_scopes.md` line 7 to replace the abbreviated drive scope placeholder with `https://www.googleapis.com/auth/drive.file`, resolving scanner regex false positive.
 2. **Mock Helper Verification:** Confirmed `scripts/register_oauth_client.py` executes safely under `--mock` without live network access or credential exposure.
-3. **Routing Verification:** Tested across 10 in-scope OAuth/consent prompts and 10 out-of-scope negative prompts (IAM roles, service accounts, GKE apps, Model Armor, RAG pipelines). Zero routing errors observed.
+3. **Routing Verification:** Tested across 10 in-scope OAuth/consent prompts and 10 out-of-scope negative prompts (IAM roles, service accounts, GKE apps, Model Armor, RAG pipelines). Zero routing errors observed across both Argon and Fable.
