@@ -1,0 +1,125 @@
+{
+  "skill_name": "jetski-customizations",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "How do I create a custom Jetski rule to enforce company coding styles?",
+      "should_trigger": true,
+      "actual_trigger": true,
+      "expected_output": "Guide on creating rules in rules/*.md, GEMINI.md, or AGENTS.md",
+      "assertions": [
+        {
+          "text": "Response references rules/*.md, GEMINI.md, or AGENTS.md",
+          "passed": true
+        },
+        {
+          "text": "Response explains trigger: always_on and hierarchical discovery",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "What are the discovery locations and precedence for Jetski customizations in Google3?",
+      "should_trigger": true,
+      "actual_trigger": true,
+      "expected_output": "Detailed explanation of personal Piper, directory/project rules, and repository shared locations",
+      "assertions": [
+        {
+          "text": "Response details personal Piper configs/users/%USERNAME%/_agents/",
+          "passed": true
+        },
+        {
+          "text": "Response details directory & project rules priority",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "How do I build and register a new custom agent in Jetski?",
+      "should_trigger": true,
+      "actual_trigger": true,
+      "expected_output": "Guide on agents/<name>/agent.json and persona definition",
+      "assertions": [
+        {
+          "text": "Response explains custom agent config in agents/<name>/agent.json",
+          "passed": true
+        },
+        {
+          "text": "Response covers tools and prompt specialization",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "How do I configure an MCP server in mcp_config.json for Jetski?",
+      "should_trigger": true,
+      "actual_trigger": true,
+      "expected_output": "Guide on mcp_config.json and MCP tool integration",
+      "assertions": [
+        {
+          "text": "Response explains mcp_config.json integration",
+          "passed": true
+        },
+        {
+          "text": "Response covers tool integration scope",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "prompt": "How do I write a bash script to backup a MySQL database?",
+      "should_trigger": false,
+      "actual_trigger": false,
+      "expected_output": "Database administration question, do not activate jetski-customizations.",
+      "assertions": [
+        {
+          "text": "Skill is suppressed for out-of-domain request",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "prompt": "Can you debug this React useEffect hook memory leak?",
+      "should_trigger": false,
+      "actual_trigger": false,
+      "expected_output": "Frontend debugging question, do not activate jetski-customizations.",
+      "assertions": [
+        {
+          "text": "Skill is suppressed for out-of-domain request",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "prompt": "How do I configure nginx reverse proxy for port 8080?",
+      "should_trigger": false,
+      "actual_trigger": false,
+      "expected_output": "Web server configuration, do not activate jetski-customizations.",
+      "assertions": [
+        {
+          "text": "Skill is suppressed for out-of-domain request",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "prompt": "Explain the difference between TCP and UDP protocols.",
+      "should_trigger": false,
+      "actual_trigger": false,
+      "expected_output": "Networking theory question, do not activate jetski-customizations.",
+      "assertions": [
+        {
+          "text": "Skill is suppressed for out-of-domain request",
+          "passed": true
+        }
+      ]
+    }
+  ]
+}

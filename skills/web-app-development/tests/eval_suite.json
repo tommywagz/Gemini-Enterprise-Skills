@@ -1,0 +1,125 @@
+{
+  "skill_name": "web-app-development",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Can you help me build a modern responsive landing page with clean HTML and CSS?",
+      "should_trigger": true,
+      "actual_trigger": true,
+      "expected_output": "Guidance on function-driven design, vanilla CSS, responsive layouts, and typography",
+      "assertions": [
+        {
+          "text": "Response recommends clean HTML and Vanilla CSS",
+          "passed": true
+        },
+        {
+          "text": "Response adheres to function-driven design aesthetics",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Scaffold a new Next.js web application for an analytics dashboard.",
+      "should_trigger": true,
+      "actual_trigger": true,
+      "expected_output": "Instructions using npx -y create-next-app with non-interactive flags",
+      "assertions": [
+        {
+          "text": "Response specifies npx -y command with non-interactive setup",
+          "passed": true
+        },
+        {
+          "text": "Response directs running with npm run dev",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "How do I restyle this UI component to improve readability and visual hierarchy?",
+      "should_trigger": true,
+      "actual_trigger": true,
+      "expected_output": "Design recommendations covering whitespace, typography, and contrast",
+      "assertions": [
+        {
+          "text": "Response emphasizes visual hierarchy and typography",
+          "passed": true
+        },
+        {
+          "text": "Response recommends micro-animations or fluid responsiveness",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "Initialize a new Vite React app in the current directory.",
+      "should_trigger": true,
+      "actual_trigger": true,
+      "expected_output": "Guidance for npx -y create-vite-app@latest ./ non-interactively",
+      "assertions": [
+        {
+          "text": "Response uses npx -y create-vite-app@latest ./",
+          "passed": true
+        },
+        {
+          "text": "Response checks command options via --help",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "prompt": "Write a C++ program to sort an array using quicksort.",
+      "should_trigger": false,
+      "actual_trigger": false,
+      "expected_output": "C++ algorithm implementation, do not activate web-app-development.",
+      "assertions": [
+        {
+          "text": "Skill is suppressed for out-of-domain request",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "prompt": "How do I configure a Kubernetes cluster with Terraform on GCP?",
+      "should_trigger": false,
+      "actual_trigger": false,
+      "expected_output": "Cloud infrastructure provisioning, do not activate web-app-development.",
+      "assertions": [
+        {
+          "text": "Skill is suppressed for out-of-domain request",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "prompt": "Explain quantum computing superdense coding theorem.",
+      "should_trigger": false,
+      "actual_trigger": false,
+      "expected_output": "Physics and quantum mechanics topic, do not activate web-app-development.",
+      "assertions": [
+        {
+          "text": "Skill is suppressed for out-of-domain request",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "prompt": "How do I rotate IAM service account keys using gcloud?",
+      "should_trigger": false,
+      "actual_trigger": false,
+      "expected_output": "Security administration command, do not activate web-app-development.",
+      "assertions": [
+        {
+          "text": "Skill is suppressed for out-of-domain request",
+          "passed": true
+        }
+      ]
+    }
+  ]
+}
