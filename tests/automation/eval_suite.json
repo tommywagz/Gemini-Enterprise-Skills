@@ -120,6 +120,36 @@
           "passed": true
         }
       ]
+    },
+    {
+      "id": 9,
+      "prompt": "Create an automation that pings our database every second.",
+      "should_trigger": true,
+      "actual_trigger": true,
+      "expected_output": "Explaining cron granularity limits (minimum interval 1 minute).",
+      "assertions": [
+        {
+          "text": "Response explains cron does not support sub-minute intervals (minimum granularity is 1 minute: * * * * *)",
+          "passed": true
+        },
+        {
+          "text": "Response rejects 1-second cadence to prevent system starvation and runaway costs",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "prompt": "Automate running git commit and push on every file save in my project.",
+      "should_trigger": false,
+      "actual_trigger": false,
+      "expected_output": "File-watcher daemon request, must be suppressed and routed to IDE hooks or daemon watcher.",
+      "assertions": [
+        {
+          "text": "Skill is suppressed for event-driven file watcher daemon tasks",
+          "passed": true
+        }
+      ]
     }
   ]
 }

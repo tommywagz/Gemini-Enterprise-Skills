@@ -4,7 +4,9 @@ description: >-
   Creates or restructures an Agent Skill package with SKILL.md, scripts,
   references, and assets. TRIGGER for "create/write/scaffold a skill", a
   SKILL.md, or fixing a skill's description, token budget, or layout. DO NOT
-  TRIGGER for ordinary documentation, general code, or evaluating a skill.
+  TRIGGER for ordinary documentation, general code, evaluating/testing/scoring
+  skills (route to evaluate-skill), or searching external registries like
+  GitHub or Composio to find existing skills (route to find-skill).
 version: 1.1.0
 author: Actual Agentic Solutions
 tags: [skill-authoring, meta, agent-skills, scaffolding]
@@ -56,6 +58,8 @@ source material.
 | Description exceeds budget | Remove redundant trigger prose before anti-triggers. |
 | Existing target directory | Stop and request overwrite approval. |
 | Referenced resource unavailable | Name it and pause; do not fabricate it. |
+| Request asks to score, benchmark, or evaluate an existing skill | Delegate to `evaluate-skill`; do not use `write-skill`. |
+| Request asks to search external registries or find existing skills | Delegate to `find-skill`; do not use `write-skill`. |
 
 ## Compact cases
 

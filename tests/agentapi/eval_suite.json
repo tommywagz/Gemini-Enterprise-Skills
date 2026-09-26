@@ -120,6 +120,40 @@
           "passed": true
         }
       ]
+    },
+    {
+      "id": 9,
+      "prompt": "What should my sidecar automation script do if agentapi fails with connection refused to the language server?",
+      "should_trigger": true,
+      "actual_trigger": true,
+      "expected_output": "Error recovery guidance including healthz probing and exponential backoff retry.",
+      "assertions": [
+        {
+          "text": "Response includes health check probe against http://localhost:5387/healthz",
+          "passed": true
+        },
+        {
+          "text": "Response provides exponential backoff retry loop with max attempts",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "prompt": "How do I safely pass dynamic user input to agentapi new-conversation without shell injection vulnerabilities?",
+      "should_trigger": true,
+      "actual_trigger": true,
+      "expected_output": "Secure parameter handling using stdin, environment variables, or proper quoting.",
+      "assertions": [
+        {
+          "text": "Response warns against passing unescaped string interpolations to shell commands",
+          "passed": true
+        },
+        {
+          "text": "Response demonstrates passing prompt content safely via file or quoted arguments",
+          "passed": true
+        }
+      ]
     }
   ]
 }

@@ -120,6 +120,32 @@
           "passed": true
         }
       ]
+    },
+    {
+      "id": 9,
+      "prompt": "How do I build an interactive HTML panel for my sidecar using Sidecar SDK and preload.js?",
+      "should_trigger": false,
+      "actual_trigger": false,
+      "expected_output": "UI plugin implementation question, must route to ui-plugin-development, not plugin manager.",
+      "assertions": [
+        {
+          "text": "Skill is suppressed for UI plugin AuxPane sidecar development",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "prompt": "Where does Jetski discover my personal rules in Google3 CitC workspaces?",
+      "should_trigger": false,
+      "actual_trigger": false,
+      "expected_output": "Customization discovery question, must route to jetski-customizations, not plugin.",
+      "assertions": [
+        {
+          "text": "Skill is suppressed for rule discovery locations in Google3",
+          "passed": true
+        }
+      ]
     }
   ]
 }

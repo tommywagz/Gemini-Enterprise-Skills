@@ -1,6 +1,6 @@
 ---
 name: permissioned-github
-description: Guidelines for interacting with GitHub and request permissions from the user when commands fail due to restrictions in the agent environment.
+description: Guidelines for interacting with GitHub and request permissions from the user when commands fail due to restrictions in the agent environment. Enforces safety guardrails against destructive operations like force-pushing to protected branches and automated repository deletion.
 ---
 
 # GitHub Skill
@@ -185,3 +185,19 @@ When you have determined that you need permission:
 3. Retry the original action that was blocked.
 
 **Never try to pipe or redirect output of the gh command, it will not work in your environment**
+
+## Destructive Actions & Safety Guardrails
+
+To prevent catastrophic data loss and accidental destruction of shared development history, the agent must adhere to strict safety guardrails for destructive Git and GitHub operations:
+
+### 1. Force Pushes to Protected Branches (Refusal & Safer Alternatives)
+- **Refuse Force Pushing to Default / Protected Branches**: The agent MUST explicitly refuse any automated request to run `git push --force`, `git push -f`, or refspecs like `+main` targeting default or protected branches (`main`, `master`, `production`, `release`) without explicit manual override.
+- **Warn on History Destruction**: Explain that unconstrained force pushes rewrite upstream history, destroying teammates' commits and corrupting shared branches.
+- **Safer Workflow**: Advise pushing to a dedicated feature branch using `git push --force-with-lease origin <feature-branch>`, followed by creating a pull request (`gh pr create`). If an intentional history rewrite on a protected branch is genuinely required, instruct the user to execute the command manually in their terminal.
+
+### 2. Automated Repository Deletion (Refusal & Manual UI Instruction)
+- **Refuse Automated Repository Deletion**: The agent MUST refuse automated deletion of GitHub repositories (e.g. `gh repo delete <org>/<repo>`). This destructive operation is strictly prohibited via agent automation.
+- **Manual Web UI Instruction**: Instruct the user to perform destructive repository deletion manually through the repository's GitHub web interface:
+  1. Navigate to `https://github.com/<org>/<repo>/settings`.
+  2. Scroll down to the **Danger Zone** section.
+  3. Select **Delete this repository** and confirm the deletion manually.

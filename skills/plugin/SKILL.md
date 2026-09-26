@@ -1,6 +1,6 @@
 ---
 name: plugin
-description: How to manage and create Jetski plugins — namespaced bundles of skills, agents, rules, MCP servers, hooks and sidecars that install, enable and disable as a single unit. Use this skill when the user wants to enable, disable, install or uninstall a plugin, when they want to create a new plugin, or when a new customization should be packaged into a plugin rather than left loose. Also triggered by the /plugin slash command. Don't use for the underlying customization system itself — discovery roots, loading priority, or authoring a standalone skill, agent, rule, hook or MCP server outside a plugin; see the jetski-customizations skill for those.
+description: How to manage and create Jetski plugins — namespaced bundles of skills, agents, rules, MCP servers, hooks and sidecars that install, enable and disable as a single unit. Use this skill when the user wants to enable, disable, install or uninstall a plugin, when they want to create a new plugin, or when a new customization should be packaged into a plugin rather than left loose. Also triggered by the /plugin slash command. DO NOT TRIGGER for UI plugin AuxPane sidecar development (building interactive HTML panels, preload.js, webviews — use ui-plugin-development), or the underlying customization system itself: discovery roots, loading priority, personal rules in Google3 CitC workspaces, or standalone skills/agents/rules outside a plugin (use jetski-customizations).
 ---
 
 # Plugins
@@ -15,7 +15,8 @@ functionality into the right plugin. Step 0 and Step 1 are common to both; Step
 1 routes you to Step 2A or Step 2B.
 
 For the underlying customization system — discovery roots, loading priority,
-what each customization type is for — see the **jetski-customizations** skill.
+personal rules in Google3 CitC workspaces, and what each customization type is for — see the **jetski-customizations** skill.
+For developing interactive HTML panels, AuxPane sidecars, or preload scripts using the Sidecar SDK, see the **ui-plugin-development** skill.
 This skill does not restate that material.
 
 ## Step 0: Preflight and inventory

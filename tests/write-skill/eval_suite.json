@@ -240,6 +240,32 @@
           "passed": true
         }
       ]
+    },
+    {
+      "id": 21,
+      "prompt": "Evaluate the trigger accuracy and false positive rate of my custom agent skill.",
+      "should_trigger": false,
+      "actual_trigger": false,
+      "expected_output": "Skill evaluation request, must route to evaluate-skill, not write-skill.",
+      "assertions": [
+        {
+          "text": "Skill is suppressed for skill testing and scoring requests",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 22,
+      "prompt": "Search external agent skill registries on GitHub or Composio to find an existing Slack integration skill.",
+      "should_trigger": false,
+      "actual_trigger": false,
+      "expected_output": "Skill discovery request, must route to find-skill, not write-skill.",
+      "assertions": [
+        {
+          "text": "Skill is suppressed for external registry search",
+          "passed": true
+        }
+      ]
     }
   ]
 }

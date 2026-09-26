@@ -1,6 +1,6 @@
 ---
 name: automation
-description: Interactive guide to design and create a scheduled background automation. Use this skill when the user wants to create an automated or recurring scheduled task (e.g. "summarize my emails every morning", "every Monday send me a to-do list"). Also triggered by the /automation slash command.
+description: Interactive guide to design and create a scheduled background automation. Use this skill when the user wants to create an automated or recurring scheduled task (e.g. "summarize my emails every morning", "every Monday send me a to-do list"). Also triggered by the /automation slash command. DO NOT TRIGGER for event-driven file-watcher daemon tasks (e.g. "run on file save"), continuous generic background daemons, or sub-minute polling loops; scheduled automations require fixed cron schedules with a minimum 1-minute interval.
 metadata:
   icon: schedule
 ---
@@ -10,6 +10,16 @@ metadata:
 A **scheduled automation** is a background sidecar (`"builtin": "schedule"`) that runs on a cron schedule and starts a fresh agent conversation (`agentapi new-conversation`) on each run.
 
 This skill is **strictly for scheduled (cron) automations**. Do not use it to create UI sidecars or continuous generic command/daemon sidecars.
+
+## Cadence, Granularity & Scope Constraints
+
+- **Cron Granularity Limits (Sub-Minute Cadence Rejection)**:
+  - Standard cron resolution has a minimum interval of 1 minute (`* * * * *`). It does **not** support sub-minute intervals (e.g. every second, every 10 seconds).
+  - You MUST explicitly reject 1-second or sub-minute cadence requests to prevent system starvation, severe rate limiting, and runaway inference costs.
+  - If a user requests a sub-minute schedule (such as pinging a database every second), explain that cron does not support sub-minute intervals (minimum granularity is 1 minute: `* * * * *`), reject the 1-second cadence to prevent system starvation and runaway costs, and offer the 1-minute interval or an external continuous service.
+- **Event-Driven File Watchers vs. Scheduled Automations**:
+  - Do NOT use this skill for event-driven filesystem watcher daemon tasks (e.g. "automate running git commit and push on every file save in my project").
+  - Scheduled sidecars trigger strictly on clock-based cron expressions, not filesystem events or editor hooks. Direct users asking for file save automation to Git pre-commit hooks, IDE extensions, or dedicated filesystem watchers (`fswatch`, `inotifywait`).
 
 ---
 
