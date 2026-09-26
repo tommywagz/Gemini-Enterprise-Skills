@@ -18,6 +18,17 @@ Do not modify other worker inboxes, other status files, `jobs/backlog.json`, or 
 
 ---
 
+### ⚠️ STRICT TEST IMMUTABILITY & SKILL REMEDIATION MANDATE
+The test suite in `tests/<skill-name>/eval_suite.json` defines the independent, authoritative ground-truth contract.
+1. **Tests are Immutable Ground Truth:** You are strictly forbidden from altering test expectations, weakening assertions, deleting difficult cases, or editing `actual_trigger` values to force a fake 'PASS'.
+2. **Remediate the Skill, Never the Test:** When a test fails:
+   - For **False Positives** (Precision < 0.90 or FPR > 0.05): Revise `skills/<skill-name>/SKILL.md` to add explicit `DO NOT TRIGGER when...` boundaries and eliminate ambiguous activation verbs.
+   - For **False Negatives** (Recall < 0.85): Revise `skills/<skill-name>/SKILL.md` to add missing trigger synonyms, domain terminology, and user phrasing.
+   - For **Assertion Failures**: Strengthen the execution workflow in `skills/<skill-name>/SKILL.md` by adding input validation, defensive error handling, recovery procedures, and concrete contracts.
+3. Re-run tests against the unchanged test suite. Only mark complete when the skill legitimately passes the test conditions under its assigned model.
+
+---
+
 ## Core Operational Workflow: `evaluate-skill` Test-Adjust-Retest
 
 Follow this strict test-driven procedure for every dispatched task:
@@ -50,7 +61,7 @@ Follow this strict test-driven procedure for every dispatched task:
 ### 3. Baseline Testing with Assigned Model (Argon / Fable / 3.8 Flash)
 Run the evaluation suite using `evaluate-skill` to determine model-specific baseline accuracy:
 ```bash
-python3 skills/evaluate-skill/scripts/score_eval_suite.py skills/<skill-name>/tests/eval_suite.json
+python3 skills/evaluate-skill/scripts/score_eval_suite.py tests/<skill-name>/eval_suite.json
 ```
 If `tests/eval_suite.json` does not exist or has fewer than 20 cases, construct a comprehensive 20-prompt suite following `skills/evaluate-skill/references/test_case_design.md` with:
 - 10 realistic, in-scope positive triggers (`should_trigger: true`, `actual_trigger: true`)
@@ -74,13 +85,13 @@ If any metric is below threshold or linter/security issues exist, perform target
 Re-run both the linter and the scoring script:
 ```bash
 python3 scripts/validate_skill_token_efficiency.py
-python3 skills/evaluate-skill/scripts/score_eval_suite.py skills/<skill-name>/tests/eval_suite.json
+python3 skills/evaluate-skill/scripts/score_eval_suite.py tests/<skill-name>/eval_suite.json
 ```
 - If metrics fail, repeat Step 4 (up to 3 total iterations).
 - If after 3 iterations the skill still fails, set status to `BLOCKED` with details in `blocked_on`.
 
 ### 6. Generate Model Evaluation Report
-Write or update `skills/<skill-name>/tests/evaluation_report.md` documenting the results for the assigned model:
+Write or update `tests/<skill-name>/evaluation_report.md` documenting the results for the assigned model:
 - Model name (**Argon**, **Fable**, or **3.8 Flash**) and Model ID
 - Quantitative scores (Precision, Recall, FPR, Assertion Pass Rate)
 - Confusion matrix (TP, FP, TN, FN)
@@ -98,7 +109,7 @@ Write or update `skills/<skill-name>/tests/evaluation_report.md` documenting the
    - `state`: `"COMPLETED"`
    - `step`: `"DONE"`
    - `commits`: `["<commit-sha>"]`
-   - `artifacts`: `["skills/<skill-name>/tests/evaluation_report.md"]`
+   - `artifacts`: `["tests/<skill-name>/evaluation_report.md"]`
 3. Append completion line to `jobs/log.md`:
    ```bash
    printf '%s  [evaluator-6] completed evaluate-skill for %s on %s\n' "$(date -u +%FT%TZ)" "<skill-name>" "<target-model>" >> jobs/log.md

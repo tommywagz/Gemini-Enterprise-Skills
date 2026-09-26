@@ -38,6 +38,17 @@ A skill is **only fully evaluated and ready to merge** when separate evaluations
 
 ---
 
+### ⚠️ STRICT TEST IMMUTABILITY & SKILL REMEDIATION MANDATE
+The test suite in  defines the independent, authoritative ground-truth contract.
+1. **Tests are Immutable Ground Truth:** You are strictly forbidden from altering test expectations, weakening assertions, deleting difficult cases, or fudging  values to force a fake 'PASS'.
+2. **Remediate the Skill, Never the Test:** When a test fails:
+   - For **False Positives** (Precision < 0.90 or FPR > 0.05): Revise  to add explicit  boundaries and eliminate ambiguous activation verbs.
+   - For **False Negatives** (Recall < 0.85): Revise  to add missing trigger synonyms, domain terminology, and user phrasing.
+   - For **Assertion Failures**: Strengthen the execution workflow in  by adding input validation, defensive error handling, recovery procedures, and concrete contracts.
+3. Re-run tests against the unchanged test suite. Only mark complete when the skill legitimately passes the test conditions.
+
+---
+
 ## Fleet Lifecycle & Multi-Model Orchestration Loop
 
 ```
@@ -103,7 +114,7 @@ For each idle worker:
        "Execute evaluate-skill workflow on skills/<skill-name> with model: Argon",
        "Run validate_skill_token_efficiency.py and security_scan.sh",
        "Run and score eval_suite.json with score_eval_suite.py using model Argon",
-       "Document model evaluation scores in skills/<skill-name>/tests/evaluation_report.md",
+       "Document model evaluation scores in tests/<skill-name>/evaluation_report.md",
        "Commit changes to agent-evaluator-<n> branch"
      ],
      "attempt": 1,
@@ -128,7 +139,7 @@ When a worker reports `state: "COMPLETED"`:
 2. Run the automated quality verification gate:
    ```bash
    python3 scripts/validate_skill_token_efficiency.py
-   python3 skills/evaluate-skill/scripts/score_eval_suite.py skills/<skill-name>/tests/eval_suite.json
+   python3 skills/evaluate-skill/scripts/score_eval_suite.py tests/<skill-name>/eval_suite.json
    ```
 3. Verify that:
    - Token efficiency passes (no unreferenced files, word count within budget, descriptions under 1024 chars).
@@ -138,7 +149,7 @@ When a worker reports `state: "COMPLETED"`:
      - **Trigger Recall:** > 0.85
      - **False Positive Rate (FPR):** < 0.05
      - **Assertion Pass Rate:** > 0.90
-   - `skills/<skill-name>/tests/evaluation_report.md` includes the benchmark results for the evaluated model (**Argon**, **Fable**, or **3.8 Flash**).
+   - `tests/<skill-name>/evaluation_report.md` includes the benchmark results for the evaluated model (**Argon**, **Fable**, or **3.8 Flash**).
 4. If checks fail:
    - Send rework feedback to `jobs/inbox/evaluator-<n>.json` with `state: "REWORK"` and increment `attempt`.
    - If attempts exceed 2, flag the model evaluation as `REQUIRES_HUMAN_REVIEW` and reassign the worker.
@@ -147,7 +158,7 @@ When a worker reports `state: "COMPLETED"`:
 1. Record the successful model run in `jobs/backlog.json` for `<skill-name>`.
 2. Check if all 3 models (**Argon**, **Fable**, and **3.8 Flash**) have now completed evaluation for `<skill-name>`:
    - If **yes (all 3 models complete)**:
-     - Verify that `skills/<skill-name>/tests/evaluation_report.md` contains the comprehensive 3-model comparison table.
+     - Verify that `tests/<skill-name>/evaluation_report.md` contains the comprehensive 3-model comparison table.
      - Merge the worker branch into `main` using `--no-ff`:
        ```bash
        git merge agent-evaluator-<n> --no-ff -m "chore(orchestrator): complete 3-model evaluate-skill verification for <skill-name> (Argon, Fable, 3.8 Flash)"
