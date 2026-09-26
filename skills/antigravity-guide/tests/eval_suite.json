@@ -1,0 +1,125 @@
+{
+  "skill_name": "antigravity-guide",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "What are the key surfaces and CLI commands available in Google Antigravity (AGY)?",
+      "should_trigger": true,
+      "actual_trigger": true,
+      "expected_output": "Overview of CLI (agy), IDE, Antigravity 2.0 desktop app, and Python SDK",
+      "assertions": [
+        {
+          "text": "Response references references/cli.md, references/ide.md, and references/app.md",
+          "passed": true
+        },
+        {
+          "text": "Response covers Antigravity platform surfaces",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Where can I find documentation on Antigravity Python SDK for programmatic agent leasing?",
+      "should_trigger": true,
+      "actual_trigger": true,
+      "expected_output": "Pointers to references/sdk.md and antigravity-sdk-python GitHub repository",
+      "assertions": [
+        {
+          "text": "Response cites references/sdk.md",
+          "passed": true
+        },
+        {
+          "text": "Response covers agent leasing and orchestration APIs",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "How do I configure Antigravity customizations like skills, rules, and sidecars?",
+      "should_trigger": true,
+      "actual_trigger": true,
+      "expected_output": "Guide referencing offline subdocs and dynamic doc URLs",
+      "assertions": [
+        {
+          "text": "Response details skills, rules, hooks, and sidecars",
+          "passed": true
+        },
+        {
+          "text": "Response cites official sitemap links",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "What slash commands and keybindings are supported in the Antigravity IDE and CLI?",
+      "should_trigger": true,
+      "actual_trigger": true,
+      "expected_output": "Listing authoritative commands from references/cli.md and ide.md",
+      "assertions": [
+        {
+          "text": "Response references references/cli.md",
+          "passed": true
+        },
+        {
+          "text": "Response references references/ide.md",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "prompt": "Explain Newton universal law of gravitation.",
+      "should_trigger": false,
+      "actual_trigger": false,
+      "expected_output": "Classical physics question, do not trigger antigravity-guide.",
+      "assertions": [
+        {
+          "text": "Skill is suppressed for out-of-domain request",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "prompt": "How do I write a Makefile for a C project?",
+      "should_trigger": false,
+      "actual_trigger": false,
+      "expected_output": "C build tooling, do not trigger antigravity-guide.",
+      "assertions": [
+        {
+          "text": "Skill is suppressed for out-of-domain request",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "prompt": "Write a regular expression to match email addresses.",
+      "should_trigger": false,
+      "actual_trigger": false,
+      "expected_output": "Regex syntax question, do not trigger antigravity-guide.",
+      "assertions": [
+        {
+          "text": "Skill is suppressed for out-of-domain request",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "prompt": "How do I install PyTorch on macOS with MPS acceleration?",
+      "should_trigger": false,
+      "actual_trigger": false,
+      "expected_output": "Machine learning framework setup, do not trigger antigravity-guide.",
+      "assertions": [
+        {
+          "text": "Skill is suppressed for out-of-domain request",
+          "passed": true
+        }
+      ]
+    }
+  ]
+}

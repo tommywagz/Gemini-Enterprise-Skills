@@ -1,0 +1,129 @@
+{
+  "skill_name": "generative-ui",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Can you build an interactive HTML chart widget to visualize our quarterly sales metrics?",
+      "should_trigger": true,
+      "actual_trigger": true,
+      "expected_output": "HTML artifact with Tailwind CDN, semantic variables, and inline JavaScript",
+      "assertions": [
+        {
+          "text": "Response uses write_to_file for HTML artifact",
+          "passed": true
+        },
+        {
+          "text": "Response includes gstatic tailwindcss.min.js script",
+          "passed": true
+        },
+        {
+          "text": "Response adheres to semantic CSS theme variables",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Create an interactive educational walkthrough diagram for how OAuth2 PKCE flow works.",
+      "should_trigger": true,
+      "actual_trigger": true,
+      "expected_output": "Interactive visual artifact rendered with generative UI",
+      "assertions": [
+        {
+          "text": "Response designs self-contained HTML widget",
+          "passed": true
+        },
+        {
+          "text": "Response avoids hardcoded background colors in favor of theme variables",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "How do I embed an HTML visualization inline into the chat response?",
+      "should_trigger": true,
+      "actual_trigger": true,
+      "expected_output": "Instructions on <agent-embed> tag usage",
+      "assertions": [
+        {
+          "text": "Response references <agent-embed src=\"file:///<path>\"></agent-embed>",
+          "passed": true
+        },
+        {
+          "text": "Response explains UserFacing: true in ArtifactMetadata",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "Generate an interactive live form preview with buttons and sliders in the chat.",
+      "should_trigger": true,
+      "actual_trigger": true,
+      "expected_output": "Interactive HTML artifact with responsive controls and host theme styling",
+      "assertions": [
+        {
+          "text": "Response sets floor font size >= 12px",
+          "passed": true
+        },
+        {
+          "text": "Response provides complete base HTML boilerplate",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "prompt": "Write a Python script to calculate matrix eigenvalues.",
+      "should_trigger": false,
+      "actual_trigger": false,
+      "expected_output": "Numerical mathematics question, do not trigger generative-ui.",
+      "assertions": [
+        {
+          "text": "Skill is suppressed for out-of-domain request",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "prompt": "How do I configure a Cloud SQL Postgres replica in GCP?",
+      "should_trigger": false,
+      "actual_trigger": false,
+      "expected_output": "Cloud database provisioning, do not trigger generative-ui.",
+      "assertions": [
+        {
+          "text": "Skill is suppressed for out-of-domain request",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "prompt": "Explain the difference between process and thread in Linux.",
+      "should_trigger": false,
+      "actual_trigger": false,
+      "expected_output": "Operating systems theory, do not trigger generative-ui.",
+      "assertions": [
+        {
+          "text": "Skill is suppressed for out-of-domain request",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "prompt": "Help me format this git commit message using conventional commits.",
+      "should_trigger": false,
+      "actual_trigger": false,
+      "expected_output": "Git styling convention, do not trigger generative-ui.",
+      "assertions": [
+        {
+          "text": "Skill is suppressed for out-of-domain request",
+          "passed": true
+        }
+      ]
+    }
+  ]
+}

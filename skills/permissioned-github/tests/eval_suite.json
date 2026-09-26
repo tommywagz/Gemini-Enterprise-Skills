@@ -1,0 +1,125 @@
+{
+  "skill_name": "permissioned-github",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "How do I interact with GitHub when commands fail due to agent environment restrictions?",
+      "should_trigger": true,
+      "actual_trigger": true,
+      "expected_output": "Guidelines on using gh CLI and asking for permissions via structured format",
+      "assertions": [
+        {
+          "text": "Response mandates using gh CLI with -R ORG/REPO",
+          "passed": true
+        },
+        {
+          "text": "Response explains permission format <command>.<action>(<resource_json>)",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Show me the permission string format to request creating a pull request in org/repo.",
+      "should_trigger": true,
+      "actual_trigger": true,
+      "expected_output": "Permission grant string gh.create({\"org\": \"org\", \"repo\": \"repo\", \"pr\": \"*\"})",
+      "assertions": [
+        {
+          "text": "Response specifies gh.create with org and repo parameters",
+          "passed": true
+        },
+        {
+          "text": "Response uses ask_custom_permission format",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Can I push a new branch to origin using git over HTTPS?",
+      "should_trigger": true,
+      "actual_trigger": true,
+      "expected_output": "Branch operation guidance and git.create branch permission format",
+      "assertions": [
+        {
+          "text": "Response authorizes git over HTTPS instead of SSH",
+          "passed": true
+        },
+        {
+          "text": "Response specifies git.create({\"org\": \"...\", \"repo\": \"...\", \"branch\": \"*\"})",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "How do I review and comment on PR #42 in google/jetski using the gh CLI?",
+      "should_trigger": true,
+      "actual_trigger": true,
+      "expected_output": "gh pr view and gh pr review commands with permission grant instructions",
+      "assertions": [
+        {
+          "text": "Response uses gh with -R google/jetski",
+          "passed": true
+        },
+        {
+          "text": "Response explains gh.update permission for commenting/reviewing",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "prompt": "Write a Python function to sort a list using mergesort.",
+      "should_trigger": false,
+      "actual_trigger": false,
+      "expected_output": "Algorithm question, do not trigger permissioned-github.",
+      "assertions": [
+        {
+          "text": "Skill is suppressed for out-of-domain request",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "prompt": "How do I configure AWS CloudWatch alarms?",
+      "should_trigger": false,
+      "actual_trigger": false,
+      "expected_output": "AWS monitoring setup, do not trigger permissioned-github.",
+      "assertions": [
+        {
+          "text": "Skill is suppressed for out-of-domain request",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "prompt": "Explain the difference between TCP and UDP.",
+      "should_trigger": false,
+      "actual_trigger": false,
+      "expected_output": "Networking fundamentals, do not trigger permissioned-github.",
+      "assertions": [
+        {
+          "text": "Skill is suppressed for out-of-domain request",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "prompt": "Help me write unit tests for my Go HTTP handler.",
+      "should_trigger": false,
+      "actual_trigger": false,
+      "expected_output": "Go unit testing, do not trigger permissioned-github.",
+      "assertions": [
+        {
+          "text": "Skill is suppressed for out-of-domain request",
+          "passed": true
+        }
+      ]
+    }
+  ]
+}

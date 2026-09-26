@@ -1,0 +1,125 @@
+{
+  "skill_name": "ui-plugin-development",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "How do I build a custom UI plugin with an interactive Auxiliary Pane in Jetski?",
+      "should_trigger": true,
+      "actual_trigger": true,
+      "expected_output": "Detailed development guide using Sidecar SDK and AuxPane embedding",
+      "assertions": [
+        {
+          "text": "Response references Sidecar SDK (Node.js, Python, or Go)",
+          "passed": true
+        },
+        {
+          "text": "Response explains embedding in conversation Auxiliary Pane (AuxPane)",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "How do I structure the plugin.json and sidecar.json manifests for a UI sidecar?",
+      "should_trigger": true,
+      "actual_trigger": true,
+      "expected_output": "Directory layout and schema for sidecars/<id>/sidecar.json and top-level plugin.json",
+      "assertions": [
+        {
+          "text": "Response outlines sidecar.json with command and port configuration",
+          "passed": true
+        },
+        {
+          "text": "Response outlines top-level plugin.json manifest",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "How do I make my UI plugin adapt dynamically to light and dark host themes?",
+      "should_trigger": true,
+      "actual_trigger": true,
+      "expected_output": "Styling with host theme CSS variables (--background, --foreground, --primary, --card)",
+      "assertions": [
+        {
+          "text": "Response details semantic CSS variables like --background, --foreground, --card",
+          "passed": true
+        },
+        {
+          "text": "Response warns against hardcoding local colors on :root",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "How does the frontend bridge script preload.js communicate with window.sidecar?",
+      "should_trigger": true,
+      "actual_trigger": true,
+      "expected_output": "Explanation of /preload.js bridge and frontend API interaction",
+      "assertions": [
+        {
+          "text": "Response explains /preload.js bridge script",
+          "passed": true
+        },
+        {
+          "text": "Response covers window.sidecar communication",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "prompt": "How do I write a Python decorator for caching function returns?",
+      "should_trigger": false,
+      "actual_trigger": false,
+      "expected_output": "Python programming question, do not trigger ui-plugin-development.",
+      "assertions": [
+        {
+          "text": "Skill is suppressed for out-of-domain request",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "prompt": "How do I optimize MySQL database indexes?",
+      "should_trigger": false,
+      "actual_trigger": false,
+      "expected_output": "Database performance tuning, do not trigger ui-plugin-development.",
+      "assertions": [
+        {
+          "text": "Skill is suppressed for out-of-domain request",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "prompt": "Explain how DNS resolution works across root and TLD nameservers.",
+      "should_trigger": false,
+      "actual_trigger": false,
+      "expected_output": "Networking concept, do not trigger ui-plugin-development.",
+      "assertions": [
+        {
+          "text": "Skill is suppressed for out-of-domain request",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "prompt": "Write a shell script to compress all log files older than 30 days.",
+      "should_trigger": false,
+      "actual_trigger": false,
+      "expected_output": "Linux administration, do not trigger ui-plugin-development.",
+      "assertions": [
+        {
+          "text": "Skill is suppressed for out-of-domain request",
+          "passed": true
+        }
+      ]
+    }
+  ]
+}

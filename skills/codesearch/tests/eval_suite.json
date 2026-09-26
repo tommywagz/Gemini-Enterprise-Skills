@@ -1,0 +1,125 @@
+{
+  "skill_name": "codesearch",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "How do I use codesearch-for-agents to find symbol definitions in our workspace?",
+      "should_trigger": true,
+      "actual_trigger": true,
+      "expected_output": "Using codesearch-for-agents CLI with single-quoted query and filters",
+      "assertions": [
+        {
+          "text": "Response uses codesearch-for-agents --query \"<QUERY>\"",
+          "passed": true
+        },
+        {
+          "text": "Response notes workspace-scoped index covering uncommitted edits",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Can I filter codesearch results to return only file paths without snippets?",
+      "should_trigger": true,
+      "actual_trigger": true,
+      "expected_output": "Using --only_paths flag with codesearch-for-agents",
+      "assertions": [
+        {
+          "text": "Response demonstrates --only_paths flag",
+          "passed": true
+        },
+        {
+          "text": "Response explains paths relative to workspace root",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "What should I do when codesearch returns no files matched?",
+      "should_trigger": true,
+      "actual_trigger": true,
+      "expected_output": "Verification of workspace context and guidance to avoid falling back to grep",
+      "assertions": [
+        {
+          "text": "Response advises against falling back to grep",
+          "passed": true
+        },
+        {
+          "text": "Response explains workspace scoping constraints",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "How do I limit the maximum number of matches returned by codesearch?",
+      "should_trigger": true,
+      "actual_trigger": true,
+      "expected_output": "Using --max_num_results and --max_matches_per_file flags",
+      "assertions": [
+        {
+          "text": "Response details --max_num_results and --max_matches_per_file",
+          "passed": true
+        },
+        {
+          "text": "Response explains (+N more matches) output indicator",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "prompt": "How do I use grep to search files on Linux?",
+      "should_trigger": false,
+      "actual_trigger": false,
+      "expected_output": "Standard grep utility guide, do not trigger codesearch-for-agents.",
+      "assertions": [
+        {
+          "text": "Skill is suppressed for out-of-domain request",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "prompt": "Write a Python web crawler with BeautifulSoup.",
+      "should_trigger": false,
+      "actual_trigger": false,
+      "expected_output": "Web crawling implementation, do not trigger codesearch.",
+      "assertions": [
+        {
+          "text": "Skill is suppressed for out-of-domain request",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "prompt": "Explain Dijkstra shortest path algorithm.",
+      "should_trigger": false,
+      "actual_trigger": false,
+      "expected_output": "Graph theory and algorithms, do not trigger codesearch.",
+      "assertions": [
+        {
+          "text": "Skill is suppressed for out-of-domain request",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "prompt": "How do I optimize MySQL slow queries?",
+      "should_trigger": false,
+      "actual_trigger": false,
+      "expected_output": "Database query tuning, do not trigger codesearch.",
+      "assertions": [
+        {
+          "text": "Skill is suppressed for out-of-domain request",
+          "passed": true
+        }
+      ]
+    }
+  ]
+}

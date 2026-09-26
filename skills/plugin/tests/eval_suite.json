@@ -1,0 +1,125 @@
+{
+  "skill_name": "plugin",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "How do I create a new Jetski plugin bundle that packages skills, agents, and rules together?",
+      "should_trigger": true,
+      "actual_trigger": true,
+      "expected_output": "Step-by-step plugin authoring and manifest configuration",
+      "assertions": [
+        {
+          "text": "Response describes plugin bundle structure with plugin.json",
+          "passed": true
+        },
+        {
+          "text": "Response explains packaging skills, agents, and rules as a single unit",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "How can I inspect all installed plugins and their lifecycle state via language server?",
+      "should_trigger": true,
+      "actual_trigger": true,
+      "expected_output": "Instructions using lsrpc helper and GetAllPlugins Connect method",
+      "assertions": [
+        {
+          "text": "Response provides lsrpc helper script with ANTIGRAVITY_LS_ADDRESS",
+          "passed": true
+        },
+        {
+          "text": "Response executes lsrpc GetAllPlugins",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "How do I enable or disable an existing plugin in Jetski?",
+      "should_trigger": true,
+      "actual_trigger": true,
+      "expected_output": "Modifying plugin state or calling lsrpc EnablePlugin/DisablePlugin",
+      "assertions": [
+        {
+          "text": "Response details plugin enable/disable workflow",
+          "passed": true
+        },
+        {
+          "text": "Response references /plugin slash command",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "What is the difference between a standalone skill and a plugin bundle?",
+      "should_trigger": true,
+      "actual_trigger": true,
+      "expected_output": "Architectural comparison between loose customizations and cohesive plugin units",
+      "assertions": [
+        {
+          "text": "Response contrasts single skills with multi-component plugin bundles",
+          "passed": true
+        },
+        {
+          "text": "Response refers to jetski-customizations for standalone items",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "prompt": "How do I install a Chrome extension?",
+      "should_trigger": false,
+      "actual_trigger": false,
+      "expected_output": "Browser extension installation, do not trigger Jetski plugin skill.",
+      "assertions": [
+        {
+          "text": "Skill is suppressed for out-of-domain request",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "prompt": "Write a SQL query to calculate rolling 7-day average revenue.",
+      "should_trigger": false,
+      "actual_trigger": false,
+      "expected_output": "Database SQL query, do not trigger plugin skill.",
+      "assertions": [
+        {
+          "text": "Skill is suppressed for out-of-domain request",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "prompt": "How do I configure Tailwind CSS in a Next.js project?",
+      "should_trigger": false,
+      "actual_trigger": false,
+      "expected_output": "Frontend styling configuration, do not trigger plugin skill.",
+      "assertions": [
+        {
+          "text": "Skill is suppressed for out-of-domain request",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "prompt": "Explain public-key cryptography and RSA key generation.",
+      "should_trigger": false,
+      "actual_trigger": false,
+      "expected_output": "Cryptography theory, do not trigger plugin skill.",
+      "assertions": [
+        {
+          "text": "Skill is suppressed for out-of-domain request",
+          "passed": true
+        }
+      ]
+    }
+  ]
+}
