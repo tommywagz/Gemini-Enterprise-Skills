@@ -1,0 +1,6 @@
+{
+  "compute_instances": [{"name": "idle-dev", "status": "RUNNING", "cpu_utilization_pct_p95": 1.0, "is_preemptible_or_spot": false, "labels": {"workload": "batch"}, "monthly_cost_usd": 100}],
+  "persistent_disks": [{"name": "orphan", "size_gb": 100, "type": "pd-ssd", "attached_instances": [], "monthly_cost_usd": 50}],
+  "static_ips": [{"name": "unused", "status": "RESERVED", "users": [], "monthly_cost_usd": 7}],
+  "cloud_run_services": [{"name": "api", "min_instances": 2, "cpu": 2, "concurrency": 1, "avg_requests_per_min": 1, "monthly_cost_usd": 20}]
+}

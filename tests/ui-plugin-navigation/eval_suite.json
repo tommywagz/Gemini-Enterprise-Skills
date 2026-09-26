@@ -1,0 +1,125 @@
+{
+  "skill_name": "ui-plugin-navigation",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "How do I control navigation between views inside a Jetski UI plugin?",
+      "should_trigger": true,
+      "actual_trigger": true,
+      "expected_output": "Managing view transitions and navigation state in AuxPane UI sidecars",
+      "assertions": [
+        {
+          "text": "Response covers navigation control within UI plugins",
+          "passed": true
+        },
+        {
+          "text": "Response explains view transitions and layout orchestration",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "How do I wire navigation buttons in my plugin frontend to change active panels?",
+      "should_trigger": true,
+      "actual_trigger": true,
+      "expected_output": "Frontend navigation event handling in Sidecar web apps",
+      "assertions": [
+        {
+          "text": "Response shows event dispatching for panel switching",
+          "passed": true
+        },
+        {
+          "text": "Response maintains consistent state across navigation",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Explain the navigation lifecycle for multi-screen UI sidecars.",
+      "should_trigger": true,
+      "actual_trigger": true,
+      "expected_output": "View transition lifecycle and route management in UI plugins",
+      "assertions": [
+        {
+          "text": "Response details view stack and transition events",
+          "passed": true
+        },
+        {
+          "text": "Response ensures state preservation during view changes",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "How do I handle deep linking or URL hash routing in an AuxPane iframe?",
+      "should_trigger": true,
+      "actual_trigger": true,
+      "expected_output": "Handling route changes in embedded sidecar iframes",
+      "assertions": [
+        {
+          "text": "Response explains iframe routing constraints",
+          "passed": true
+        },
+        {
+          "text": "Response covers hash-based client routing",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "prompt": "How do I implement React Router in a standalone website?",
+      "should_trigger": false,
+      "actual_trigger": false,
+      "expected_output": "General React router question, do not trigger ui-plugin-navigation.",
+      "assertions": [
+        {
+          "text": "Skill is suppressed for out-of-domain request",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "prompt": "How do I configure GPS waypoints in a mobile app?",
+      "should_trigger": false,
+      "actual_trigger": false,
+      "expected_output": "Mobile GPS navigation, do not trigger ui-plugin-navigation.",
+      "assertions": [
+        {
+          "text": "Skill is suppressed for out-of-domain request",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "prompt": "Write a binary search algorithm in Java.",
+      "should_trigger": false,
+      "actual_trigger": false,
+      "expected_output": "Java algorithmic implementation, do not trigger ui-plugin-navigation.",
+      "assertions": [
+        {
+          "text": "Skill is suppressed for out-of-domain request",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "prompt": "How do I set up an Apache virtual host?",
+      "should_trigger": false,
+      "actual_trigger": false,
+      "expected_output": "Web server setup, do not trigger ui-plugin-navigation.",
+      "assertions": [
+        {
+          "text": "Skill is suppressed for out-of-domain request",
+          "passed": true
+        }
+      ]
+    }
+  ]
+}

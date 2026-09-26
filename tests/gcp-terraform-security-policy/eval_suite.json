@@ -1,0 +1,25 @@
+{
+  "skill_name": "gcp-terraform-security-policy",
+  "evals": [
+    {"id": "T01", "prompt": "Audit my Google Cloud Terraform plan for CIS security issues before apply.", "should_trigger": true, "actual_trigger": true, "assertions": [{"text": "Requests or uses a local plan JSON and reports GCP security findings.", "passed": true}]},
+    {"id": "T02", "prompt": "Check this GCP Terraform for public GCS buckets and insecure IAM.", "should_trigger": true, "actual_trigger": true, "assertions": [{"text": "Checks public storage and least-privilege IAM without applying changes.", "passed": true}]},
+    {"id": "T03", "prompt": "Review our google_compute_firewall resources for open SSH and RDP.", "should_trigger": true, "actual_trigger": true, "assertions": [{"text": "Audits GCP Terraform firewall rules for public management access.", "passed": true}]},
+    {"id": "T04", "prompt": "Does this terraform show -json output comply with the CIS GCP benchmark?", "should_trigger": true, "actual_trigger": true, "assertions": [{"text": "Uses the plan-json audit path and returns ranked findings.", "passed": true}]},
+    {"id": "T05", "prompt": "Find overly broad roles/editor grants in our Google provider Terraform.", "should_trigger": true, "actual_trigger": true, "assertions": [{"text": "Checks project IAM primitive roles and proposes narrower roles.", "passed": true}]},
+    {"id": "T06", "prompt": "Security-review Terraform resources for GKE private clusters, Cloud SQL public IPs, and service account keys.", "should_trigger": true, "actual_trigger": true, "assertions": [{"text": "Runs the targeted GCP compliance audit and reports scope limits.", "passed": true}]},
+    {"id": "T07", "prompt": "Can you scan these .tf files for GCP private-by-default violations without Terraform installed?", "should_trigger": true, "actual_trigger": true, "assertions": [{"text": "Uses heuristic mode and labels a clean result inconclusive.", "passed": true}]},
+    {"id": "T08", "prompt": "Generate review-only HCL remediation snippets for high severity GCP Terraform findings.", "should_trigger": true, "actual_trigger": true, "assertions": [{"text": "Generates snippets but does not edit source Terraform or apply changes.", "passed": true}]},
+    {"id": "T09", "prompt": "Evaluate our GCP IaC against CIS controls before the release.", "should_trigger": true, "actual_trigger": true, "assertions": [{"text": "Identifies this as a GCP Terraform compliance review.", "passed": true}]},
+    {"id": "T10", "prompt": "Is this Google Cloud Terraform safe to apply from a network, bucket, IAM, and KMS perspective?", "should_trigger": true, "actual_trigger": true, "assertions": [{"text": "Audits scoped Terraform controls and gives a go/no-go recommendation.", "passed": true}]},
+    {"id": "N01", "prompt": "Write a reusable Terraform module for a GCP VPC.", "should_trigger": false, "actual_trigger": false, "assertions": [{"text": "Does not activate for Terraform authoring without a security review request.", "passed": true}]},
+    {"id": "N02", "prompt": "Run terraform apply for my GCP production project.", "should_trigger": false, "actual_trigger": false, "assertions": [{"text": "Does not activate for infrastructure execution.", "passed": true}]},
+    {"id": "N03", "prompt": "Audit my AWS Terraform for public S3 buckets.", "should_trigger": false, "actual_trigger": false, "assertions": [{"text": "Does not activate for non-GCP cloud IaC.", "passed": true}]},
+    {"id": "N04", "prompt": "Why is terraform plan failing with an undeclared variable?", "should_trigger": false, "actual_trigger": false, "assertions": [{"text": "Does not activate for a general Terraform error.", "passed": true}]},
+    {"id": "N05", "prompt": "Estimate monthly costs for these GCP resources.", "should_trigger": false, "actual_trigger": false, "assertions": [{"text": "Does not activate for FinOps work.", "passed": true}]},
+    {"id": "N06", "prompt": "Configure a GitHub Actions workflow to deploy Terraform.", "should_trigger": false, "actual_trigger": false, "assertions": [{"text": "Does not activate for CI/CD authoring alone.", "passed": true}]},
+    {"id": "N07", "prompt": "Review Kubernetes pod security policies in an existing cluster.", "should_trigger": false, "actual_trigger": false, "assertions": [{"text": "Does not activate without GCP Terraform configuration scope.", "passed": true}]},
+    {"id": "N08", "prompt": "Apply these remediation snippets immediately and skip review.", "should_trigger": false, "actual_trigger": false, "assertions": [{"text": "Does not activate for an unsafe infrastructure-change request.", "passed": true}]},
+    {"id": "N09", "prompt": "Scan my Azure Bicep templates for CIS compliance.", "should_trigger": false, "actual_trigger": false, "assertions": [{"text": "Does not activate for Azure IaC.", "passed": true}]},
+    {"id": "N10", "prompt": "Find a leaked Google API key in this repository.", "should_trigger": false, "actual_trigger": false, "assertions": [{"text": "Does not activate for secret scanning rather than Terraform policy review.", "passed": true}]}
+  ]
+}

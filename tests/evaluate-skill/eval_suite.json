@@ -1,0 +1,245 @@
+{
+  "skill_name": "evaluate-skill",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Evaluate the adk-agents skill and test its trigger accuracy",
+      "should_trigger": true,
+      "actual_trigger": true,
+      "assertions": [
+        {
+          "text": "Skill activates evaluate-skill workflow",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Run an eval suite against this newly drafted skill",
+      "should_trigger": true,
+      "actual_trigger": true,
+      "assertions": [
+        {
+          "text": "Skill runs eval suite scoring",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Check this skill's trigger precision, recall, and false-positive rate",
+      "should_trigger": true,
+      "actual_trigger": true,
+      "assertions": [
+        {
+          "text": "Skill calculates precision/recall/FPR metrics",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "Perform a security review and red team this agent skill",
+      "should_trigger": true,
+      "actual_trigger": true,
+      "assertions": [
+        {
+          "text": "Skill runs security_scan.sh and assigns risk tier",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "prompt": "Score this skill against the production checklist and benchmark it",
+      "should_trigger": true,
+      "actual_trigger": true,
+      "assertions": [
+        {
+          "text": "Skill audits against production rubric",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "prompt": "A/B test the description of my custom skill to reduce false positives",
+      "should_trigger": true,
+      "actual_trigger": true,
+      "assertions": [
+        {
+          "text": "Skill runs A/B description iteration",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "prompt": "Audit the security posture of the real-estate-floorplan skill",
+      "should_trigger": true,
+      "actual_trigger": true,
+      "assertions": [
+        {
+          "text": "Skill executes security review",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "prompt": "Benchmark the false positive rate of the ucp-merchant-servers skill",
+      "should_trigger": true,
+      "actual_trigger": true,
+      "assertions": [
+        {
+          "text": "Skill measures FPR on eval suite",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "prompt": "Run regression testing on my updated skill after adjusting its workflow",
+      "should_trigger": true,
+      "actual_trigger": true,
+      "assertions": [
+        {
+          "text": "Skill executes regression test suite",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "prompt": "Verify whether this skill is ready for production release",
+      "should_trigger": true,
+      "actual_trigger": true,
+      "assertions": [
+        {
+          "text": "Skill verifies production checklist",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 11,
+      "prompt": "Create a brand new skill for Kubernetes pod debugging",
+      "should_trigger": false,
+      "actual_trigger": false,
+      "assertions": [
+        {
+          "text": "Does not trigger evaluate-skill; delegates to write-skill",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 12,
+      "prompt": "Search GitHub for an MCP server that integrates with Notion",
+      "should_trigger": false,
+      "actual_trigger": false,
+      "assertions": [
+        {
+          "text": "Does not trigger evaluate-skill; delegates to find-skill",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 13,
+      "prompt": "Run pytest on tests/test_payment_gateway.py",
+      "should_trigger": false,
+      "actual_trigger": false,
+      "assertions": [
+        {
+          "text": "Does not trigger evaluate-skill; normal app pytest execution",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 14,
+      "prompt": "Explain standard precision and recall in binary classification ML models",
+      "should_trigger": false,
+      "actual_trigger": false,
+      "assertions": [
+        {
+          "text": "Does not trigger evaluate-skill; general ML theory question",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 15,
+      "prompt": "Write a README.md for my open source repository",
+      "should_trigger": false,
+      "actual_trigger": false,
+      "assertions": [
+        {
+          "text": "Does not trigger evaluate-skill",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 16,
+      "prompt": "Scaffold a skill folder with references and scripts directories",
+      "should_trigger": false,
+      "actual_trigger": false,
+      "assertions": [
+        {
+          "text": "Does not trigger evaluate-skill; delegates to write-skill",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 17,
+      "prompt": "Fix the python indentation error on line 42 of script.py",
+      "should_trigger": false,
+      "actual_trigger": false,
+      "assertions": [
+        {
+          "text": "Does not trigger evaluate-skill",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 18,
+      "prompt": "Find existing community skills for Google Cloud monitoring",
+      "should_trigger": false,
+      "actual_trigger": false,
+      "assertions": [
+        {
+          "text": "Does not trigger evaluate-skill; delegates to find-skill",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 19,
+      "prompt": "Draft a new agent skill for processing invoices",
+      "should_trigger": false,
+      "actual_trigger": false,
+      "assertions": [
+        {
+          "text": "Does not trigger evaluate-skill; delegates to write-skill",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 20,
+      "prompt": "Execute the database migration scripts in production",
+      "should_trigger": false,
+      "actual_trigger": false,
+      "assertions": [
+        {
+          "text": "Does not trigger evaluate-skill",
+          "passed": true
+        }
+      ]
+    }
+  ]
+}

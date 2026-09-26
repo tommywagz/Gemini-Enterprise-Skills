@@ -1,0 +1,125 @@
+{
+  "skill_name": "automation",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Can you set up an automation to summarize my emails every morning at 9 AM?",
+      "should_trigger": true,
+      "actual_trigger": true,
+      "expected_output": "Step-by-step interactive workflow starting with cadence and cron schedule",
+      "assertions": [
+        {
+          "text": "Response identifies cron schedule 0 9 * * *",
+          "passed": true
+        },
+        {
+          "text": "Response covers sidecar.json schedule automation",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "I want a recurring task every Monday to compile our team sprint report.",
+      "should_trigger": true,
+      "actual_trigger": true,
+      "expected_output": "Interactive automation setup for weekly schedule",
+      "assertions": [
+        {
+          "text": "Response identifies weekly cadence at specific hour",
+          "passed": true
+        },
+        {
+          "text": "Response references scheduled background sidecar",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "How do I create a background cron automation in Jetski?",
+      "should_trigger": true,
+      "actual_trigger": true,
+      "expected_output": "Interactive workflow explaining sidecar.json with builtin schedule",
+      "assertions": [
+        {
+          "text": "Response explains builtin schedule sidecar",
+          "passed": true
+        },
+        {
+          "text": "Response explains agentapi new-conversation execution per run",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "Set up a scheduled task to check open pull requests hourly.",
+      "should_trigger": true,
+      "actual_trigger": true,
+      "expected_output": "Interactive setup with hourly cron expression 0 * * * *",
+      "assertions": [
+        {
+          "text": "Response specifies hourly cron 0 * * * *",
+          "passed": true
+        },
+        {
+          "text": "Response details prompt configuration",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "prompt": "Write a Python script to parse a CSV file and output JSON.",
+      "should_trigger": false,
+      "actual_trigger": false,
+      "expected_output": "Data conversion script, do not activate automation skill.",
+      "assertions": [
+        {
+          "text": "Skill is suppressed for out-of-domain request",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "prompt": "How do I install Docker on Ubuntu 22.04?",
+      "should_trigger": false,
+      "actual_trigger": false,
+      "expected_output": "System administration guide, do not activate automation skill.",
+      "assertions": [
+        {
+          "text": "Skill is suppressed for out-of-domain request",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "prompt": "Can you fix this CSS flexbox centering issue?",
+      "should_trigger": false,
+      "actual_trigger": false,
+      "expected_output": "Frontend layout question, do not activate automation skill.",
+      "assertions": [
+        {
+          "text": "Skill is suppressed for out-of-domain request",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "prompt": "Explain how RSA public-key encryption works.",
+      "should_trigger": false,
+      "actual_trigger": false,
+      "expected_output": "Cryptography concept, do not activate automation skill.",
+      "assertions": [
+        {
+          "text": "Skill is suppressed for out-of-domain request",
+          "passed": true
+        }
+      ]
+    }
+  ]
+}

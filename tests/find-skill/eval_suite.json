@@ -1,0 +1,245 @@
+{
+  "skill_name": "find-skill",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Search awesome-agent-skills for an existing PostgreSQL tool skill",
+      "should_trigger": true,
+      "actual_trigger": true,
+      "assertions": [
+        {
+          "text": "Skill activates find-skill workflow",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Find an MCP server for Slack notifications",
+      "should_trigger": true,
+      "actual_trigger": true,
+      "assertions": [
+        {
+          "text": "Skill queries MCP registry sources",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Is there an existing skill for Jira ticket management?",
+      "should_trigger": true,
+      "actual_trigger": true,
+      "assertions": [
+        {
+          "text": "Skill searches registry for Jira skill",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "Discover Composio integrations or agent skills for GitHub PR reviews",
+      "should_trigger": true,
+      "actual_trigger": true,
+      "assertions": [
+        {
+          "text": "Skill searches Composio/community skills",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "prompt": "Search external skill registries to find a Snowflake query runner",
+      "should_trigger": true,
+      "actual_trigger": true,
+      "assertions": [
+        {
+          "text": "Skill performs registry search",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "prompt": "Find an MCP server that provides Salesforce CRM access",
+      "should_trigger": true,
+      "actual_trigger": true,
+      "assertions": [
+        {
+          "text": "Skill queries MCP catalog",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "prompt": "Look up community agent skills for Stripe checkout handling",
+      "should_trigger": true,
+      "actual_trigger": true,
+      "assertions": [
+        {
+          "text": "Skill checks community registry",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "prompt": "Find any vetted skill packages for Docker container lifecycle management",
+      "should_trigger": true,
+      "actual_trigger": true,
+      "assertions": [
+        {
+          "text": "Skill searches and screens packages",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "prompt": "Can you find an MCP server or tool integration for SendGrid?",
+      "should_trigger": true,
+      "actual_trigger": true,
+      "assertions": [
+        {
+          "text": "Skill locates tool integration",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "prompt": "Search for pre-built agent skills that integrate with Datadog alerts",
+      "should_trigger": true,
+      "actual_trigger": true,
+      "assertions": [
+        {
+          "text": "Skill searches for pre-built skills",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 11,
+      "prompt": "Write a new custom skill from scratch for auditing AWS IAM roles",
+      "should_trigger": false,
+      "actual_trigger": false,
+      "assertions": [
+        {
+          "text": "Does not trigger find-skill; delegates to write-skill",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 12,
+      "prompt": "Evaluate the trigger precision of the a2a-workflows skill",
+      "should_trigger": false,
+      "actual_trigger": false,
+      "assertions": [
+        {
+          "text": "Does not trigger find-skill; delegates to evaluate-skill",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 13,
+      "prompt": "Search Google for the documentation on Python asyncio.gather",
+      "should_trigger": false,
+      "actual_trigger": false,
+      "assertions": [
+        {
+          "text": "Does not trigger find-skill; generic web search",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 14,
+      "prompt": "Write unit tests for my UserService class in src/users.py",
+      "should_trigger": false,
+      "actual_trigger": false,
+      "assertions": [
+        {
+          "text": "Does not trigger find-skill",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 15,
+      "prompt": "Run the security scanner against this repository",
+      "should_trigger": false,
+      "actual_trigger": false,
+      "assertions": [
+        {
+          "text": "Does not trigger find-skill",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 16,
+      "prompt": "Draft a SKILL.md template for a new data pipeline skill",
+      "should_trigger": false,
+      "actual_trigger": false,
+      "assertions": [
+        {
+          "text": "Does not trigger find-skill; delegates to write-skill",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 17,
+      "prompt": "Explain how OAuth 2.0 PKCE works under the hood",
+      "should_trigger": false,
+      "actual_trigger": false,
+      "assertions": [
+        {
+          "text": "Does not trigger find-skill; conceptual query",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 18,
+      "prompt": "Score this skill against the production rubric",
+      "should_trigger": false,
+      "actual_trigger": false,
+      "assertions": [
+        {
+          "text": "Does not trigger find-skill; delegates to evaluate-skill",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 19,
+      "prompt": "Refactor the authentication middleware to use JWT tokens",
+      "should_trigger": false,
+      "actual_trigger": false,
+      "assertions": [
+        {
+          "text": "Does not trigger find-skill",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 20,
+      "prompt": "What is the weather forecast in San Francisco tomorrow?",
+      "should_trigger": false,
+      "actual_trigger": false,
+      "assertions": [
+        {
+          "text": "Does not trigger find-skill",
+          "passed": true
+        }
+      ]
+    }
+  ]
+}

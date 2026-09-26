@@ -1,0 +1,25 @@
+{
+  "skill_name": "agents-cli-plugin-moderator",
+  "evals": [
+    {"id": 1, "prompt": "Add safety guardrails in ADK for every sub-agent.", "should_trigger": true, "actual_trigger": true, "assertions": [{"text": "Routes to the runner-wide ADK plugin skill.", "passed": true}]},
+    {"id": 2, "prompt": "Configure Model Armor in agents-cli.", "should_trigger": true, "actual_trigger": true, "assertions": [{"text": "Routes to Model Armor integration guidance.", "passed": true}]},
+    {"id": 3, "prompt": "Block harmful prompts before they reach my ADK model.", "should_trigger": true, "actual_trigger": true, "assertions": [{"text": "Routes to the before-model safety gate.", "passed": true}]},
+    {"id": 4, "prompt": "Detect PII exfiltration from an ADK HTTP tool.", "should_trigger": true, "actual_trigger": true, "assertions": [{"text": "Routes to configured outbound-tool scanning.", "passed": true}]},
+    {"id": 5, "prompt": "Write a runner-wide BasePlugin safety guardrail.", "should_trigger": true, "actual_trigger": true, "assertions": [{"text": "Routes to the global BasePlugin workflow.", "passed": true}]},
+    {"id": 6, "prompt": "Use before_model_callback to block jailbreaks in my ADK runner.", "should_trigger": true, "actual_trigger": true, "assertions": [{"text": "Routes to the prompt-gate implementation.", "passed": true}]},
+    {"id": 7, "prompt": "Use sanitizeUserPrompt and sanitizeModelResponse in an ADK plugin.", "should_trigger": true, "actual_trigger": true, "assertions": [{"text": "Routes to the Model Armor callback workflow.", "passed": true}]},
+    {"id": 8, "prompt": "Stop session-state poisoning across my ADK coordinator and sub-agents.", "should_trigger": true, "actual_trigger": true, "assertions": [{"text": "Routes to session-state integrity guidance.", "passed": true}]},
+    {"id": 9, "prompt": "My ADK support bot exposes card numbers in replies; add output redaction.", "should_trigger": true, "actual_trigger": true, "assertions": [{"text": "Routes to the response SDP-redaction gate.", "passed": true}]},
+    {"id": 10, "prompt": "Add content filters to every agent managed by my ADK Runner.", "should_trigger": true, "actual_trigger": true, "assertions": [{"text": "Routes to runner-scoped safety filtering.", "passed": true}]},
+    {"id": 11, "prompt": "Write a one-off callback to convert dates for one agent.", "should_trigger": false, "actual_trigger": false, "assertions": [{"text": "Does not activate for non-safety agent-local callbacks.", "passed": true}]},
+    {"id": 12, "prompt": "Moderate comments on my non-ADK Django forum.", "should_trigger": false, "actual_trigger": false, "assertions": [{"text": "Does not activate for generic moderation outside ADK Runner.", "passed": true}]},
+    {"id": 13, "prompt": "Audit my GCP Terraform IAM bindings for CIS compliance.", "should_trigger": false, "actual_trigger": false, "assertions": [{"text": "Defers GCP infrastructure auditing to gcp-terraform-security-policy.", "passed": true}]},
+    {"id": 14, "prompt": "Create a Cloud Armor WAF policy for my load balancer.", "should_trigger": false, "actual_trigger": false, "assertions": [{"text": "Does not confuse Cloud Armor with Model Armor.", "passed": true}]},
+    {"id": 15, "prompt": "Set up Google Cloud IAM roles for a service account.", "should_trigger": false, "actual_trigger": false, "assertions": [{"text": "Does not activate for credential or IAM provisioning.", "passed": true}]},
+    {"id": 16, "prompt": "Implement a React profanity filter in the browser.", "should_trigger": false, "actual_trigger": false, "assertions": [{"text": "Does not activate for client-side non-ADK filtering.", "passed": true}]},
+    {"id": 17, "prompt": "Add a rate limiter to my FastAPI endpoint.", "should_trigger": false, "actual_trigger": false, "assertions": [{"text": "Does not activate for unrelated API protection.", "passed": true}]},
+    {"id": 18, "prompt": "Store long-term user preferences in Vertex AI Memory Bank.", "should_trigger": false, "actual_trigger": false, "assertions": [{"text": "Defers cross-session memory to the Memory Bank skill.", "passed": true}]},
+    {"id": 19, "prompt": "Pause an ADK workflow until a manager approves it.", "should_trigger": false, "actual_trigger": false, "assertions": [{"text": "Defers durable approval gates to adk-durable-human-in-the-loop.", "passed": true}]},
+    {"id": 20, "prompt": "Test whether my local UCP service follows the protocol.", "should_trigger": false, "actual_trigger": false, "assertions": [{"text": "Defers protocol testing to agents-cli-conformance-tester.", "passed": true}]}
+  ]
+}

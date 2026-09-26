@@ -1,0 +1,22 @@
+{"skill_name":"gcp-cost-optimizer","evals":[
+{"id":"T01","prompt":"Reduce GCP costs from this billing inventory.","should_trigger":true,"actual_trigger":true,"assertions":[{"text":"Runs a FinOps audit without applying changes.","passed":true}]},
+{"id":"T02","prompt":"Find idle Google Cloud resources.","should_trigger":true,"actual_trigger":true,"assertions":[{"text":"Audits GCP resource waste.","passed":true}]},
+{"id":"T03","prompt":"Optimize our BigQuery slot utilization.","should_trigger":true,"actual_trigger":true,"assertions":[{"text":"Assesses BigQuery capacity data.","passed":true}]},
+{"id":"T04","prompt":"Run a GCP spend audit before the next billing cycle.","should_trigger":true,"actual_trigger":true,"assertions":[{"text":"Produces documented savings estimates.","passed":true}]},
+{"id":"T05","prompt":"Review Cloud Run min instances for cost waste.","should_trigger":true,"actual_trigger":true,"assertions":[{"text":"Requires owner confirmation for availability tradeoffs.","passed":true}]},
+{"id":"T06","prompt":"Find unattached GCP disks and unused static IPs.","should_trigger":true,"actual_trigger":true,"assertions":[{"text":"Recommends reviewable cleanup actions.","passed":true}]},
+{"id":"T07","prompt":"Analyze this Google Cloud inventory export for savings.","should_trigger":true,"actual_trigger":true,"assertions":[{"text":"Uses normalized inventory data.","passed":true}]},
+{"id":"T08","prompt":"Can you identify GCP rightsizing opportunities?","should_trigger":true,"actual_trigger":true,"assertions":[{"text":"Uses cost-focused resource signals.","passed":true}]},
+{"id":"T09","prompt":"Find wasted compute spending in my GCP projects.","should_trigger":true,"actual_trigger":true,"assertions":[{"text":"Activates for GCP FinOps.","passed":true}]},
+{"id":"T10","prompt":"Generate review-only Terraform snippets to reduce GCP spend.","should_trigger":true,"actual_trigger":true,"assertions":[{"text":"Does not auto-apply changes.","passed":true}]},
+{"id":"N01","prompt":"Write a GCP Terraform VPC module.","should_trigger":false,"actual_trigger":false,"assertions":[{"text":"Does not activate for general authoring.","passed":true}]},
+{"id":"N02","prompt":"Audit GCP Terraform IAM for CIS compliance.","should_trigger":false,"actual_trigger":false,"assertions":[{"text":"Defers to security policy skill.","passed":true}]},
+{"id":"N03","prompt":"Optimize AWS EC2 costs.","should_trigger":false,"actual_trigger":false,"assertions":[{"text":"Does not activate for AWS.","passed":true}]},
+{"id":"N04","prompt":"Apply these Terraform changes to production now.","should_trigger":false,"actual_trigger":false,"assertions":[{"text":"Does not activate for execution.","passed":true}]},
+{"id":"N05","prompt":"Fix a Terraform syntax error.","should_trigger":false,"actual_trigger":false,"assertions":[{"text":"Does not activate for syntax repair.","passed":true}]},
+{"id":"N06","prompt":"Create a GCP billing alert.","should_trigger":false,"actual_trigger":false,"assertions":[{"text":"Does not activate for alert setup.","passed":true}]},
+{"id":"N07","prompt":"Estimate my mortgage payment.","should_trigger":false,"actual_trigger":false,"assertions":[{"text":"Does not activate for unrelated finance.","passed":true}]},
+{"id":"N08","prompt":"Find leaked Google API keys.","should_trigger":false,"actual_trigger":false,"assertions":[{"text":"Does not activate for secret scanning.","passed":true}]},
+{"id":"N09","prompt":"Improve Cloud SQL query latency.","should_trigger":false,"actual_trigger":false,"assertions":[{"text":"Does not activate for performance tuning.","passed":true}]},
+{"id":"N10","prompt":"Delete all idle GCP disks without review.","should_trigger":false,"actual_trigger":false,"assertions":[{"text":"Does not activate for unsafe deletion.","passed":true}]}
+]}

@@ -1,0 +1,365 @@
+{
+  "skill_name": "agents-cli-scaffold-extension",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "How can I scaffold a multi-agent polyglot workspace that pairs a TypeScript Hono gateway with a Python ADK backend?",
+      "should_trigger": true,
+      "actual_trigger": true,
+      "assertions": [
+        {
+          "text": "Skill agents-cli-scaffold-extension triggers",
+          "passed": true
+        },
+        {
+          "text": "Response provides generate_polyglot_workspace.py command",
+          "passed": true
+        },
+        {
+          "text": "Response specifies Hono and ADK communication pattern",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "I need to add Node.js/Python boundaries to an agent project with strict JSON request contracts and separate manifests.",
+      "should_trigger": true,
+      "actual_trigger": true,
+      "assertions": [
+        {
+          "text": "Skill agents-cli-scaffold-extension triggers",
+          "passed": true
+        },
+        {
+          "text": "Response specifies message contract schema and session management",
+          "passed": true
+        },
+        {
+          "text": "Response emphasizes distinct npm and python dependency files",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Use agents-cli scaffold enhance multiple languages to set up a dual TypeScript frontend API and Python ADK agents.",
+      "should_trigger": true,
+      "actual_trigger": true,
+      "assertions": [
+        {
+          "text": "Skill agents-cli-scaffold-extension triggers",
+          "passed": true
+        },
+        {
+          "text": "Response clarifies that agents-cli scaffold enhance is an adjunct pattern rather than an installed CLI command",
+          "passed": true
+        },
+        {
+          "text": "Response provides the dry-run command using generate_polyglot_workspace.py",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "Connect a Hono HTTP handler to an ADK orchestrator agent across language boundaries.",
+      "should_trigger": true,
+      "actual_trigger": true,
+      "assertions": [
+        {
+          "text": "Skill agents-cli-scaffold-extension triggers",
+          "passed": true
+        },
+        {
+          "text": "Response provides gateway route proxying to ADK REST API server",
+          "passed": true
+        },
+        {
+          "text": "Response details error handling for 502 upstream errors and 504 timeouts",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "prompt": "Can I dry-run preview the generated polyglot workspace layout before writing any files to disk?",
+      "should_trigger": true,
+      "actual_trigger": true,
+      "assertions": [
+        {
+          "text": "Skill agents-cli-scaffold-extension triggers",
+          "passed": true
+        },
+        {
+          "text": "Response shows generate_polyglot_workspace.py --dry-run invocation",
+          "passed": true
+        },
+        {
+          "text": "Response explains JSON plan validation output",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "prompt": "We have an existing npm monorepo and want to integrate a Python ADK multi-agent workflow without breaking root package.json.",
+      "should_trigger": true,
+      "actual_trigger": true,
+      "assertions": [
+        {
+          "text": "Skill agents-cli-scaffold-extension triggers",
+          "passed": true
+        },
+        {
+          "text": "Response warns against running the generator directly on the repo root",
+          "passed": true
+        },
+        {
+          "text": "Response advises staging in a sibling directory and selectively merging apps/ and contracts/",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "prompt": "How do I verify the cross-runtime path between Hono and the ADK worker using demo mode?",
+      "should_trigger": true,
+      "actual_trigger": true,
+      "assertions": [
+        {
+          "text": "Skill agents-cli-scaffold-extension triggers",
+          "passed": true
+        },
+        {
+          "text": "Response details running with WORKSPACE_DEMO=1",
+          "passed": true
+        },
+        {
+          "text": "Response instructs verifying /health, /list-apps, and POST /api/message returning DEMO prefix",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "prompt": "What is the recommended directory structure for a polyglot agent workspace with Hono and ADK?",
+      "should_trigger": true,
+      "actual_trigger": true,
+      "assertions": [
+        {
+          "text": "Skill agents-cli-scaffold-extension triggers",
+          "passed": true
+        },
+        {
+          "text": "Response references references/polyglot_workspace_patterns.md",
+          "passed": true
+        },
+        {
+          "text": "Response describes apps/gateway, apps/agents, and contracts/ layout",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "prompt": "How do I configure the planner and writer two-agent sequential pattern in apps/agents?",
+      "should_trigger": true,
+      "actual_trigger": true,
+      "assertions": [
+        {
+          "text": "Skill agents-cli-scaffold-extension triggers",
+          "passed": true
+        },
+        {
+          "text": "Response explains the two-agent sequence in apps/agents/<agent_name>/agent.py",
+          "passed": true
+        },
+        {
+          "text": "Response details session lifecycle ownership across the language boundary",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "prompt": "Generate a polyglot workspace named billing-assistant with web-port 3100 and adk-port 8100.",
+      "should_trigger": true,
+      "actual_trigger": true,
+      "assertions": [
+        {
+          "text": "Skill agents-cli-scaffold-extension triggers",
+          "passed": true
+        },
+        {
+          "text": "Response provides generate_polyglot_workspace.py with --web-port 3100 --adk-port 8100",
+          "passed": true
+        },
+        {
+          "text": "Response notes distinct port allocation validation",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 11,
+      "prompt": "How do I scaffold a standard single-agent Python project using default agents-cli init?",
+      "should_trigger": false,
+      "actual_trigger": false,
+      "assertions": [
+        {
+          "text": "agents-cli-scaffold-extension skill does NOT activate",
+          "passed": true
+        },
+        {
+          "text": "Handled by standard single-agent CLI scaffolding",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 12,
+      "prompt": "How do I create and activate a Python virtualenv alone using venv on macOS?",
+      "should_trigger": false,
+      "actual_trigger": false,
+      "assertions": [
+        {
+          "text": "agents-cli-scaffold-extension skill does NOT activate",
+          "passed": true
+        },
+        {
+          "text": "Handled with basic Python environment setup instructions",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 13,
+      "prompt": "Author a generic Hono endpoint with CORS and JWT bearer authentication in Node.js.",
+      "should_trigger": false,
+      "actual_trigger": false,
+      "assertions": [
+        {
+          "text": "agents-cli-scaffold-extension skill does NOT activate",
+          "passed": true
+        },
+        {
+          "text": "Handled as standard Hono web framework route authoring",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 14,
+      "prompt": "Deploy our existing Docker container to Google Cloud Run with terraform.",
+      "should_trigger": false,
+      "actual_trigger": false,
+      "assertions": [
+        {
+          "text": "agents-cli-scaffold-extension skill does NOT activate",
+          "passed": true
+        },
+        {
+          "text": "Handled as Cloud Run deployment rather than local polyglot workspace generation",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 15,
+      "prompt": "Evaluate routing accuracy and precision of an Agent Skill with score_eval_suite.py.",
+      "should_trigger": false,
+      "actual_trigger": false,
+      "assertions": [
+        {
+          "text": "agents-cli-scaffold-extension skill does NOT activate",
+          "passed": true
+        },
+        {
+          "text": "System routes to evaluate-skill",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 16,
+      "prompt": "Audit IAM role permissions in GCP project to identify excessive Owner access.",
+      "should_trigger": false,
+      "actual_trigger": false,
+      "assertions": [
+        {
+          "text": "agents-cli-scaffold-extension skill does NOT activate",
+          "passed": true
+        },
+        {
+          "text": "System routes to gcp-iam-privilege-audit",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 17,
+      "prompt": "Configure Pub/Sub push subscription and Cloud Scheduler cron for headless ADK background worker.",
+      "should_trigger": false,
+      "actual_trigger": false,
+      "assertions": [
+        {
+          "text": "agents-cli-scaffold-extension skill does NOT activate",
+          "passed": true
+        },
+        {
+          "text": "System routes to adk-long-horizon-harness",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 18,
+      "prompt": "Build an interactive multi-agent conversation using Agent2Agent protocol cards.",
+      "should_trigger": false,
+      "actual_trigger": false,
+      "assertions": [
+        {
+          "text": "agents-cli-scaffold-extension skill does NOT activate",
+          "passed": true
+        },
+        {
+          "text": "System routes to a2a-workflows",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 19,
+      "prompt": "Optimize GCP BigQuery and Compute Engine monthly billing with FinOps recommendations.",
+      "should_trigger": false,
+      "actual_trigger": false,
+      "assertions": [
+        {
+          "text": "agents-cli-scaffold-extension skill does NOT activate",
+          "passed": true
+        },
+        {
+          "text": "System routes to gcp-cost-optimizer",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 20,
+      "prompt": "Write unit tests for a Python string utility module using pytest.",
+      "should_trigger": false,
+      "actual_trigger": false,
+      "assertions": [
+        {
+          "text": "agents-cli-scaffold-extension skill does NOT activate",
+          "passed": true
+        },
+        {
+          "text": "Handled as routine Python unit testing",
+          "passed": true
+        }
+      ]
+    }
+  ]
+}

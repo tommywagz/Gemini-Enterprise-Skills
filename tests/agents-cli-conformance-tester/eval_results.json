@@ -1,0 +1,25 @@
+{
+  "skill_name": "agents-cli-conformance-tester",
+  "evals": [
+    {"id": "T01", "prompt": "Run UCP conformance tests against my local merchant server.", "should_trigger": true, "actual_trigger": true, "assertions": [{"text": "Routes to the local UCP conformance scanner.", "passed": true}]},
+    {"id": "T02", "prompt": "Check protocol compatibility for my A2A agent on localhost.", "should_trigger": true, "actual_trigger": true, "assertions": [{"text": "Routes to the local A2A conformance scanner.", "passed": true}]},
+    {"id": "T03", "prompt": "Use agents-cli test-compliance with a mock sandbox.", "should_trigger": true, "actual_trigger": true, "assertions": [{"text": "Routes to the bundled mock-sandbox workflow.", "passed": true}]},
+    {"id": "T04", "prompt": "Smoke test my UCP checkout server at 127.0.0.1 before CI.", "should_trigger": true, "actual_trigger": true, "assertions": [{"text": "Routes to loopback UCP pre-flight testing.", "passed": true}]},
+    {"id": "T05", "prompt": "Validate my local A2A AgentCard and message/send JSON-RPC endpoint.", "should_trigger": true, "actual_trigger": true, "assertions": [{"text": "Routes to the A2A HTTP+JSON subset.", "passed": true}]},
+    {"id": "T06", "prompt": "Can I run the local UCP compatibility checker without installing dependencies?", "should_trigger": true, "actual_trigger": true, "assertions": [{"text": "Routes to the dependency-free local suite.", "passed": true}]},
+    {"id": "T07", "prompt": "Run a quick preflight conformance scan of my localhost merchant API.", "should_trigger": true, "actual_trigger": true, "assertions": [{"text": "Routes to local merchant pre-flight conformance testing.", "passed": true}]},
+    {"id": "T08", "prompt": "Test whether my local A2A host handles an unknown task correctly.", "should_trigger": true, "actual_trigger": true, "assertions": [{"text": "Routes to the A2A conformance scanner.", "passed": true}]},
+    {"id": "T09", "prompt": "I need a JUnit report from protocol checks against a loopback UCP service.", "should_trigger": true, "actual_trigger": true, "assertions": [{"text": "Routes to the local protocol scanner with JUnit output.", "passed": true}]},
+    {"id": "T10", "prompt": "Show me a reference mock for UCP conformance tests.", "should_trigger": true, "actual_trigger": true, "assertions": [{"text": "Routes to the UCP mock sandbox.", "passed": true}]},
+    {"id": "F01", "prompt": "Write unit tests for my React component with Vitest.", "should_trigger": false, "actual_trigger": false, "assertions": [{"text": "Does not route generic unit testing here.", "passed": true}]},
+    {"id": "F02", "prompt": "Run ESLint and format my TypeScript project.", "should_trigger": false, "actual_trigger": false, "assertions": [{"text": "Does not route generic linting here.", "passed": true}]},
+    {"id": "F03", "prompt": "Test UCP conformance on https://staging.example.com.", "should_trigger": false, "actual_trigger": false, "assertions": [{"text": "Does not target a non-loopback endpoint.", "passed": true}]},
+    {"id": "F04", "prompt": "Certify our production A2A deployment as fully compliant.", "should_trigger": false, "actual_trigger": false, "assertions": [{"text": "Routes official certification outside this local pre-flight skill.", "passed": true}]},
+    {"id": "F05", "prompt": "Generate a new UCP merchant server from scratch.", "should_trigger": false, "actual_trigger": false, "assertions": [{"text": "Routes server authoring to the merchant-server skill.", "passed": true}]},
+    {"id": "F06", "prompt": "Create a multi-agent A2A workflow.", "should_trigger": false, "actual_trigger": false, "assertions": [{"text": "Routes workflow authoring to a2a-workflows.", "passed": true}]},
+    {"id": "F07", "prompt": "Run a security scan of my Docker image.", "should_trigger": false, "actual_trigger": false, "assertions": [{"text": "Does not route unrelated security testing here.", "passed": true}]},
+    {"id": "F08", "prompt": "Use pytest to run my Python test suite.", "should_trigger": false, "actual_trigger": false, "assertions": [{"text": "Does not route standard pytest work here.", "passed": true}]},
+    {"id": "F09", "prompt": "Benchmark GPT models for agent quality.", "should_trigger": false, "actual_trigger": false, "assertions": [{"text": "Does not route model benchmarking here.", "passed": true}]},
+    {"id": "F10", "prompt": "Create an AutoCAD floor plan validation suite.", "should_trigger": false, "actual_trigger": false, "assertions": [{"text": "Does not route unrelated domain testing here.", "passed": true}]}
+  ]
+}

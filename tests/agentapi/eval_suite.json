@@ -1,0 +1,125 @@
+{
+  "skill_name": "agentapi",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "How do I programmatically start a new conversation using agentapi CLI?",
+      "should_trigger": true,
+      "actual_trigger": true,
+      "expected_output": "Explanation and example of agentapi new-conversation \"...\"",
+      "assertions": [
+        {
+          "text": "Response references agentapi new-conversation command",
+          "passed": true
+        },
+        {
+          "text": "Response explains running outside agent session",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Can I send a message from a background script to a running agent conversation?",
+      "should_trigger": true,
+      "actual_trigger": true,
+      "expected_output": "Use agentapi send-message with conversation ID",
+      "assertions": [
+        {
+          "text": "Response explains agentapi send-message <conversation-id> <message>",
+          "passed": true
+        },
+        {
+          "text": "Response covers sidecar notification pattern",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "How do I fetch metadata for an active conversation via CLI?",
+      "should_trigger": true,
+      "actual_trigger": true,
+      "expected_output": "Use agentapi get-conversation-metadata",
+      "assertions": [
+        {
+          "text": "Response shows agentapi get-conversation-metadata <conversation-id>",
+          "passed": true
+        },
+        {
+          "text": "Response notes self-documenting CLI help",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "How can a sidecar or automation script drive the agent without interactive UI?",
+      "should_trigger": true,
+      "actual_trigger": true,
+      "expected_output": "Using agentapi command-line interface",
+      "assertions": [
+        {
+          "text": "Response highlights agentapi CLI communicating with language server",
+          "passed": true
+        },
+        {
+          "text": "Response provides concrete command examples",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "prompt": "How do I run git commit inside this repo?",
+      "should_trigger": false,
+      "actual_trigger": false,
+      "expected_output": "Git commit guidance, do not activate agentapi.",
+      "assertions": [
+        {
+          "text": "Skill is suppressed for out-of-domain request",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "prompt": "Write a Python function to compute Fibonacci numbers.",
+      "should_trigger": false,
+      "actual_trigger": false,
+      "expected_output": "Standard Python function, do not activate agentapi.",
+      "assertions": [
+        {
+          "text": "Skill is suppressed for out-of-domain request",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "prompt": "How do I dispatch a subagent using the invoke_subagent tool in-session?",
+      "should_trigger": false,
+      "actual_trigger": false,
+      "expected_output": "In-session tool call guidance, do not activate agentapi CLI.",
+      "assertions": [
+        {
+          "text": "Skill is suppressed for out-of-domain request",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "prompt": "Explain how to configure an AWS S3 bucket policy.",
+      "should_trigger": false,
+      "actual_trigger": false,
+      "expected_output": "Cloud infrastructure question, do not activate agentapi.",
+      "assertions": [
+        {
+          "text": "Skill is suppressed for out-of-domain request",
+          "passed": true
+        }
+      ]
+    }
+  ]
+}

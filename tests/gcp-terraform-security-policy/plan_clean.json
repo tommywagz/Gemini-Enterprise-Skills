@@ -1,0 +1,14 @@
+{
+  "planned_values": {
+    "root_module": {
+      "resources": [
+        {
+          "address": "google_storage_bucket.private",
+          "mode": "managed",
+          "type": "google_storage_bucket",
+          "values": {"uniform_bucket_level_access": true}
+        }
+      ]
+    }
+  }
+}

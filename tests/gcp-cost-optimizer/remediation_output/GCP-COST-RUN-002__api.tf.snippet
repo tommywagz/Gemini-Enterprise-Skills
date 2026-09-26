@@ -1,0 +1,11 @@
+# GCP-COST-RUN-002: Multi-vCPU Cloud Run service configured with concurrency = 1
+# Resource: api
+# Detail: cpu=2 concurrency=1
+#
+# Only raise concurrency if the request handler is thread-/async-safe.
+resource "google_cloud_run_v2_service" "REPLACE_ME" {
+  # ... existing config ...
+  template {
+    max_instance_request_concurrency = 80 # was 1 -- verify handler safety first
+  }
+}

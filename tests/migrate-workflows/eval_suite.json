@@ -1,0 +1,125 @@
+{
+  "skill_name": "migrate-workflows",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "How do I automatically migrate our legacy .agents/workflows markdown files to modern skills?",
+      "should_trigger": true,
+      "actual_trigger": true,
+      "expected_output": "Scanning workflow directories and generating SKILL.md packages",
+      "assertions": [
+        {
+          "text": "Response identifies legacy .agents/workflows/*.md paths",
+          "passed": true
+        },
+        {
+          "text": "Response details creating .agents/skills/<name>/SKILL.md",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Run the workflow migration tool across global and workspace configurations.",
+      "should_trigger": true,
+      "actual_trigger": true,
+      "expected_output": "Autonomous migration workflow execution across global ~/.gemini and local workspace",
+      "assertions": [
+        {
+          "text": "Response checks ~/.gemini/config/workflows and workspace paths",
+          "passed": true
+        },
+        {
+          "text": "Response checks if target SKILL.md already exists",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Convert this old workflows.json manifest into modern skill directories.",
+      "should_trigger": true,
+      "actual_trigger": true,
+      "expected_output": "Manifest parsing and conversion to first-class skills with slash command support",
+      "assertions": [
+        {
+          "text": "Response parses workflow manifest entries",
+          "passed": true
+        },
+        {
+          "text": "Response explains multi-file capabilities of skills over workflows",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "What are the advantages of migrating legacy agent workflows to SKILL.md packages?",
+      "should_trigger": true,
+      "actual_trigger": true,
+      "expected_output": "Explanation of slash command support, semantic discovery, and multi-file resources",
+      "assertions": [
+        {
+          "text": "Response highlights slash command support",
+          "passed": true
+        },
+        {
+          "text": "Response highlights semantic discovery and multi-file helper support",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "prompt": "How do I migrate my database schema from PostgreSQL to MySQL?",
+      "should_trigger": false,
+      "actual_trigger": false,
+      "expected_output": "Database migration, do not trigger migrate-workflows.",
+      "assertions": [
+        {
+          "text": "Skill is suppressed for out-of-domain request",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "prompt": "Write a Dockerfile for a Python FastAPI service.",
+      "should_trigger": false,
+      "actual_trigger": false,
+      "expected_output": "Containerization task, do not trigger migrate-workflows.",
+      "assertions": [
+        {
+          "text": "Skill is suppressed for out-of-domain request",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "prompt": "Explain how Kubernetes Horizontal Pod Autoscaler works.",
+      "should_trigger": false,
+      "actual_trigger": false,
+      "expected_output": "K8s infrastructure topic, do not trigger migrate-workflows.",
+      "assertions": [
+        {
+          "text": "Skill is suppressed for out-of-domain request",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "prompt": "Debug this JavaScript null pointer exception.",
+      "should_trigger": false,
+      "actual_trigger": false,
+      "expected_output": "General coding bug, do not trigger migrate-workflows.",
+      "assertions": [
+        {
+          "text": "Skill is suppressed for out-of-domain request",
+          "passed": true
+        }
+      ]
+    }
+  ]
+}

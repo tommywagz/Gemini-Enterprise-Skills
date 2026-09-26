@@ -1,0 +1,245 @@
+{
+  "skill_name": "ucp-extensions-schemas",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "How do I author a new UCP extension schema for restaurant food ordering?",
+      "should_trigger": true,
+      "actual_trigger": true,
+      "assertions": [
+        {
+          "text": "Activates on UCP food ordering vertical extension authoring",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Design a UCP capability extension schema for hotel lodging reservations extending checkout.",
+      "should_trigger": true,
+      "actual_trigger": true,
+      "assertions": [
+        {
+          "text": "Activates on UCP lodging extension schema design",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "How does date-based versioning work for UCP extension schemas when making backward-compatible updates?",
+      "should_trigger": true,
+      "actual_trigger": true,
+      "assertions": [
+        {
+          "text": "Activates on date-based versioning for UCP",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "Validate the reverse-domain authority binding for a custom UCP schema under com.example.retail.",
+      "should_trigger": true,
+      "actual_trigger": true,
+      "assertions": [
+        {
+          "text": "Activates on authority binding validation",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "prompt": "Extend the UCP checkout schema to support promotional discount codes and percentage coupons.",
+      "should_trigger": true,
+      "actual_trigger": true,
+      "assertions": [
+        {
+          "text": "Activates on extending UCP checkout schema with discounts",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "prompt": "Write a JSON Schema Draft 2020-12 definition for UCP multi-carrier shipping fulfillment options.",
+      "should_trigger": true,
+      "actual_trigger": true,
+      "assertions": [
+        {
+          "text": "Activates on UCP fulfillment extension schema authoring",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "prompt": "How do I declare my custom UCP vertical extension in the merchant /.well-known/ucp discovery profile?",
+      "should_trigger": true,
+      "actual_trigger": true,
+      "assertions": [
+        {
+          "text": "Activates on discovery manifest capability declaration",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "prompt": "Why should I avoid additionalProperties: false on the root object when authoring UCP schemas?",
+      "should_trigger": true,
+      "actual_trigger": true,
+      "assertions": [
+        {
+          "text": "Activates on UCP schema authoring conventions and property closure",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "prompt": "Version my UCP extension schema with a new calendar date after introducing breaking property changes.",
+      "should_trigger": true,
+      "actual_trigger": true,
+      "assertions": [
+        {
+          "text": "Activates on versioning UCP extension schema with calendar date",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "prompt": "Author a custom UCP vertical schema without forking core commerce primitives.",
+      "should_trigger": true,
+      "actual_trigger": true,
+      "assertions": [
+        {
+          "text": "Activates on custom UCP vertical schema authoring",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 11,
+      "prompt": "Implement business server REST handlers for UCP cart and checkout endpoints.",
+      "should_trigger": false,
+      "actual_trigger": false,
+      "assertions": [
+        {
+          "text": "Refuses business server handlers, defers to ucp-merchant-servers",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 12,
+      "prompt": "Build a consumer shopping agent that negotiates UCP capabilities and places an order.",
+      "should_trigger": false,
+      "actual_trigger": false,
+      "assertions": [
+        {
+          "text": "Refuses shopping agent client logic, defers to ucp-consumer-surface",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 13,
+      "prompt": "Create signed AP2 payment mandate credentials for delegated agent payments.",
+      "should_trigger": false,
+      "actual_trigger": false,
+      "assertions": [
+        {
+          "text": "Refuses payment mandate generation, defers to ap2-agent-payments",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 14,
+      "prompt": "Write a generic JSON schema for a customer user profile with address and phone number.",
+      "should_trigger": false,
+      "actual_trigger": false,
+      "assertions": [
+        {
+          "text": "Refuses generic non-UCP JSON schema authoring",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 15,
+      "prompt": "Configure Vertex AI Memory Bank for cross-session agent knowledge persistence.",
+      "should_trigger": false,
+      "actual_trigger": false,
+      "assertions": [
+        {
+          "text": "Refuses ADK memory bank configuration",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 16,
+      "prompt": "Audit Terraform configurations against GCP CIS security benchmarks.",
+      "should_trigger": false,
+      "actual_trigger": false,
+      "assertions": [
+        {
+          "text": "Refuses GCP IaC security policy auditing",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 17,
+      "prompt": "Debug a Kubernetes pod stuck in CrashLoopBackOff on Google Kubernetes Engine.",
+      "should_trigger": false,
+      "actual_trigger": false,
+      "assertions": [
+        {
+          "text": "Refuses GKE workload triage",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 18,
+      "prompt": "Audit GCP IAM role bindings to enforce least-privilege service account permissions.",
+      "should_trigger": false,
+      "actual_trigger": false,
+      "assertions": [
+        {
+          "text": "Refuses GCP IAM privilege audit",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 19,
+      "prompt": "Design an A2A multi-agent workflow coordinating host and sub-agent communication.",
+      "should_trigger": false,
+      "actual_trigger": false,
+      "assertions": [
+        {
+          "text": "Refuses A2A multi-agent workflow authoring",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 20,
+      "prompt": "Search public skill registries for an existing Slack integration skill.",
+      "should_trigger": false,
+      "actual_trigger": false,
+      "assertions": [
+        {
+          "text": "Refuses registry skill search, defers to find-skill",
+          "passed": true
+        }
+      ]
+    }
+  ]
+}

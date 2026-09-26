@@ -1,0 +1,365 @@
+{
+  "skill_name": "adk-long-horizon-harness",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "How do I build an event-driven ADK agent that processes inbound Google Cloud Pub/Sub messages asynchronously?",
+      "should_trigger": true,
+      "actual_trigger": true,
+      "assertions": [
+        {
+          "text": "Skill adk-long-horizon-harness triggers",
+          "passed": true
+        },
+        {
+          "text": "Response provides authenticated base64 payload decoding and bounded queue processing",
+          "passed": true
+        },
+        {
+          "text": "Response references references/ambient_agents_api.md",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "We need to run our ADK maintenance agent on a cron schedule using Cloud Scheduler and FastAPI. How should we architect this?",
+      "should_trigger": true,
+      "actual_trigger": true,
+      "assertions": [
+        {
+          "text": "Skill adk-long-horizon-harness triggers",
+          "passed": true
+        },
+        {
+          "text": "Response specifies Cloud Scheduler authenticated HTTP target configuration",
+          "passed": true
+        },
+        {
+          "text": "Response emphasizes review-only deployment with assets/cloud_scheduler_cron.tf",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Configure a Google Cloud Pub/Sub push subscription worker for long-running ADK background tasks with dead-letter queue handling.",
+      "should_trigger": true,
+      "actual_trigger": true,
+      "assertions": [
+        {
+          "text": "Skill adk-long-horizon-harness triggers",
+          "passed": true
+        },
+        {
+          "text": "Response details DLQ routing for non-retryable poison events",
+          "passed": true
+        },
+        {
+          "text": "Response ensures transient faults are retried with exponential backoff",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "How do I implement idempotent event handling for our headless ADK agent so duplicate Pub/Sub deliveries don't re-run actions?",
+      "should_trigger": true,
+      "actual_trigger": true,
+      "assertions": [
+        {
+          "text": "Skill adk-long-horizon-harness triggers",
+          "passed": true
+        },
+        {
+          "text": "Response requires durable idempotency storage rather than in-memory sets",
+          "passed": true
+        },
+        {
+          "text": "Response requires recording idempotency keys prior to executing external actions",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "prompt": "Our long-running ADK background session is hitting token limits. How do we configure EventsCompactionConfig to summarize session history?",
+      "should_trigger": true,
+      "actual_trigger": true,
+      "assertions": [
+        {
+          "text": "Skill adk-long-horizon-harness triggers",
+          "passed": true
+        },
+        {
+          "text": "Response outlines context compaction while preserving recent event tail",
+          "passed": true
+        },
+        {
+          "text": "Response references references/context_compaction_patterns.md",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "prompt": "How can I safely use LlmEventSummarizer to compact conversation history without losing pending approval states or audit data?",
+      "should_trigger": true,
+      "actual_trigger": true,
+      "assertions": [
+        {
+          "text": "Skill adk-long-horizon-harness triggers",
+          "passed": true
+        },
+        {
+          "text": "Response warns that lossy summarization must never compact authorization or approval state",
+          "passed": true
+        },
+        {
+          "text": "Response instructs verifying constructor and config parameter names in the pinned ADK version",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "prompt": "Can we test our ADK ambient worker event pipeline locally before deploying to GCP?",
+      "should_trigger": true,
+      "actual_trigger": true,
+      "assertions": [
+        {
+          "text": "Skill adk-long-horizon-harness triggers",
+          "passed": true
+        },
+        {
+          "text": "Response recommends running scripts/run_ambient_worker.sh with --mock-event",
+          "passed": true
+        },
+        {
+          "text": "Response confirms the mock script operates offline without network or Google API calls",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "prompt": "I need to set up a nightly reconciliation job that triggers an autonomous ADK background worker at 2 AM UTC.",
+      "should_trigger": true,
+      "actual_trigger": true,
+      "assertions": [
+        {
+          "text": "Skill adk-long-horizon-harness triggers",
+          "passed": true
+        },
+        {
+          "text": "Response proposes Cloud Scheduler cron job with authenticated OIDC token",
+          "passed": true
+        },
+        {
+          "text": "Response incorporates bounded concurrency and structured logging",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "prompt": "What is the recommended lifecycle and graceful shutdown handling for a FastAPI app hosting headless ADK background workers?",
+      "should_trigger": true,
+      "actual_trigger": true,
+      "assertions": [
+        {
+          "text": "Skill adk-long-horizon-harness triggers",
+          "passed": true
+        },
+        {
+          "text": "Response details FastAPI lifespan context manager for draining in-flight events",
+          "passed": true
+        },
+        {
+          "text": "Response advises leaving incomplete work retryable in durable storage",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "prompt": "How should our headless ADK worker log event processing decisions without exposing customer PII or auth credentials?",
+      "should_trigger": true,
+      "actual_trigger": true,
+      "assertions": [
+        {
+          "text": "Skill adk-long-horizon-harness triggers",
+          "passed": true
+        },
+        {
+          "text": "Response mandates logging immutable event IDs and state transitions instead of raw payloads",
+          "passed": true
+        },
+        {
+          "text": "Response requires an explicit redaction policy for sensitive customer fields",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 11,
+      "prompt": "Can you help me build an interactive conversational chatbot using ADK for a real-time web chat widget?",
+      "should_trigger": false,
+      "actual_trigger": false,
+      "assertions": [
+        {
+          "text": "adk-long-horizon-harness skill does NOT activate",
+          "passed": true
+        },
+        {
+          "text": "System routes to interactive ADK or adk-agents skill",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 12,
+      "prompt": "Create a simple CRUD REST API endpoint in FastAPI to query user profiles from PostgreSQL.",
+      "should_trigger": false,
+      "actual_trigger": false,
+      "assertions": [
+        {
+          "text": "adk-long-horizon-harness skill does NOT activate",
+          "passed": true
+        },
+        {
+          "text": "Request is handled as standard FastAPI web service development without autonomous agents",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 13,
+      "prompt": "Write a quick one-off Python script to parse a local CSV file and print summary statistics.",
+      "should_trigger": false,
+      "actual_trigger": false,
+      "assertions": [
+        {
+          "text": "adk-long-horizon-harness skill does NOT activate",
+          "passed": true
+        },
+        {
+          "text": "Request is handled with general Python scripting assistance",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 14,
+      "prompt": "Our GKE pod in production is stuck in CrashLoopBackOff with OOMKilled errors. How do we debug it?",
+      "should_trigger": false,
+      "actual_trigger": false,
+      "assertions": [
+        {
+          "text": "adk-long-horizon-harness skill does NOT activate",
+          "passed": true
+        },
+        {
+          "text": "System routes to Kubernetes / GKE resource triage skill",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 15,
+      "prompt": "Audit GCP IAM role bindings to find service accounts with excessive Owner or Editor privileges.",
+      "should_trigger": false,
+      "actual_trigger": false,
+      "assertions": [
+        {
+          "text": "adk-long-horizon-harness skill does NOT activate",
+          "passed": true
+        },
+        {
+          "text": "System routes to GCP IAM privilege audit skill",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 16,
+      "prompt": "How do I implement Google OAuth 2.0 user consent flow for user workspace delegation in our agent app?",
+      "should_trigger": false,
+      "actual_trigger": false,
+      "assertions": [
+        {
+          "text": "adk-long-horizon-harness skill does NOT activate",
+          "passed": true
+        },
+        {
+          "text": "System routes to ADK OAuth user consent flow skill",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 17,
+      "prompt": "Configure Model Armor safety guardrails and input/output plugin moderation for our agent CLI.",
+      "should_trigger": false,
+      "actual_trigger": false,
+      "assertions": [
+        {
+          "text": "adk-long-horizon-harness skill does NOT activate",
+          "passed": true
+        },
+        {
+          "text": "System routes to agent CLI plugin moderator skill",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 18,
+      "prompt": "Review our Google Cloud BigQuery and Compute Engine monthly spending to identify FinOps cost optimizations.",
+      "should_trigger": false,
+      "actual_trigger": false,
+      "assertions": [
+        {
+          "text": "adk-long-horizon-harness skill does NOT activate",
+          "passed": true
+        },
+        {
+          "text": "System routes to GCP cost optimizer skill",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 19,
+      "prompt": "Write pytest unit tests with mock fixtures for a calculator utility class in Python.",
+      "should_trigger": false,
+      "actual_trigger": false,
+      "assertions": [
+        {
+          "text": "adk-long-horizon-harness skill does NOT activate",
+          "passed": true
+        },
+        {
+          "text": "Request is treated as routine application unit testing",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "id": 20,
+      "prompt": "Write a reusable Terraform module to deploy a VPC network with private subnets across 3 GCP regions.",
+      "should_trigger": false,
+      "actual_trigger": false,
+      "assertions": [
+        {
+          "text": "adk-long-horizon-harness skill does NOT activate",
+          "passed": true
+        },
+        {
+          "text": "Handled as generic GCP infrastructure as code rather than ADK ambient harness",
+          "passed": true
+        }
+      ]
+    }
+  ]
+}
